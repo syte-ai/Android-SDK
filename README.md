@@ -1,4 +1,6 @@
-# Syte Native Android SDK
+# DEPRECATED: Syte Native Android SDK
+
+This repository is now deprecated and is not recommended for use. There will be no maintanance and no response to any issues.
 
 # Files
 
