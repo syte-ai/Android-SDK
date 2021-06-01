@@ -1,1 +1,3 @@
-include ':app', ':sytesdk'
+rootProject.name = "Android-SDK"
+include ':app'
+include ':android-sdk'
