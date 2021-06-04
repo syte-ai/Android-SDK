@@ -6,29 +6,29 @@ import java.util.Objects;
 
 public class UrlImageSearchRequestData {
 
-    private String imageUrl;
-    private SyteProductType productType;
-    private String sku;
+    private String mImageUrl;
+    private SyteProductType mProductType;
+    private String mSku;
 
     public UrlImageSearchRequestData(String imageUrl, SyteProductType productType) {
-        this.imageUrl = imageUrl;
-        this.productType = productType;
+        this.mImageUrl = imageUrl;
+        this.mProductType = productType;
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return mImageUrl;
     }
 
     public SyteProductType getProductType() {
-        return productType;
+        return mProductType;
     }
 
     public void setSku(String sku) {
-        this.sku = sku;
+        this.mSku = sku;
     }
 
     public String getSku() {
-        return sku;
+        return mSku;
     }
 
     @Override
@@ -36,14 +36,14 @@ public class UrlImageSearchRequestData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UrlImageSearchRequestData that = (UrlImageSearchRequestData) o;
-        return imageUrl.equals(that.imageUrl) &&
-                productType == that.productType &&
-                Objects.equals(sku, that.sku);
+        return mImageUrl.equals(that.mImageUrl) &&
+                mProductType == that.mProductType &&
+                Objects.equals(mSku, that.mSku);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(imageUrl, productType, sku);
+        return Objects.hash(mImageUrl, mProductType, mSku);
     }
 
 }

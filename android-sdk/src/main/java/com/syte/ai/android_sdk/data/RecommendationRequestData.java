@@ -8,47 +8,47 @@ import java.util.Objects;
 
 public class RecommendationRequestData {
 
-    public String sku;
-    public String imageUrl;
-    private RecommendationReturnField fieldsToReturn;
-    private RecommendationFeature feature;
-    private RecommendationProduct product;
+    private String mSku;
+    private String mImageUrl;
+    private RecommendationReturnField mFieldsToReturn;
+    private RecommendationFeature mFeature;
+    private RecommendationProduct mProduct;
 
     public RecommendationRequestData(String sku, String imageUrl) {
-        this.sku = sku;
-        this.imageUrl = imageUrl;
+        this.mSku = sku;
+        this.mImageUrl = imageUrl;
     }
 
     public String getSku() {
-        return sku;
+        return mSku;
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return mImageUrl;
     }
 
     public void setFeature(RecommendationFeature feature) {
-        this.feature = feature;
+        this.mFeature = feature;
     }
 
     public RecommendationFeature getFeature() {
-        return feature;
+        return mFeature;
     }
 
     public void setProduct(RecommendationProduct product) {
-        this.product = product;
+        this.mProduct = product;
     }
 
     public RecommendationProduct getProduct() {
-        return product;
+        return mProduct;
     }
 
     public void setFieldsToReturn(RecommendationReturnField fieldsToReturn) {
-        this.fieldsToReturn = fieldsToReturn;
+        this.mFieldsToReturn = fieldsToReturn;
     }
 
     public RecommendationReturnField getFieldsToReturn() {
-        return fieldsToReturn;
+        return mFieldsToReturn;
     }
 
     @Override
@@ -56,16 +56,16 @@ public class RecommendationRequestData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecommendationRequestData that = (RecommendationRequestData) o;
-        return sku.equals(that.sku) &&
-                imageUrl.equals(that.imageUrl) &&
-                fieldsToReturn == that.fieldsToReturn &&
-                feature == that.feature &&
-                product == that.product;
+        return mSku.equals(that.mSku) &&
+                mImageUrl.equals(that.mImageUrl) &&
+                mFieldsToReturn == that.mFieldsToReturn &&
+                mFeature == that.mFeature &&
+                mProduct == that.mProduct;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sku, imageUrl, fieldsToReturn, feature, product);
+        return Objects.hash(mSku, mImageUrl, mFieldsToReturn, mFeature, mProduct);
     }
 
 }

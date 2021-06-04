@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 public class ImageSearchRequestData {
 
-    private final Byte[] imagePayload;
-    private Double[] coordinates;
+    private final Byte[] mImagePayload;
+    private Double[] mCoordinates;
 
     public ImageSearchRequestData(Byte[] imagePayload) {
-        this.imagePayload = imagePayload;
+        this.mImagePayload = imagePayload;
     }
 
     public void setCoordinates(Double[] coordinates) {
-        this.coordinates = coordinates;
+        this.mCoordinates = coordinates;
     }
 
     @Override
@@ -20,14 +20,14 @@ public class ImageSearchRequestData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ImageSearchRequestData that = (ImageSearchRequestData) o;
-        return Arrays.equals(imagePayload, that.imagePayload) &&
-                Arrays.equals(coordinates, that.coordinates);
+        return Arrays.equals(mImagePayload, that.mImagePayload) &&
+                Arrays.equals(mCoordinates, that.mCoordinates);
     }
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(imagePayload);
-        result = 31 * result + Arrays.hashCode(coordinates);
+        int result = Arrays.hashCode(mImagePayload);
+        result = 31 * result + Arrays.hashCode(mCoordinates);
         return result;
     }
 

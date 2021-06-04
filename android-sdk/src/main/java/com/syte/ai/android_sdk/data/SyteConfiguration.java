@@ -9,35 +9,35 @@ import java.util.List;
 
 public class SyteConfiguration {
 
-    private final String accountId;
-    private final String signature;
+    private final String mAccountId;
+    private final String mSignature;
 
-    private String locale = "en";
-    private List<String> sessionSkus = new ArrayList<>();
-    private String userId;
-    private String sessionId;
+    private String mLocale = "en";
+    private List<String> mSessionSkus = new ArrayList<>();
+    private String mUserId;
+    private String mSessionId;
 
     private SyteStorage mStorage;
 
     public SyteConfiguration(Context context, String accountId, String signature) throws SyteInitializationException {
-        this.accountId = accountId;
-        this.signature = signature;
+        this.mAccountId = accountId;
+        this.mSignature = signature;
     }
 
     public void setLocale(String locale) {
-        this.locale = locale;
+        this.mLocale = locale;
     }
 
     public String getLocale() {
-        return locale;
+        return mLocale;
     }
 
     public String getAccountId() {
-        return accountId;
+        return mAccountId;
     }
 
     public String getSignature() {
-        return signature;
+        return mSignature;
     }
 
     public String getUserId() {
@@ -49,15 +49,15 @@ public class SyteConfiguration {
     }
 
     public void addSessionSku(String sessionSku) {
-        sessionSkus.add(sessionSku);
+        mSessionSkus.add(sessionSku);
     }
 
     public List<String> getSessionSkus() {
-        return sessionSkus;
+        return mSessionSkus;
     }
 
     public void addSessionSkus(List<String> sessionSkus) {
-        this.sessionSkus.addAll(sessionSkus);
+        this.mSessionSkus.addAll(sessionSkus);
     }
 
     private void generateSessionId() {
