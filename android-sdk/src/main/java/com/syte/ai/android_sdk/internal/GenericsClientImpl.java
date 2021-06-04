@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.impl;
+package com.syte.ai.android_sdk.internal;
 
 import com.syte.ai.android_sdk.GenericsClient;
 import com.syte.ai.android_sdk.SyteCallback;

@@ -4,8 +4,16 @@ import java.util.Arrays;
 
 public class ImageSearchRequestData {
 
-    public Byte[] imagePayload;
-    public Double[] coordinates;
+    private final Byte[] imagePayload;
+    private Double[] coordinates;
+
+    public ImageSearchRequestData(Byte[] imagePayload) {
+        this.imagePayload = imagePayload;
+    }
+
+    public void setCoordinates(Double[] coordinates) {
+        this.coordinates = coordinates;
+    }
 
     @Override
     public boolean equals(Object o) {

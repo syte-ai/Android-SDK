@@ -1,19 +1,19 @@
-package com.syte.ai.android_sdk.impl;
+package com.syte.ai.android_sdk.internal;
 
 import com.syte.ai.android_sdk.EventsClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.EventRequestData;
+import com.syte.ai.android_sdk.data.SyteEvent;
 
 class EventsClientImpl implements EventsClient {
 
     @Override
-    public SyteResult launch(EventRequestData requestData) {
+    public SyteResult launch(SyteEvent requestData) {
         return null;
     }
 
     @Override
-    public void launchAsync(EventRequestData requestData, SyteCallback callback) {
+    public void launchAsync(SyteEvent requestData, SyteCallback callback) {
 
     }
 

@@ -14,7 +14,7 @@ public abstract class InitSyte {
     public static synchronized InitSyte getInstance() throws SyteInitializationException {
         InitSyte instance = null;
         try {
-            Class<?> clazz = Class.forName("com.syte.ai.android_sdk.impl.InitSyteImpl");
+            Class<?> clazz = Class.forName("com.syte.ai.android_sdk.internal.InitSyteImpl");
             Method method = clazz.getDeclaredMethod("getInstanceInternal");
             method.setAccessible(true);
             instance = (InitSyte) method.invoke(null);
@@ -30,7 +30,7 @@ public abstract class InitSyte {
         return instance;
     }
 
-    public abstract SyteResult initialize(SyteConfiguration configuration);
+    public abstract SyteResult initialize(SyteConfiguration configuration) throws SyteInitializationException;
 
     public abstract void initializeAsync(SyteConfiguration configuration, SyteCallback callback);
 

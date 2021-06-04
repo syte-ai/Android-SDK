@@ -6,9 +6,30 @@ import java.util.Objects;
 
 public class UrlImageSearchRequestData {
 
-    public String imageUrl;
-    public SyteProductType productType;
-    public String sku;
+    private String imageUrl;
+    private SyteProductType productType;
+    private String sku;
+
+    public UrlImageSearchRequestData(String imageUrl, SyteProductType productType) {
+        this.imageUrl = imageUrl;
+        this.productType = productType;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public SyteProductType getProductType() {
+        return productType;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getSku() {
+        return sku;
+    }
 
     @Override
     public boolean equals(Object o) {

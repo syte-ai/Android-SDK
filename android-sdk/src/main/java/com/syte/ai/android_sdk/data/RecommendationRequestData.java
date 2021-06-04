@@ -10,9 +10,46 @@ public class RecommendationRequestData {
 
     public String sku;
     public String imageUrl;
-    public RecommendationReturnField fieldsToReturn;
-    public RecommendationFeature feature;
-    public RecommendationProduct product;
+    private RecommendationReturnField fieldsToReturn;
+    private RecommendationFeature feature;
+    private RecommendationProduct product;
+
+    public RecommendationRequestData(String sku, String imageUrl) {
+        this.sku = sku;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setFeature(RecommendationFeature feature) {
+        this.feature = feature;
+    }
+
+    public RecommendationFeature getFeature() {
+        return feature;
+    }
+
+    public void setProduct(RecommendationProduct product) {
+        this.product = product;
+    }
+
+    public RecommendationProduct getProduct() {
+        return product;
+    }
+
+    public void setFieldsToReturn(RecommendationReturnField fieldsToReturn) {
+        this.fieldsToReturn = fieldsToReturn;
+    }
+
+    public RecommendationReturnField getFieldsToReturn() {
+        return fieldsToReturn;
+    }
 
     @Override
     public boolean equals(Object o) {

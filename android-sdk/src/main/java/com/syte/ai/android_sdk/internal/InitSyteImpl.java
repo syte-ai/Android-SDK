@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.impl;
+package com.syte.ai.android_sdk.internal;
 
 import com.syte.ai.android_sdk.EventsClient;
 import com.syte.ai.android_sdk.GenericsClient;
@@ -9,10 +9,17 @@ import com.syte.ai.android_sdk.InitSyte;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
+import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
 class InitSyteImpl extends InitSyte {
 
+    private enum SyteState {
+        IDLE, INITIALIZED
+    }
+
     private SyteConfiguration mConfiguration;
+    private SyteRemoteDataSource mRemoteDataSource;
+    private SyteState mState = SyteState.IDLE;
 
     private static InitSyteImpl mInstance = null;
 
@@ -28,7 +35,12 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteResult initialize(SyteConfiguration configuration) {
+    public SyteResult initialize(SyteConfiguration configuration) throws SyteInitializationException {
+        if(!validateConfig(configuration)) {
+            throw new SyteInitializationException();
+        }
+        mState = SyteState.INITIALIZED;
+        mConfiguration = configuration;
         return null;
     }
 
@@ -77,6 +89,10 @@ class InitSyteImpl extends InitSyte {
 
     private boolean validateConfig(SyteConfiguration configuration) {
         return true;
+    }
+
+    private boolean checkInitialized() {
+        return mState == SyteState.INITIALIZED;
     }
 
 }
