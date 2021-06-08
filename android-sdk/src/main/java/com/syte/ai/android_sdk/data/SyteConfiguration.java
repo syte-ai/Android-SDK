@@ -22,6 +22,13 @@ public class SyteConfiguration {
     public SyteConfiguration(Context context, String accountId, String signature) throws SyteInitializationException {
         this.mAccountId = accountId;
         this.mSignature = signature;
+        try {
+            this.mStorage = new SyteStorage(context);
+            this.mSessionId = Long.toString(mStorage.getSessionId());
+            this.mUserId = mStorage.getUserId();
+        } catch (Exception e) {
+            throw new SyteInitializationException();
+        }
     }
 
     public void setLocale(String locale) {
@@ -58,14 +65,6 @@ public class SyteConfiguration {
 
     public void addSessionSkus(List<String> sessionSkus) {
         this.mSessionSkus.addAll(sessionSkus);
-    }
-
-    private void generateSessionId() {
-
-    }
-
-    private void generateUserId() {
-
     }
 
 }

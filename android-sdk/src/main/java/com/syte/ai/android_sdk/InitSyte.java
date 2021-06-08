@@ -30,9 +30,9 @@ public abstract class InitSyte {
         return instance;
     }
 
-    public abstract SyteResult initialize(SyteConfiguration configuration) throws SyteInitializationException;
+    public abstract SyteResult startSession(SyteConfiguration configuration) throws SyteInitializationException;
 
-    public abstract void initializeAsync(SyteConfiguration configuration, SyteCallback callback);
+    public abstract void startSessionAsync(SyteConfiguration configuration, SyteCallback callback);
 
     public abstract SyteConfiguration getCurrentConfiguration();
 
@@ -46,8 +46,10 @@ public abstract class InitSyte {
 
     public abstract RecommendationEngineClient retrieveRecommendationEngineClient();
 
-    public abstract GenericsClient retrieveGenericsClient();
-
     public abstract ImageSearchClient retrieveImageSearchClient();
+
+    public abstract void endSession();
+
+    public abstract void addSkuPdp(String sku);
 
 }

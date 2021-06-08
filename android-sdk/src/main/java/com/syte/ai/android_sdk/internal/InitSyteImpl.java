@@ -1,7 +1,6 @@
 package com.syte.ai.android_sdk.internal;
 
 import com.syte.ai.android_sdk.EventsClient;
-import com.syte.ai.android_sdk.GenericsClient;
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.RecommendationEngineClient;
 import com.syte.ai.android_sdk.data.AccountDataService;
@@ -35,7 +34,7 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteResult initialize(SyteConfiguration configuration) throws SyteInitializationException {
+    public SyteResult startSession(SyteConfiguration configuration) throws SyteInitializationException {
         if(!validateConfig(configuration)) {
             throw new SyteInitializationException();
         }
@@ -45,7 +44,7 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void initializeAsync(SyteConfiguration configuration, SyteCallback callback) {
+    public void startSessionAsync(SyteConfiguration configuration, SyteCallback callback) {
     }
 
     @Override
@@ -55,7 +54,6 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public void applyConfiguration(SyteConfiguration configuration) {
-
     }
 
     @Override
@@ -78,14 +76,15 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public GenericsClient retrieveGenericsClient() {
-        return new GenericsClientImpl();
-    }
-
-    @Override
     public ImageSearchClient retrieveImageSearchClient() {
         return new ImageSearchClientImpl();
     }
+
+    @Override
+    public void endSession() { }
+
+    @Override
+    public void addSkuPdp(String sku) { }
 
     private boolean validateConfig(SyteConfiguration configuration) {
         return true;
