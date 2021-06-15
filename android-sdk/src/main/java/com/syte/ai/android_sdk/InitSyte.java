@@ -1,10 +1,11 @@
 package com.syte.ai.android_sdk;
 
-import com.syte.ai.android_sdk.data.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -30,15 +31,13 @@ public abstract class InitSyte {
         return instance;
     }
 
-    public abstract SyteResult startSession(SyteConfiguration configuration) throws SyteInitializationException;
+    public abstract SyteResult<AccountDataService> startSession(SyteConfiguration configuration) throws SyteInitializationException;
 
-    public abstract void startSessionAsync(SyteConfiguration configuration, SyteCallback callback);
+    public abstract void startSessionAsync(SyteConfiguration configuration, SyteCallback<AccountDataService> callback) throws SyteInitializationException;
 
     public abstract SyteConfiguration getCurrentConfiguration();
 
     public abstract void applyConfiguration(SyteConfiguration configuration);
-
-    public abstract void applyConfigurationAsync(SyteConfiguration configuration, SyteCallback callback);
 
     public abstract AccountDataService getAccountDataService();
 

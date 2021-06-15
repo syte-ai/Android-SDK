@@ -2,14 +2,19 @@ package com.syte.ai.android_sdk.internal;
 
 import android.os.CountDownTimer;
 
+import com.google.gson.GsonBuilder;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
+import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
+import java.io.IOException;
+
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 abstract class BaseRemoteDataSource {
 
@@ -29,6 +34,7 @@ abstract class BaseRemoteDataSource {
         mRetrofit = new Retrofit
                 .Builder()
                 .baseUrl(SYTE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
@@ -41,9 +47,9 @@ abstract class BaseRemoteDataSource {
 
     protected abstract void resetTimer();
 
-    abstract SyteResult initialize();
+    abstract SyteResult<AccountDataService> initialize() throws IOException;
 
-    abstract void initializeAsync(SyteCallback callback);
+    abstract void initializeAsync(SyteCallback<AccountDataService> callback);
 
     abstract SyteResult urlImageSearch(UrlImageSearchRequestData requestData);
 

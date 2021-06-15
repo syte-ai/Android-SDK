@@ -48,11 +48,11 @@ public class SyteConfiguration {
     }
 
     public String getUserId() {
-        return "";
+        return mStorage.getUserId();
     }
 
-    public String getSessionId() {
-        return "";
+    public Long getSessionId() {
+        return mStorage.getSessionId();
     }
 
     public void addSessionSku(String sessionSku) {

@@ -3,7 +3,7 @@ package com.syte.ai.android_sdk.internal;
 import com.syte.ai.android_sdk.EventsClient;
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.RecommendationEngineClient;
-import com.syte.ai.android_sdk.data.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.InitSyte;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
@@ -34,30 +34,52 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteResult startSession(SyteConfiguration configuration) throws SyteInitializationException {
-        if(!validateConfig(configuration)) {
+    public SyteResult<AccountDataService> startSession(SyteConfiguration configuration) throws SyteInitializationException {
+        if (!validateConfig(configuration)) {
             throw new SyteInitializationException();
         }
-        mState = SyteState.INITIALIZED;
         mConfiguration = configuration;
-        return null;
+        mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
+        SyteResult<AccountDataService> result = new SyteResult<>();
+        try {
+            result = mRemoteDataSource.initialize();
+            mState = SyteState.INITIALIZED;
+        } catch (Exception e) {
+            result.isSuccessful = false;
+            mState = SyteState.IDLE;
+        }
+        return result;
     }
 
     @Override
-    public void startSessionAsync(SyteConfiguration configuration, SyteCallback callback) {
+    public void startSessionAsync(SyteConfiguration configuration, SyteCallback<AccountDataService> callback) throws SyteInitializationException {
+        if (!validateConfig(configuration)) {
+            throw new SyteInitializationException();
+        }
+        mConfiguration = configuration;
+        mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
+        mRemoteDataSource.initializeAsync(new SyteCallback<AccountDataService>() {
+            @Override
+            public void onResult(SyteResult<AccountDataService> syteResult) {
+                if (syteResult.isSuccessful) {
+                    mState = SyteState.INITIALIZED;
+                } else {
+                    mState = SyteState.IDLE;
+                }
+                callback.onResult(syteResult);
+            }
+        });
     }
 
     @Override
     public SyteConfiguration getCurrentConfiguration() {
-        return null;
+        return mConfiguration;
     }
 
     @Override
     public void applyConfiguration(SyteConfiguration configuration) {
-    }
-
-    @Override
-    public void applyConfigurationAsync(SyteConfiguration configuration, SyteCallback callback) {
+        mConfiguration = configuration;
+        mRemoteDataSource.applyConfiguration(configuration);
     }
 
     @Override
@@ -81,10 +103,12 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void endSession() { }
+    public void endSession() {
+    }
 
     @Override
-    public void addSkuPdp(String sku) { }
+    public void addSkuPdp(String sku) {
+    }
 
     private boolean validateConfig(SyteConfiguration configuration) {
         return true;
