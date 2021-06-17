@@ -3,15 +3,22 @@ package com.syte.ai.android_sdk;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
+import com.syte.ai.android_sdk.data.result.offers.Bound;
+import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
+import com.syte.ai.android_sdk.data.result.offers.OffersResult;
 
 public interface ImageSearchClient {
     
-    SyteResult launch(ImageSearchRequestData imageSearchRequestData);
+    SyteResult<BoundsResult> getBounds(ImageSearchRequestData imageSearchRequestData);
 
-    SyteResult launch(UrlImageSearchRequestData urlImageSearchRequestData);
+    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData urlImageSearchRequestData);
 
-    void launchAsync(ImageSearchRequestData imageSearchRequestData, SyteCallback callback);
+    SyteResult<OffersResult> getOffers(Bound bound);
 
-    void launchAsync(UrlImageSearchRequestData urlImageSearchRequestData, SyteCallback callback);
+    void getBoundsAsync(ImageSearchRequestData imageSearchRequestData, SyteCallback<BoundsResult> callback);
+
+    void getBoundsAsync(UrlImageSearchRequestData urlImageSearchRequestData, SyteCallback<BoundsResult> callback);
+
+    void getOffersAsync(Bound bound, SyteCallback<OffersResult> callback);
 
 }

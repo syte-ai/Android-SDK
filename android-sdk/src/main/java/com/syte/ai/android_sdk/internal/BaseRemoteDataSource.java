@@ -9,10 +9,15 @@ import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.offers.Bound;
+import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
+import com.syte.ai.android_sdk.data.result.offers.OffersResult;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
 import java.io.IOException;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -31,10 +36,13 @@ abstract class BaseRemoteDataSource {
         //TODO initialize timer
         mConfiguration = configuration;
 
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
         mRetrofit = new Retrofit
                 .Builder()
                 .baseUrl(SYTE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
     }
 
@@ -51,9 +59,13 @@ abstract class BaseRemoteDataSource {
 
     abstract void initializeAsync(SyteCallback<AccountDataService> callback);
 
-    abstract SyteResult urlImageSearch(UrlImageSearchRequestData requestData);
+    abstract SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, AccountDataService accountDataService) throws IOException;
 
-    abstract void urlImageSearchAsync(UrlImageSearchRequestData requestData, SyteCallback callback);
+    abstract void getBoundsAsync(UrlImageSearchRequestData requestData, AccountDataService accountDataService, SyteCallback<BoundsResult> callback);
+
+    abstract SyteResult<OffersResult> getOffers(Bound bound);
+
+    abstract void getOffersAsync(Bound bound, SyteCallback<OffersResult> callback);
 
     abstract void wildImageSearch(ImageSearchRequestData requestData);
 

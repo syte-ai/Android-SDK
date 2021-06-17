@@ -12,7 +12,7 @@ public class SyteConfiguration {
     private final String mAccountId;
     private final String mSignature;
 
-    private String mLocale = "en";
+    private String mLocale = "en_Us";
     private List<String> mSessionSkus = new ArrayList<>();
     private String mUserId;
     private String mSessionId;

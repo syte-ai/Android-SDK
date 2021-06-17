@@ -1,14 +1,17 @@
 package com.syte.ai.android_sdk.data;
 
+import androidx.annotation.Nullable;
+
 import com.syte.ai.android_sdk.enums.SyteProductType;
 
 import java.util.Objects;
 
 public class UrlImageSearchRequestData {
 
-    private String mImageUrl;
-    private SyteProductType mProductType;
-    private String mSku;
+    private final String mImageUrl;
+    private final SyteProductType mProductType;
+    @Nullable private String mSku;
+    private boolean mRetrieveOffersForTheFirstBound = true;
 
     public UrlImageSearchRequestData(String imageUrl, SyteProductType productType) {
         this.mImageUrl = imageUrl;
@@ -27,8 +30,17 @@ public class UrlImageSearchRequestData {
         this.mSku = sku;
     }
 
+    @Nullable
     public String getSku() {
         return mSku;
+    }
+
+    public void setRetrieveOffersForTheFirstBound(boolean retrieveOffersForTheFirstBound) {
+        mRetrieveOffersForTheFirstBound = retrieveOffersForTheFirstBound;
+    }
+
+    public boolean isRetrieveOffersForTheFirstBound() {
+        return mRetrieveOffersForTheFirstBound;
     }
 
     @Override
@@ -38,7 +50,8 @@ public class UrlImageSearchRequestData {
         UrlImageSearchRequestData that = (UrlImageSearchRequestData) o;
         return mImageUrl.equals(that.mImageUrl) &&
                 mProductType == that.mProductType &&
-                Objects.equals(mSku, that.mSku);
+                Objects.equals(mSku, that.mSku) &&
+                mRetrieveOffersForTheFirstBound == that.mRetrieveOffersForTheFirstBound;
     }
 
     @Override

@@ -18,6 +18,7 @@ class InitSyteImpl extends InitSyte {
 
     private SyteConfiguration mConfiguration;
     private SyteRemoteDataSource mRemoteDataSource;
+    private AccountDataService mAccountDataService;
     private SyteState mState = SyteState.IDLE;
 
     private static InitSyteImpl mInstance = null;
@@ -43,6 +44,7 @@ class InitSyteImpl extends InitSyte {
         SyteResult<AccountDataService> result = new SyteResult<>();
         try {
             result = mRemoteDataSource.initialize();
+            mAccountDataService = result.data;
             mState = SyteState.INITIALIZED;
         } catch (Exception e) {
             result.isSuccessful = false;
@@ -62,6 +64,7 @@ class InitSyteImpl extends InitSyte {
             @Override
             public void onResult(SyteResult<AccountDataService> syteResult) {
                 if (syteResult.isSuccessful) {
+                    mAccountDataService = syteResult.data;
                     mState = SyteState.INITIALIZED;
                 } else {
                     mState = SyteState.IDLE;
@@ -84,7 +87,7 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public AccountDataService getAccountDataService() {
-        return null;
+        return mAccountDataService;
     }
 
     @Override
@@ -99,7 +102,7 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public ImageSearchClient retrieveImageSearchClient() {
-        return new ImageSearchClientImpl();
+        return new ImageSearchClientImpl(mRemoteDataSource, mAccountDataService);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class InitFragment extends Fragment {
             SyteConfiguration syteConfiguration = new SyteConfiguration(
                             requireContext().getApplicationContext(),
                     "9186",
-                    ""
+                    "602e43d2d6ddcd558359f91f"
             );
             mUserCredentialsTv.setText("UserId - " + syteConfiguration.getUserId() + "\nSessionId - " + syteConfiguration.getSessionId());
             InitSyte initSyte = InitSyte.getInstance();
