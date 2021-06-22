@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import com.syte.ai.android_sdk.data.result.offers.Offer;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
@@ -32,6 +34,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
         public TextView categories;
         public TextView sku;
         public TextView brand;
+        public TextView originalDataTitle;
 
         public ViewHolder(View view) {
             super(view);
@@ -49,6 +52,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
             categories = (TextView) view.findViewById(R.id.categories);
             sku = (TextView) view.findViewById(R.id.sku);
             brand = (TextView) view.findViewById(R.id.brand);
+            originalDataTitle = (TextView) view.findViewById(R.id.od_title);
         }
 
     }
@@ -81,6 +85,9 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
         viewHolder.sku.setText(mData.get(position).getSku());
         viewHolder.brand.setText(mData.get(position).getBrand());
         Picasso.get().load(mData.get(position).getImageUrl()).into(viewHolder.imageView);
+        try {
+            viewHolder.originalDataTitle.setText(mData.get(position).getOriginalData().getString("title"));
+        } catch (JSONException e) {}
     }
 
     @Override

@@ -1,9 +1,5 @@
 package com.syte.ai.android_sdk.internal;
 
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
-
-import org.json.JSONObject;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -18,7 +14,7 @@ public interface SyteService {
 
 
     //TODO include session SKUs here
-    @GET("offers/bb")
+    @GET("v1.1/offers/bb")
     Call<ResponseBody> getBounds(@Query("account_id") String accountId,
                                  @Query("sig") String signature,
                                  @Query("syte_uuid") String userId,

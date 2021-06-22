@@ -39,6 +39,7 @@
 
         <EditText
             android:id="@+id/account_data_service_et"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
