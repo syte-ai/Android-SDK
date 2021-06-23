@@ -7,10 +7,11 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
+
+import com.syte.ai.android_sdk.util.SyteLogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -77,8 +78,8 @@ class ImageProcessor {
                 break;
         }
 
-        Log.i(TAG, "Compressed max height: " + height);
-        Log.i(TAG, "Compressed max width: " + width);
+        SyteLogger.i(TAG, "Compressed max height: " + height);
+        SyteLogger.i(TAG, "Compressed max width: " + width);
         compressor.setMaxHeight(height);
         compressor.setMaxWidth(width);
         return compressor.get();
@@ -134,8 +135,8 @@ class ImageProcessor {
 
         int rotation = exifToDegrees(orientation);
 
-        Log.i(TAG, "Orientation: " + orientation);
-        Log.i(TAG, "Rotation: " + rotation);
+        SyteLogger.i(TAG, "Orientation: " + orientation);
+        SyteLogger.i(TAG, "Rotation: " + rotation);
 
         Matrix matrix = new Matrix();
         if (rotation != 0) {
