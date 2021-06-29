@@ -1,10 +1,9 @@
-package com.syte.ai.android_sdk.internal;
+package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;

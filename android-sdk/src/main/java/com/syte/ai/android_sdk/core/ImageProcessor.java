@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.internal;
+package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -33,6 +33,13 @@ class ImageProcessor {
 
     static final String COMPRESSED_IMAGE_DIR = "/compress";
     static final int SCALE_QUALITY = 20;
+    static final int SMALL_IMAGE_MAX_SIZE = 300_000;
+    static final float SMALL_IMAGE_MAX_WIDTH = 500f;
+    static final float SMALL_IMAGE_MAX_HEIGHT = 1000f;
+    static final float MEDIUM_IMAGE_MAX_WIDTH = 1400f;
+    static final float MEDIUM_IMAGE_MAX_HEIGHT = 1400f;
+    static final float LARGE_IMAGE_MAX_WIDTH = 2000f;
+    static final float LARGE_IMAGE_MAX_HEIGHT = 2000f;
 
     File compress(Context context, Bitmap bitmap, Scale scale) {
         //TODO handle errors here
@@ -42,7 +49,10 @@ class ImageProcessor {
         String dir = context.getFilesDir().getAbsolutePath() + COMPRESSED_IMAGE_DIR;
         File file = new File(dir);
         if (!file.exists()) {
-            file.mkdir();
+            boolean result = file.mkdir();
+            if (!result) {
+                //TODO throw exception here
+            }
         }
         compress.setTargetDir(dir);
         Compressor compressor = compress.strategy(Strategies.INSTANCE.compressor());
@@ -57,7 +67,7 @@ class ImageProcessor {
         float width = 0;
         Scale resultScale;
 
-        if (bitmap.getHeight() * bitmap.getRowBytes() > 300_000) {
+        if (bitmap.getHeight() * bitmap.getRowBytes() > SMALL_IMAGE_MAX_SIZE) {
             resultScale = scale;
         } else {
             resultScale = Scale.SMALL;
@@ -65,16 +75,16 @@ class ImageProcessor {
 
         switch (resultScale) {
             case SMALL:
-                height = 1000f;
-                width = 500f;
+                height = SMALL_IMAGE_MAX_HEIGHT;
+                width = SMALL_IMAGE_MAX_WIDTH;
                 break;
             case MEDIUM:
-                height = 1400f;
-                width = 1400f;
+                height = MEDIUM_IMAGE_MAX_HEIGHT;
+                width = MEDIUM_IMAGE_MAX_WIDTH;
                 break;
             case LARGE:
-                height = 2000f;
-                width = 2000f;
+                height = LARGE_IMAGE_MAX_HEIGHT;
+                width = LARGE_IMAGE_MAX_WIDTH;
                 break;
         }
 

@@ -1,34 +1,22 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.core;
 
+import com.syte.ai.android_sdk.EventsClient;
+import com.syte.ai.android_sdk.ImageSearchClient;
+import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
 public abstract class InitSyte {
 
-    public static synchronized InitSyte getInstance() throws SyteInitializationException {
-        InitSyte instance = null;
-        try {
-            Class<?> clazz = Class.forName("com.syte.ai.android_sdk.internal.InitSyteImpl");
-            Method method = clazz.getDeclaredMethod("getInstanceInternal");
-            method.setAccessible(true);
-            instance = (InitSyte) method.invoke(null);
-
-        } catch (ClassNotFoundException
-                | NoSuchMethodException
-                | IllegalAccessException
-                | InvocationTargetException e
-        ) {
-            throw new SyteInitializationException();
-        }
-
-        return instance;
+    public static synchronized InitSyte getInstance() {
+        return new InitSyteImpl();
     }
 
     public abstract SyteResult<AccountDataService> startSession(SyteConfiguration configuration) throws SyteInitializationException;

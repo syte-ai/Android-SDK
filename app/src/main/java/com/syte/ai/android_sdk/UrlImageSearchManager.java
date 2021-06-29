@@ -3,6 +3,7 @@ package com.syte.ai.android_sdk;
 import android.content.Context;
 import android.net.Uri;
 
+import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;

@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.internal;
+package com.syte.ai.android_sdk.core;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

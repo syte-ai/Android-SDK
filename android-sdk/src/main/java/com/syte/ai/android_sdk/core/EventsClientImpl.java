@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.internal;
+package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.EventsClient;
 import com.syte.ai.android_sdk.SyteCallback;

@@ -1,10 +1,9 @@
-package com.syte.ai.android_sdk.internal;
+package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.EventsClient;
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.RecommendationEngineClient;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
-import com.syte.ai.android_sdk.InitSyte;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -21,17 +20,7 @@ class InitSyteImpl extends InitSyte {
     private AccountDataService mAccountDataService;
     private SyteState mState = SyteState.IDLE;
 
-    private static InitSyteImpl mInstance = null;
-
-    private InitSyteImpl() {
-    }
-
-    static synchronized InitSyteImpl getInstanceInternal() {
-        if (mInstance == null) {
-            mInstance = new InitSyteImpl();
-        }
-
-        return mInstance;
+    InitSyteImpl() {
     }
 
     @Override
