@@ -53,4 +53,17 @@ public class Bound {
 	public List<Double> getB1(){
 		return b1;
 	}
+
+	@Override
+	public String toString() {
+		return "Bound{" +
+				"offersUrl='" + offersUrl + '\'' +
+				", gender='" + gender + '\'' +
+				", catalog='" + catalog + '\'' +
+				", center=" + center +
+				", label='" + label + '\'' +
+				", b0=" + b0 +
+				", b1=" + b1 +
+				'}';
+	}
 }

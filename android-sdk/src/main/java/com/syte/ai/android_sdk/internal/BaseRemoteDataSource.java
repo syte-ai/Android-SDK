@@ -1,8 +1,8 @@
 package com.syte.ai.android_sdk.internal;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 
-import com.google.gson.GsonBuilder;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
@@ -19,7 +19,6 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 abstract class BaseRemoteDataSource {
 
@@ -27,10 +26,12 @@ abstract class BaseRemoteDataSource {
 
     protected static final int SESSION_TIMEOUT_SEC = 30 * 60;
     protected static final String SYTE_URL = "https://cdn.syteapi.com";
+    protected static final String EXIF_REMOVAL_URL = "https://imagemod.syteapi.com";
 
     protected CountDownTimer mTimer;
     protected SyteConfiguration mConfiguration;
     protected Retrofit mRetrofit;
+    protected Retrofit mExifRemovalRetrofit;
 
     BaseRemoteDataSource(SyteConfiguration configuration) {
         //TODO initialize timer
@@ -42,6 +43,11 @@ abstract class BaseRemoteDataSource {
         mRetrofit = new Retrofit
                 .Builder()
                 .baseUrl(SYTE_URL)
+                .client(client)
+                .build();
+        mExifRemovalRetrofit = new Retrofit
+                .Builder()
+                .baseUrl(EXIF_REMOVAL_URL)
                 .client(client)
                 .build();
     }
@@ -67,8 +73,16 @@ abstract class BaseRemoteDataSource {
 
     abstract void getOffersAsync(Bound bound, SyteCallback<OffersResult> callback);
 
-    abstract void wildImageSearch(ImageSearchRequestData requestData);
+    abstract SyteResult<BoundsResult> getBoundsWild(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService
+    ) throws IOException;
 
-    abstract void wildImageSearchAsync(ImageSearchRequestData requestData, SyteCallback callback);
-
+    abstract void getBoundsWildAsync(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService,
+            SyteCallback<BoundsResult> callback
+    ) throws IOException;
 }

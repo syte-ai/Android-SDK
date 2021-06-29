@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.internal;
 
+import android.content.Context;
+
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -21,8 +23,12 @@ class ImageSearchClientImpl implements ImageSearchClient {
     }
 
     @Override
-    public SyteResult<BoundsResult> getBounds(ImageSearchRequestData imageSearchRequestData) {
-        return null;
+    public SyteResult<BoundsResult> getBounds(Context context, ImageSearchRequestData imageSearchRequestData) {
+        return mSyteRemoteDataSource.getBoundsWild(
+                context,
+                imageSearchRequestData,
+                mAccountDataService
+        );
     }
 
     @Override
@@ -41,8 +47,12 @@ class ImageSearchClientImpl implements ImageSearchClient {
     }
 
     @Override
-    public void getBoundsAsync(ImageSearchRequestData imageSearchRequestData, SyteCallback<BoundsResult> callback) {
-
+    public void getBoundsAsync(
+            Context context,
+            ImageSearchRequestData imageSearchRequestData,
+            SyteCallback<BoundsResult> callback
+    ) {
+        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearchRequestData, mAccountDataService, callback);
     }
 
     @Override

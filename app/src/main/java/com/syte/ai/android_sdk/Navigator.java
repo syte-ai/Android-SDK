@@ -23,6 +23,12 @@ public class Navigator {
                 .commit();
     }
 
+    public void wildImageSearchFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new WildImageSearchFragment(), null)
+                .commit();
+    }
+
     public void mainFragment() {
         mFragmentManager.beginTransaction()
                 .add(R.id.fragment_holder, new MainFragment(), null)

@@ -1,5 +1,8 @@
 package com.syte.ai.android_sdk.internal;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+
 import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
@@ -10,14 +13,21 @@ import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
+import com.syte.ai.android_sdk.enums.SyteProductType;
+import com.syte.ai.android_sdk.util.SyteLogger;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,15 +35,23 @@ import retrofit2.Response;
 
 class SyteRemoteDataSource extends BaseRemoteDataSource {
 
+    private static final String TAG = SyteRemoteDataSource.class.getSimpleName();
+
     private interface BoundsResultCallback {
         void onResult(SyteResult<BoundsResult> result);
     }
 
+    private interface ExifRemovalResultCallback {
+        void onResult(UrlImageSearchRequestData requestData); //TODO add error description
+    }
+
     private final SyteService mSyteService;
+    private final ExifRemovalService mExifRemovalService;
 
     SyteRemoteDataSource(SyteConfiguration configuration) {
         super(configuration);
         mSyteService = mRetrofit.create(SyteService.class);
+        mExifRemovalService = mExifRemovalRetrofit.create(ExifRemovalService.class);
     }
 
     @Override
@@ -99,6 +117,10 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     @Override
     SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, AccountDataService accountDataService) {
+        if (requestData == null) {
+            return null;
+        }
+
         try {
             return onBoundsResult(requestData,
                     mSyteService.getBounds(
@@ -234,6 +256,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             modifiedResponseString =
                     response.body().string().replace(requestData.getImageUrl(), "bounds");
         } catch (IOException e) {
+            //TODO
         }
 
         if (modifiedResponseString == null) {
@@ -309,13 +332,195 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     @Override
-    void wildImageSearch(ImageSearchRequestData requestData) {
+    public SyteResult<BoundsResult> getBoundsWild(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService
+    ) {
 
+        ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
+                this,
+                accountDataService
+        );
+        try {
+            return imageSearchClient.getBounds(prepareUrlImageSearchRequestData(
+                    context,
+                    requestData,
+                    accountDataService
+            ));
+        } catch (IOException e) {
+            //TODO handle error
+            return null;
+        }
     }
 
     @Override
-    void wildImageSearchAsync(ImageSearchRequestData requestData, SyteCallback callback) {
+    void getBoundsWildAsync(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService,
+            SyteCallback<BoundsResult> callback
+    ) {
+        ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
+                this,
+                accountDataService
+        );
+        prepareUrlImageSearchRequestDataAsync(
+                context,
+                requestData,
+                accountDataService,
+                new ExifRemovalResultCallback() {
+                    @Override
+                    public void onResult(UrlImageSearchRequestData requestData) {
+                        imageSearchClient.getBoundsAsync(requestData, callback);
+                    }
+                }
+        );
+    }
 
+    private UrlImageSearchRequestData prepareUrlImageSearchRequestData(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService
+    ) throws IOException {
+        byte[] bytes = prepareImage(context, requestData, accountDataService);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), bytes);
+
+        ResponseBody body = mExifRemovalService.removeTags(
+                mConfiguration.getAccountId(),
+                mConfiguration.getSignature(),
+                requestBody
+        ).execute().body();
+
+        if (body != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(body.string());
+                UrlImageSearchRequestData urlImageSearchRequestData = new UrlImageSearchRequestData(
+                        jsonObject.getString("url"),
+                        SyteProductType.DISCOVERY_BUTTON
+                );
+                urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(
+                        requestData.isRetrieveOffersForTheFirstBound()
+                );
+                return urlImageSearchRequestData;
+            } catch (JSONException e) {
+                //TODO
+            }
+        }
+
+        return null;
+    }
+
+    private void prepareUrlImageSearchRequestDataAsync(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService,
+            ExifRemovalResultCallback callback
+    ) {
+        byte[] bytes = prepareImage(context, requestData, accountDataService);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), bytes);
+
+        mExifRemovalService.removeTags(
+                mConfiguration.getAccountId(),
+                mConfiguration.getSignature(),
+                requestBody
+        ).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                ResponseBody body = response.body();
+                if (body != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(body.string());
+                        UrlImageSearchRequestData urlImageSearchRequestData = new UrlImageSearchRequestData(
+                                jsonObject.getString("url"),
+                                SyteProductType.DISCOVERY_BUTTON
+                        );
+                        urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(
+                                requestData.isRetrieveOffersForTheFirstBound()
+                        );
+                        callback.onResult(urlImageSearchRequestData);
+                    } catch (IOException | JSONException e) {
+                        // TODO handle error
+                        callback.onResult(null);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // TODO handle error
+                callback.onResult(null);
+            }
+        });
+    }
+
+    private byte[] prepareImage(
+            Context context,
+            ImageSearchRequestData requestData,
+            AccountDataService accountDataService) {
+
+        ImageProcessor imageProcessor = new ImageProcessor();
+        Bitmap bitmap = imageProcessor.rotateImageIfNeeded(
+                context,
+                requestData.getImageUri()
+        );
+
+        File file = imageProcessor.compress(
+                context,
+                bitmap,
+                getImageScale(accountDataService)
+        );
+
+        SyteLogger.i(TAG, "Compressed image size: " + file.length() + " bytes");
+
+        return getFileBytes(file);
+    }
+
+    private byte[] getFileBytes(File file) {
+        int size = (int) file.length();
+        byte[] bytes = new byte[size];
+
+        try {
+            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+        } catch (IOException e) {
+            //TODO handle error here
+        }
+
+        return bytes;
+    }
+
+    private ImageProcessor.Scale getImageScale(AccountDataService accountDataService) {
+        //TODO check for nulls here
+        String imageScale = accountDataService
+                .getData()
+                .getProducts()
+                .getSyteapp()
+                .getFeatures()
+                .getCameraHandler()
+                .getPhotoReductionSize();
+
+        ImageProcessor.Scale scale;
+
+        switch (imageScale.toLowerCase()) {
+            case "small":
+                scale = ImageProcessor.Scale.SMALL;
+                break;
+            case "medium":
+                scale = ImageProcessor.Scale.MEDIUM;
+                break;
+            case "large":
+                scale = ImageProcessor.Scale.LARGE;
+                break;
+            default:
+                scale = ImageProcessor.Scale.MEDIUM;
+                break;
+        }
+
+        return scale;
     }
 
 }

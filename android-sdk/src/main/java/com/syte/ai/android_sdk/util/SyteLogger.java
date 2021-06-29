@@ -8,7 +8,7 @@ public class SyteLogger {
         VERBOSE, INFO, DEBUG, WARN, ERROR;
     }
 
-    private static LogLevel mLogLevel = LogLevel.ERROR;
+    private static LogLevel mLogLevel = LogLevel.VERBOSE;
 
     private static String appendTag(String TAG) {
         return ":SYTE:" + TAG;

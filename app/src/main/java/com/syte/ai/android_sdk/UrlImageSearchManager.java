@@ -1,5 +1,9 @@
 package com.syte.ai.android_sdk;
 
+import android.content.Context;
+import android.net.Uri;
+
+import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -13,6 +17,7 @@ import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
 
     private UrlImageSearchFragment mUrlImageSearchFragment;
+    private WildImageSearchFragment mWildImageSearchFragment;
     private BoundsFragment mBoundsFragment;
     private InitSyte mInitSyte;
     private boolean mSessionStarted = false;
@@ -25,9 +30,16 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
         mOffersResult = null;
     }
 
+    public void subscribe(WildImageSearchFragment fragment) {
+        mWildImageSearchFragment = fragment;
+        mBoundsResult = null;
+        mOffersResult = null;
+    }
+
     public void unsubscribe() {
         mUrlImageSearchFragment = null;
         mBoundsFragment = null;
+        mWildImageSearchFragment = null;
     }
 
     public void subscribe(BoundsFragment fragment) {
@@ -62,7 +74,11 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
         });
     }
 
-    public void getBoundsSync(String url, String sku, boolean retrieveOffersForTheFirstBound) {
+    public void getBoundsSync(
+            String url,
+            String sku,
+            boolean retrieveOffersForTheFirstBound
+    ) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -80,6 +96,34 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
                 if (mUrlImageSearchFragment != null) {
                     mUrlImageSearchFragment.showToast("Successful - " + result.isSuccessful);
                     mUrlImageSearchFragment.onBoundsRetrieved(result.data);
+                }
+            }
+        }).start();
+    }
+
+    public void getBoundsSyncWild(
+            Uri imageUri,
+            boolean retrieveOffersForTheFirstBound
+    ) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ImageSearchRequestData imageSearchRequestData = new ImageSearchRequestData(imageUri);
+                imageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
+
+                Context context = mUrlImageSearchFragment == null ?
+                        mWildImageSearchFragment.requireActivity().getApplicationContext() :
+                        mUrlImageSearchFragment.requireActivity().getApplicationContext();
+
+                SyteResult<BoundsResult> result = mInitSyte.retrieveImageSearchClient().getBounds(
+                        context,
+                        imageSearchRequestData
+                );
+
+                mBoundsResult = result.data;
+                if (mWildImageSearchFragment != null) {
+                    mWildImageSearchFragment.showToast("Successful - " + result.isSuccessful);
+                    mWildImageSearchFragment.onBoundsRetrieved(result.data);
                 }
             }
         }).start();
@@ -108,13 +152,37 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
         });
     }
 
+    public void getBoundsWildAsync(Uri imageUri, boolean retrieveOffersForTheFirstBound) {
+        ImageSearchRequestData imageSearchRequestData = new ImageSearchRequestData(imageUri);
+        imageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
+
+        Context context = mUrlImageSearchFragment == null ?
+                mWildImageSearchFragment.requireActivity().getApplicationContext() :
+                mUrlImageSearchFragment.requireActivity().getApplicationContext();
+
+        mInitSyte.retrieveImageSearchClient().getBoundsAsync(
+                context, imageSearchRequestData, new SyteCallback<BoundsResult>() {
+            @Override
+            public void onResult(SyteResult<BoundsResult> syteResult) {
+                mBoundsResult = syteResult.data;
+                if (mWildImageSearchFragment != null) {
+                    mWildImageSearchFragment.showToast("Successful - " + syteResult.isSuccessful);
+                    mWildImageSearchFragment.onBoundsRetrieved(syteResult.data);
+                }
+            }
+        });
+    }
+
     public void initSyte() throws SyteInitializationException {
-        if (mUrlImageSearchFragment == null) {
+        if (mUrlImageSearchFragment == null && mWildImageSearchFragment == null) {
             return;
         }
         mInitSyte = InitSyte.getInstance();
+        Context context = mUrlImageSearchFragment == null ?
+                mWildImageSearchFragment.requireActivity().getApplicationContext() :
+                mUrlImageSearchFragment.requireActivity().getApplicationContext();
         SyteConfiguration syteConfiguration = new SyteConfiguration(
-                mUrlImageSearchFragment.requireContext().getApplicationContext(),
+                context,
                 "9186",
                 "602e43d2d6ddcd558359f91f"
         );
@@ -127,7 +195,11 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
         if (syteResult.isSuccessful) {
             mSessionStarted = true;
         } else {
-            mUrlImageSearchFragment.showToast(null);
+            if (mUrlImageSearchFragment != null) {
+                mUrlImageSearchFragment.showToast(null);
+            } else if (mWildImageSearchFragment != null) {
+                mWildImageSearchFragment.showToast(null);
+            }
         }
     }
 

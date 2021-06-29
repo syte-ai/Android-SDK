@@ -32,5 +32,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/init_btn" />
 
+    <Button
+        android:id="@+id/wild_search_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/wild_search"
+        android:textColor="@color/black"
+        app:backgroundTint="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/url_search_btn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

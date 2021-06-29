@@ -34,7 +34,7 @@ class ImageProcessor {
     static final String COMPRESSED_IMAGE_DIR = "/compress";
     static final int SCALE_QUALITY = 20;
 
-    File compress(Scale scale, Context context, Bitmap bitmap) {
+    File compress(Context context, Bitmap bitmap, Scale scale) {
         //TODO handle errors here
         Compress compress = Compress.Companion.with(context, bitmap);
         compress.setFormat(Bitmap.CompressFormat.JPEG);
@@ -57,7 +57,7 @@ class ImageProcessor {
         float width = 0;
         Scale resultScale;
 
-        if (file.length() > 300_000) {
+        if (bitmap.getHeight() * bitmap.getRowBytes() > 300_000) {
             resultScale = scale;
         } else {
             resultScale = Scale.SMALL;

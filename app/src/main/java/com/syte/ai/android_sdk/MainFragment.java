@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ public class MainFragment extends BaseFragment {
 
     private Button mInitButton;
     private Button mUrlSearchButton;
+    private Button mWildSearchButton;
     private Navigator mNavigator;
 
     @Override
@@ -39,6 +39,13 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 mNavigator.urlimageSearchFragment();
+            }
+        });
+        mWildSearchButton = view.findViewById(R.id.wild_search_btn);
+        mWildSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.wildImageSearchFragment();
             }
         });
     }
