@@ -50,7 +50,10 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mOffersResult = mInitSyte.retrieveImageSearchClient().getOffers(bound).data;
+                mOffersResult = mInitSyte.retrieveImageSearchClient().getOffers(
+                        bound,
+                        null
+                ).data;
                 if (mBoundsFragment != null) {
                     mBoundsFragment.onOffersRetrieved(mOffersResult);
                 }
@@ -63,7 +66,10 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
     }
 
     public void getOffersAsync(Bound bound) {
-        mInitSyte.retrieveImageSearchClient().getOffersAsync(bound, new SyteCallback<OffersResult>() {
+        mInitSyte.retrieveImageSearchClient().getOffersAsync(
+                bound,
+                null,
+                new SyteCallback<OffersResult>() {
             @Override
             public void onResult(SyteResult<OffersResult> syteResult) {
                 mOffersResult = syteResult.data;

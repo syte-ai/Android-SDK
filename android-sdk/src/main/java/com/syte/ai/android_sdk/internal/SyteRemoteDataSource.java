@@ -2,9 +2,13 @@ package com.syte.ai.android_sdk.internal;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
@@ -17,6 +21,7 @@ import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +30,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -141,6 +147,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                             requestData.getSku(),
                             requestData.getImageUrl()
                     ).execute(),
+                    requestData.getFirstBoundOffersCoordinates(),
+                    accountDataService,
                     true,
                     null
             );
@@ -180,7 +188,13 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             public void onResponse(@NotNull Call<ResponseBody> call,
                                    @NotNull Response<ResponseBody> response) {
                 try {
-                    onBoundsResult(requestData, response, false, new BoundsResultCallback() {
+                    onBoundsResult(
+                            requestData,
+                            response,
+                            requestData.getFirstBoundOffersCoordinates(),
+                            accountDataService,
+                            false,
+                            new BoundsResultCallback() {
                         @Override
                         public void onResult(SyteResult<BoundsResult> result) {
                             callback.onResult(result);
@@ -200,10 +214,18 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     @Override
-    SyteResult<OffersResult> getOffers(Bound bound) {
+    SyteResult<OffersResult> getOffers(
+            Bound bound,
+            @Nullable CropCoordinates cropCoordinates,
+            AccountDataService accountDataService
+    ) {
         SyteResult<OffersResult> syteResult = new SyteResult<>();
         try {
-            Response<ResponseBody> response = mSyteService.getOffers(bound.getOffersUrl()).execute();
+            Response<ResponseBody> response = generateOffersCall(
+                    bound.getOffersUrl(),
+                    cropCoordinates,
+                    accountDataService
+            ).execute();
             syteResult.isSuccessful = response.isSuccessful();
             syteResult.resultCode = response.code();
             syteResult.data = onOffersResult(response);
@@ -215,8 +237,16 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     @Override
-    void getOffersAsync(Bound bound, SyteCallback<OffersResult> callback) {
-        mSyteService.getOffers(bound.getOffersUrl()).enqueue(new Callback<ResponseBody>() {
+    void getOffersAsync(
+            Bound bound,
+            CropCoordinates cropCoordinates,
+            AccountDataService accountDataService,
+            SyteCallback<OffersResult> callback) {
+        generateOffersCall(
+                bound.getOffersUrl(),
+                cropCoordinates,
+                accountDataService
+        ).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 SyteResult<OffersResult> syteResult = new SyteResult<>();
@@ -240,6 +270,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private SyteResult<BoundsResult> onBoundsResult(
             UrlImageSearchRequestData requestData,
             Response<ResponseBody> response,
+            @Nullable CropCoordinates cropCoordinates,
+            AccountDataService accountDataService,
             boolean sync,
             BoundsResultCallback resultCallback
     ) throws IOException {
@@ -272,14 +304,19 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         if (requestData.isRetrieveOffersForTheFirstBound()) {
             if (sync) {
                 Response<ResponseBody> offersResponse =
-                        mSyteService.getOffers(
-                                syteResult.data.getBounds().get(0).getOffersUrl()
+                        //TODO check for null here
+                        generateOffersCall(
+                                syteResult.data.getBounds().get(0).getOffersUrl(),
+                                cropCoordinates,
+                                accountDataService
                         ).execute();
                 syteResult.data.setFirstBoundOffersResult(onOffersResult(offersResponse));
                 return syteResult;
             } else {
-                mSyteService.getOffers(
-                        syteResult.data.getBounds().get(0).getOffersUrl()
+                generateOffersCall(
+                        syteResult.data.getBounds().get(0).getOffersUrl(),
+                        cropCoordinates,
+                        accountDataService
                 ).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -304,6 +341,55 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             resultCallback.onResult(syteResult);
         }
         return syteResult;
+    }
+
+    private Call<ResponseBody> generateOffersCall(
+            String offersUrl,
+            CropCoordinates cropCoordinates,
+            AccountDataService accountDataService
+    ) {
+        boolean cropEnabled = cropCoordinates != null;
+        String actualUrl = null;
+        String coordinatesBase64 = null;
+
+        if (cropEnabled) {
+            byte[] coordinateStringBytes = cropCoordinates.toString().getBytes();
+            Uri uri = Uri.parse(offersUrl);
+            final Set<String> params = uri.getQueryParameterNames();
+            final Uri.Builder newUri = uri.buildUpon().clearQuery();
+
+            coordinatesBase64 = Base64.encodeToString(coordinateStringBytes, Base64.DEFAULT);
+
+            SyteLogger.i(TAG, "Encoded coordinates: " + coordinatesBase64);
+
+            for (String param : params) {
+                if (param.equals("cats")
+                        || param.equals("crop")
+                        || param.equals("catalog")
+                        || param.equals("feed")
+                ) continue;
+                newUri.appendQueryParameter(param, uri.getQueryParameter(param));
+            }
+
+            actualUrl = newUri.toString();
+        } else {
+            actualUrl = offersUrl;
+        }
+
+        return mSyteService.getOffers(
+                actualUrl,
+                coordinatesBase64,
+                cropEnabled ? "general" : null,
+                cropEnabled ? accountDataService
+                        .getData()
+                        .getProducts()
+                        .getSyteapp()
+                        .getFeatures()
+                        .getBoundingBox()
+                        .getCropper()
+                        .getCatalog() : null
+
+        );
     }
 
     private OffersResult onOffersResult(Response<ResponseBody> offersResponse) throws IOException {
@@ -403,6 +489,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(
                         requestData.isRetrieveOffersForTheFirstBound()
                 );
+                urlImageSearchRequestData.setFirstBoundOffersCoordinates(
+                        requestData.getFirstBoundOffersCoordinates()
+                );
                 return urlImageSearchRequestData;
             } catch (JSONException e) {
                 //TODO
@@ -439,6 +528,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                         );
                         urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(
                                 requestData.isRetrieveOffersForTheFirstBound()
+                        );
+                        urlImageSearchRequestData.setFirstBoundOffersCoordinates(
+                                requestData.getFirstBoundOffersCoordinates()
                         );
                         callback.onResult(urlImageSearchRequestData);
                     } catch (IOException | JSONException e) {

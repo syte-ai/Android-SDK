@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
@@ -37,13 +38,13 @@ class ImageSearchClientImpl implements ImageSearchClient {
     }
 
     @Override
-    public SyteResult<OffersResult> getOffers(Bound bound) {
-        return mSyteRemoteDataSource.getOffers(bound);
+    public SyteResult<OffersResult> getOffers(Bound bound, CropCoordinates cropCoordinates) {
+        return mSyteRemoteDataSource.getOffers(bound, cropCoordinates, mAccountDataService);
     }
 
     @Override
-    public void getOffersAsync(Bound bound, SyteCallback<OffersResult> callback) {
-        mSyteRemoteDataSource.getOffersAsync(bound, callback);
+    public void getOffersAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<OffersResult> callback) {
+        mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, mAccountDataService, callback);
     }
 
     @Override

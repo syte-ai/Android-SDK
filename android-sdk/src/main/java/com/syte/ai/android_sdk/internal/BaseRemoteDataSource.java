@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.CountDownTimer;
 
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
@@ -48,7 +49,6 @@ abstract class BaseRemoteDataSource {
         mExifRemovalRetrofit = new Retrofit
                 .Builder()
                 .baseUrl(EXIF_REMOVAL_URL)
-                .client(client)
                 .build();
     }
 
@@ -69,9 +69,14 @@ abstract class BaseRemoteDataSource {
 
     abstract void getBoundsAsync(UrlImageSearchRequestData requestData, AccountDataService accountDataService, SyteCallback<BoundsResult> callback);
 
-    abstract SyteResult<OffersResult> getOffers(Bound bound);
+    abstract SyteResult<OffersResult> getOffers(Bound bound,
+                                                CropCoordinates cropCoordinates,
+                                                AccountDataService accountDataService);
 
-    abstract void getOffersAsync(Bound bound, SyteCallback<OffersResult> callback);
+    abstract void getOffersAsync(Bound bound,
+                                 CropCoordinates cropCoordinates,
+                                 AccountDataService accountDataService,
+                                 SyteCallback<OffersResult> callback);
 
     abstract SyteResult<BoundsResult> getBoundsWild(
             Context context,

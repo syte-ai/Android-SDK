@@ -12,6 +12,7 @@ public class UrlImageSearchRequestData {
     private final SyteProductType mProductType;
     @Nullable private String mSku;
     private boolean mRetrieveOffersForTheFirstBound = true;
+    private CropCoordinates mCoordinates;
 
     public UrlImageSearchRequestData(String imageUrl, SyteProductType productType) {
         this.mImageUrl = imageUrl;
@@ -33,6 +34,14 @@ public class UrlImageSearchRequestData {
     @Nullable
     public String getSku() {
         return mSku;
+    }
+
+    public void setFirstBoundOffersCoordinates(CropCoordinates coordinates) {
+        this.mCoordinates = coordinates;
+    }
+
+    public CropCoordinates getFirstBoundOffersCoordinates() {
+        return mCoordinates;
     }
 
     public void setRetrieveOffersForTheFirstBound(boolean retrieveOffersForTheFirstBound) {

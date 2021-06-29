@@ -26,6 +26,11 @@ public interface SyteService {
                                  @Query("imageUrl") String imageUrl);
 
     @GET
-    Call<ResponseBody> getOffers(@Url String offersUrl);
+    Call<ResponseBody> getOffers(
+            @Url String offersUrl,
+            @Query(value = "crop", encoded = true) String crop,
+            @Query("force_cats") String forceCats,
+            @Query("catalog") String catalog
+    );
 
 }
