@@ -86,7 +86,9 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public RecommendationEngineClient retrieveRecommendationEngineClient() {
-        return new RecommendationEngineClientImpl();
+        return new RecommendationEngineClientImpl(
+                mRemoteDataSource, mAccountDataService
+        );
     }
 
     @Override

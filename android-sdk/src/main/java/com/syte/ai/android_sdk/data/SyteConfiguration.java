@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +63,42 @@ public class SyteConfiguration {
 
     public List<String> getSessionSkus() {
         return mSessionSkus;
+    }
+
+    @Nullable
+    public String getSessionSkusString() {
+        if (mSessionSkus.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String sku : mSessionSkus) {
+            stringBuilder.append(sku);
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+        return stringBuilder.toString();
+    }
+
+    @Nullable
+    public String getSessionSkusJSONArray() {
+        if (mSessionSkus.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+        for (String sku : mSessionSkus) {
+            stringBuilder.append("\"");
+            stringBuilder.append(sku);
+            stringBuilder.append("\"");
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 
     public void addSessionSkus(List<String> sessionSkus) {

@@ -15,6 +15,9 @@ public class MainFragment extends BaseFragment {
     private Button mInitButton;
     private Button mUrlSearchButton;
     private Button mWildSearchButton;
+    private Button mGetSimilarsButton;
+    private Button mGetShopTheLookButton;
+    private Button mPersonalizationButton;
     private Navigator mNavigator;
 
     @Override
@@ -46,6 +49,27 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 mNavigator.wildImageSearchFragment();
+            }
+        });
+        mGetSimilarsButton = view.findViewById(R.id.similars);
+        mGetSimilarsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.similarsFragment();
+            }
+        });
+        mGetShopTheLookButton = view.findViewById(R.id.ctl);
+        mGetShopTheLookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.shopTheLookFragment();
+            }
+        });
+        mPersonalizationButton = view.findViewById(R.id.personalization);
+        mPersonalizationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.personalizationFragment();
             }
         });
     }

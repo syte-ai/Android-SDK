@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultRegistry;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -29,7 +28,7 @@ public class WildImageSearchFragment extends BaseFragment implements View.OnClic
     private CheckBox mFetchOffersForTheFirstBoundCheckBox;
     private Uri mSelectedImageUri = null;
 
-    private UrlImageSearchManager mImageSearchManager;
+    private SyteManager mImageSearchManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +44,7 @@ public class WildImageSearchFragment extends BaseFragment implements View.OnClic
         mLoadImageButton = view.findViewById(R.id.load_image_btn);
         mFetchOffersForTheFirstBoundCheckBox = view.findViewById(R.id.fetch_offers_for_the_first_bound);
 
-        mImageSearchManager = SDKApplication.getInstance().getUrlImageSearchManager();
+        mImageSearchManager = SDKApplication.getInstance().getSyteManager();
         initViews();
     }
 

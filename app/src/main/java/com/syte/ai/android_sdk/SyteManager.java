@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.syte.ai.android_sdk.core.InitSyte;
+import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
@@ -12,10 +13,13 @@ import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
+import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
+import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
+import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
-public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
+public class SyteManager implements SyteCallback<AccountDataService> {
 
     private UrlImageSearchFragment mUrlImageSearchFragment;
     private WildImageSearchFragment mWildImageSearchFragment;
@@ -24,6 +28,11 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
     private boolean mSessionStarted = false;
     private BoundsResult mBoundsResult = null;
     private OffersResult mOffersResult = null;
+
+    private SimilarProductsResult mSimilarProductsResult;
+    private ShopTheLookResult mShopTheLookResult;
+    private PersonalizationResult mPersonalizationResult;
+    private CropCoordinates mCropCoordinates;
 
     public void subscribe(UrlImageSearchFragment fragment) {
         mUrlImageSearchFragment = fragment;
@@ -66,10 +75,18 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
         return mOffersResult;
     }
 
+    public void setSimilarProductsResult(SimilarProductsResult similarProductsResult) {
+        mSimilarProductsResult = similarProductsResult;
+    }
+
+    public SimilarProductsResult getSimilarProductsResult() {
+        return mSimilarProductsResult;
+    }
+
     public void getOffersAsync(Bound bound) {
         mInitSyte.retrieveImageSearchClient().getOffersAsync(
                 bound,
-                null,
+                mCropCoordinates,
                 new SyteCallback<OffersResult>() {
             @Override
             public void onResult(SyteResult<OffersResult> syteResult) {
@@ -190,8 +207,8 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
                 mUrlImageSearchFragment.requireActivity().getApplicationContext();
         SyteConfiguration syteConfiguration = new SyteConfiguration(
                 context,
-                "9186",
-                "602e43d2d6ddcd558359f91f"
+                "9165",
+                "601c206d0a7f780efb9360f3"
         );
         mInitSyte.startSessionAsync(syteConfiguration, this);
     }
@@ -208,6 +225,26 @@ public class UrlImageSearchManager implements SyteCallback<AccountDataService> {
                 mWildImageSearchFragment.showToast(null);
             }
         }
+    }
+
+    public void setCoordinates(CropCoordinates coordinates) {
+        mCropCoordinates = coordinates;
+    }
+
+    public void setShopTheLookResult(ShopTheLookResult data) {
+        mShopTheLookResult = data;
+    }
+
+    public ShopTheLookResult getShopTheLookResult() {
+        return mShopTheLookResult;
+    }
+
+    public void setPersonalizationResult(PersonalizationResult data) {
+        mPersonalizationResult = data;
+    }
+
+    public PersonalizationResult getPersonalizationResult() {
+        return mPersonalizationResult;
     }
 
 }

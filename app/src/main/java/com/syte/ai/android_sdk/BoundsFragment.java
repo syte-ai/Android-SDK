@@ -28,7 +28,7 @@ public class BoundsFragment extends Fragment {
         super.onStart();
         SDKApplication
                 .getInstance()
-                .getUrlImageSearchManager()
+                .getSyteManager()
                 .subscribe(this);
     }
 
@@ -37,7 +37,7 @@ public class BoundsFragment extends Fragment {
         super.onStop();
         SDKApplication
                 .getInstance()
-                .getUrlImageSearchManager()
+                .getSyteManager()
                 .unsubscribe();
     }
 
@@ -53,7 +53,7 @@ public class BoundsFragment extends Fragment {
         BoundsAdapter adapter = new BoundsAdapter(
                 SDKApplication
                         .getInstance()
-                        .getUrlImageSearchManager()
+                        .getSyteManager()
                         .getBoundsResult()
                         .getBounds());
         adapter.setListener(new BoundsAdapter.ClickListener() {
@@ -61,7 +61,7 @@ public class BoundsFragment extends Fragment {
             public void onClick(Bound bound) {
                 SDKApplication
                         .getInstance()
-                        .getUrlImageSearchManager()
+                        .getSyteManager()
                         .getOffersAsync(bound);
             }
         });

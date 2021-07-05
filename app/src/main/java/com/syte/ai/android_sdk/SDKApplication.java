@@ -4,13 +4,13 @@ import android.app.Application;
 
 public class SDKApplication  extends Application {
 
-    private UrlImageSearchManager mUrlImageSearchManager;
+    private SyteManager mSyteManager;
     private static SDKApplication mInstance;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mUrlImageSearchManager = new UrlImageSearchManager();
+        mSyteManager = new SyteManager();
         mInstance = this;
     }
 
@@ -18,8 +18,8 @@ public class SDKApplication  extends Application {
         return mInstance;
     }
 
-    public UrlImageSearchManager getUrlImageSearchManager() {
-        return mUrlImageSearchManager;
+    public SyteManager getSyteManager() {
+        return mSyteManager;
     }
 
 }

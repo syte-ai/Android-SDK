@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -23,8 +24,12 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
     private CheckBox mFetchOffersForTheFirstBoundCheckBox;
     private EditText mImageUrlEditText;
     private EditText mSKUEditText;
+    private EditText mX1;
+    private EditText mY1;
+    private EditText mX2;
+    private EditText mY2;
 
-    private UrlImageSearchManager mUrlImageSearchManager;
+    private SyteManager mSyteManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,17 +45,21 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
         mFetchOffersForTheFirstBoundCheckBox = view.findViewById(R.id.fetch_offers_for_the_first_bound);
         mImageUrlEditText = view.findViewById(R.id.image_url_et);
         mSKUEditText = view.findViewById(R.id.sku_et);
+        mX1 = view.findViewById(R.id.x1);
+        mY1 = view.findViewById(R.id.y1);
+        mX2 = view.findViewById(R.id.x2);
+        mY2 = view.findViewById(R.id.y2);
 
-        mUrlImageSearchManager = SDKApplication.getInstance().getUrlImageSearchManager();
+        mSyteManager = SDKApplication.getInstance().getSyteManager();
         initViews();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mUrlImageSearchManager.subscribe(this);
+        mSyteManager.subscribe(this);
         try {
-            mUrlImageSearchManager.initSyte();
+            mSyteManager.initSyte();
         } catch (SyteInitializationException syteInitializationException) {
             showToast(null);
         }
@@ -68,7 +77,7 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
     @Override
     public void onStop() {
         super.onStop();
-        mUrlImageSearchManager.unsubscribe();
+        mSyteManager.unsubscribe();
     }
 
     private void initViews() {
@@ -81,16 +90,22 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        mSyteManager.setCoordinates(new CropCoordinates(
+                Double.parseDouble(mX1.getText().toString()),
+                Double.parseDouble(mY1.getText().toString()),
+                Double.parseDouble(mX2.getText().toString()),
+                Double.parseDouble(mY2.getText().toString())
+        ));
         switch (v.getId()) {
             case R.id.bounds_sync_btn:
-                mUrlImageSearchManager.getBoundsSync(
+                mSyteManager.getBoundsSync(
                         mImageUrlEditText.getText().toString(),
                         mSKUEditText.getText().toString(),
                         mFetchOffersForTheFirstBoundCheckBox.isChecked()
                 );
                 break;
             case R.id.bounds_async_btn:
-                mUrlImageSearchManager.getBoundsAsync(
+                mSyteManager.getBoundsAsync(
                         mImageUrlEditText.getText().toString(),
                         mSKUEditText.getText().toString(),
                         mFetchOffersForTheFirstBoundCheckBox.isChecked()

@@ -19,7 +19,7 @@ public class Navigator {
 
     public void urlimageSearchFragment() {
         mFragmentManager.beginTransaction()
-                .add(R.id.fragment_holder, new UrlImageSearchFragment(), null)
+                .replace(R.id.fragment_holder, new UrlImageSearchFragment(), null)
                 .commit();
     }
 
@@ -46,4 +46,24 @@ public class Navigator {
                 .add(R.id.fragment_holder, new OffersFragment(), null)
                 .commit();
     }
+
+    public void similarsFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new SimilarsFragment(), null)
+                .commit();
+    }
+
+    public void shopTheLookFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new ShopTheLookFragment(), null)
+                .commit();
+    }
+
+    public void personalizationFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new PersonalizationFragment(), null)
+                .commit();
+
+    }
+
 }

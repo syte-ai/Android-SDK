@@ -41,7 +41,7 @@ class ImageProcessor {
     static final float LARGE_IMAGE_MAX_WIDTH = 2000f;
     static final float LARGE_IMAGE_MAX_HEIGHT = 2000f;
 
-    File compress(Context context, Bitmap bitmap, Scale scale) {
+    File compress(Context context, long size, Bitmap bitmap, Scale scale) {
         //TODO handle errors here
         Compress compress = Compress.Companion.with(context, bitmap);
         compress.setFormat(Bitmap.CompressFormat.JPEG);
@@ -67,7 +67,7 @@ class ImageProcessor {
         float width = 0;
         Scale resultScale;
 
-        if (bitmap.getHeight() * bitmap.getRowBytes() > SMALL_IMAGE_MAX_SIZE) {
+        if (size > SMALL_IMAGE_MAX_SIZE) {
             resultScale = scale;
         } else {
             resultScale = Scale.SMALL;

@@ -29,6 +29,49 @@
             android:layout_margin="10dp"
             android:textColor="@color/black" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Crop (x1, y1, x2, y2):"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/x1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="0"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/y1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="0"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/x2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/y2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/bounds_sync_btn"

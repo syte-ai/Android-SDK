@@ -1,0 +1,97 @@
+package com.syte.ai.android_sdk.data;
+
+import com.syte.ai.android_sdk.enums.RecommendationReturnField;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+
+public class ShopTheLookRequestData {
+
+    private final String mSku;
+    private final String mImageUrl;
+    private boolean mPersonalizedRanking = false;
+    private String mSyteUrlReferer = "mobile_sdk";
+    private int mLimit = 7;
+    private int mLimitPerBound = -1;
+    private String mSyteOriginalItem = null;
+    private RecommendationReturnField mFieldsToReturn = RecommendationReturnField.ALL;
+
+    public ShopTheLookRequestData(String sku, String imageUrl) {
+        this.mSku = sku;
+        this.mImageUrl = imageUrl;
+    }
+
+    public String getSku() {
+        return mSku;
+    }
+
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setFieldsToReturn(RecommendationReturnField fieldsToReturn) {
+        this.mFieldsToReturn = fieldsToReturn;
+    }
+
+    public RecommendationReturnField getFieldsToReturn() {
+        return mFieldsToReturn;
+    }
+
+    public void setPersonalizedRanking(boolean personalizedRanking) {
+        mPersonalizedRanking = personalizedRanking;
+    }
+
+    public boolean getPersonalizedRanking() {
+        return mPersonalizedRanking;
+    }
+
+    public void setSyteUrlReferer(String syteUrlReferer) {
+        mSyteUrlReferer = syteUrlReferer;
+    }
+
+    public String getSyteUrlReferer() {
+        return mSyteUrlReferer;
+    }
+
+    public void setLimit(int limit) {
+        mLimit = limit;
+    }
+
+    public int getLimit() {
+        return mLimit;
+    }
+
+    public void setLimitPerBound(int limit) {
+        mLimitPerBound = limit;
+    }
+
+    public int getLimitPerBound() {
+        return mLimitPerBound;
+    }
+
+    public void setSyteOriginalItem(String originalItem) {
+        mSyteOriginalItem = originalItem;
+    }
+
+    @Nullable
+    public String getSyteOriginalItem() {
+        return mSyteOriginalItem;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShopTheLookRequestData that = (ShopTheLookRequestData) o;
+        return mSku.equals(that.mSku) &&
+                mImageUrl.equals(that.mImageUrl) &&
+                mFieldsToReturn == that.mFieldsToReturn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mSku, mImageUrl, mFieldsToReturn);
+    }
+
+}

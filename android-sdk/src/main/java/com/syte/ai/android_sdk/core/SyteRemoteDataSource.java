@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
+import com.syte.ai.android_sdk.data.PersonalizationRequestData;
+import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
+import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -16,6 +19,9 @@ import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
+import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
+import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
+import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
@@ -52,21 +58,76 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private final SyteService mSyteService;
     private final ExifRemovalService mExifRemovalService;
+    private final RecommendationRemoteDataSource mRecommendationRemoteDataSource;
 
     SyteRemoteDataSource(SyteConfiguration configuration) {
         super(configuration);
         mSyteService = mRetrofit.create(SyteService.class);
         mExifRemovalService = mExifRemovalRetrofit.create(ExifRemovalService.class);
+        mRecommendationRemoteDataSource = new RecommendationRemoteDataSource(mSyteService, configuration);
     }
 
-    @Override
-    protected void startCountDown() {
-
+    SyteResult<SimilarProductsResult> getSimilarProducts(
+            SimilarProductsRequestData similarProductsRequestData
+    ) {
+        return mRecommendationRemoteDataSource.getSimilarProducts(similarProductsRequestData);
     }
 
-    @Override
-    protected void resetTimer() {
+    void getSimilarProductsAsync(
+            SimilarProductsRequestData similarProductsRequestData,
+            SyteCallback<SimilarProductsResult> callback
+    ) {
+        mRecommendationRemoteDataSource.getSimilarProductsAsync(
+                similarProductsRequestData,
+                new SyteCallback<SimilarProductsResult>() {
+                    @Override
+                    public void onResult(SyteResult<SimilarProductsResult> syteResult) {
+                        callback.onResult(syteResult);
+                    }
+                }
+        );
+    }
 
+    SyteResult<ShopTheLookResult> getShopTheLook(
+            ShopTheLookRequestData shopTheLookRequestData
+    ) {
+        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData);
+    }
+
+    void getShopTheLookAsync(
+            ShopTheLookRequestData shopTheLookRequestData,
+            SyteCallback<ShopTheLookResult> callback
+    ) {
+        mRecommendationRemoteDataSource.getShopTheLookAsync(
+                shopTheLookRequestData,
+                new SyteCallback<ShopTheLookResult>() {
+                    @Override
+                    public void onResult(SyteResult<ShopTheLookResult> syteResult) {
+                        callback.onResult(syteResult);
+                    }
+                }
+        );
+    }
+
+    SyteResult<PersonalizationResult> getPersonalization(
+            PersonalizationRequestData personalizationRequestData
+    ) {
+        return mRecommendationRemoteDataSource.getPersonalization(personalizationRequestData);
+    }
+
+    void getPersonalizationAsync(
+            PersonalizationRequestData personalizationRequestData,
+            SyteCallback<PersonalizationResult> callback
+    ) {
+        mRecommendationRemoteDataSource.getPersonalizationAsync(
+                personalizationRequestData,
+                new SyteCallback<PersonalizationResult>() {
+                    @Override
+                    public void onResult(SyteResult<PersonalizationResult> syteResult) {
+                        callback.onResult(syteResult);
+                    }
+                }
+        );
     }
 
     @Override
@@ -558,8 +619,15 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 requestData.getImageUri()
         );
 
+        File notCompressedImage = new File(requestData.getImageUri().toString());
+        long size = 0;
+        if (notCompressedImage.exists()) {
+            size = notCompressedImage.length();
+        }
+
         File file = imageProcessor.compress(
                 context,
+                size,
                 bitmap,
                 getImageScale(accountDataService)
         );

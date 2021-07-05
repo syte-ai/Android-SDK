@@ -55,11 +55,11 @@ abstract class BaseRemoteDataSource {
     public void applyConfiguration(SyteConfiguration configuration) {
         SyteLogger.v(TAG, "applyConfiguration");
         this.mConfiguration = configuration;
+        //TODO set configuration in all data sources
     }
 
-    protected abstract void startCountDown();
-
-    protected abstract void resetTimer();
+    protected void startCountDown() {}
+    protected void resetTimer() {}
 
     abstract SyteResult<AccountDataService> initialize() throws IOException;
 
