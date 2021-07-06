@@ -15,9 +15,14 @@ import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
@@ -37,19 +42,8 @@ abstract class BaseRemoteDataSource {
     BaseRemoteDataSource(SyteConfiguration configuration) {
         //TODO initialize timer
         mConfiguration = configuration;
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        mRetrofit = new Retrofit
-                .Builder()
-                .baseUrl(SYTE_URL)
-                .client(client)
-                .build();
-        mExifRemovalRetrofit = new Retrofit
-                .Builder()
-                .baseUrl(EXIF_REMOVAL_URL)
-                .build();
+        mRetrofit = RetrofitBuilder.build(SYTE_URL);
+        mExifRemovalRetrofit = RetrofitBuilder.build(EXIF_REMOVAL_URL);
     }
 
     public void applyConfiguration(SyteConfiguration configuration) {

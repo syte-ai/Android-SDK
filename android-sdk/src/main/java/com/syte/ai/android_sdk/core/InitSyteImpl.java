@@ -1,12 +1,13 @@
 package com.syte.ai.android_sdk.core;
 
-import com.syte.ai.android_sdk.EventsClient;
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.RecommendationEngineClient;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
+import com.syte.ai.android_sdk.events.BaseSyteEvent;
+import com.syte.ai.android_sdk.events.EventInitialization;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
 class InitSyteImpl extends InitSyte {
@@ -18,6 +19,7 @@ class InitSyteImpl extends InitSyte {
     private SyteConfiguration mConfiguration;
     private SyteRemoteDataSource mRemoteDataSource;
     private AccountDataService mAccountDataService;
+    private EventsRemoteDataSource mEventsRemoteDataSource;
     private SyteState mState = SyteState.IDLE;
 
     InitSyteImpl() {
@@ -30,6 +32,7 @@ class InitSyteImpl extends InitSyte {
         }
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
+        mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
         SyteResult<AccountDataService> result = new SyteResult<>();
         try {
             result = mRemoteDataSource.initialize();
@@ -39,6 +42,7 @@ class InitSyteImpl extends InitSyte {
             result.isSuccessful = false;
             mState = SyteState.IDLE;
         }
+        fireEvent(new EventInitialization());
         return result;
     }
 
@@ -49,6 +53,7 @@ class InitSyteImpl extends InitSyte {
         }
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
+        mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
         mRemoteDataSource.initializeAsync(new SyteCallback<AccountDataService>() {
             @Override
             public void onResult(SyteResult<AccountDataService> syteResult) {
@@ -58,6 +63,7 @@ class InitSyteImpl extends InitSyte {
                 } else {
                     mState = SyteState.IDLE;
                 }
+                fireEvent(new EventInitialization());
                 callback.onResult(syteResult);
             }
         });
@@ -80,11 +86,6 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public EventsClient retrieveEventsClient() {
-        return new EventsClientImpl();
-    }
-
-    @Override
     public RecommendationEngineClient retrieveRecommendationEngineClient() {
         return new RecommendationEngineClientImpl(
                 mRemoteDataSource, mAccountDataService
@@ -98,6 +99,11 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public void endSession() {
+    }
+
+    @Override
+    public void fireEvent(BaseSyteEvent event) {
+        mEventsRemoteDataSource.fireEvent(event);
     }
 
     @Override
