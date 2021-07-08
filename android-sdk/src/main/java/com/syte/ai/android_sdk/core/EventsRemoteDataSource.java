@@ -1,20 +1,11 @@
 package com.syte.ai.android_sdk.core;
 
-import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

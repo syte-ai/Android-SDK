@@ -1,13 +1,10 @@
 package com.syte.ai.android_sdk.core;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
-import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;

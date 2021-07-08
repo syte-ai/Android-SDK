@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.data;
+package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +14,7 @@ class SyteStorage {
 
     private static final String SESSION_ID_PREF_KEY = "syte_session_id_pref";
     private static final String USER_ID_PREF_KEY = "syte_user_id_pref";
+    private static final String SESSION_ID_TIMESTAMP_KEY = "syte_session_id_time_pref";
 
     private final SharedPreferences mSharedPreferences;
 
@@ -36,14 +37,28 @@ class SyteStorage {
 
     public Long getSessionId() {
         long sessionId = mSharedPreferences.getLong(SESSION_ID_PREF_KEY, -1);
-        if (sessionId == -1) {
+        if (sessionId == -1 || needNewSessionId()) {
             sessionId = Math.round(Math.random() * 100000000);
             mSharedPreferences
                     .edit()
                     .putLong(SESSION_ID_PREF_KEY, sessionId)
                     .apply();
+            renewSessionIdTimestamp();
         }
         return sessionId;
+    }
+
+    private boolean needNewSessionId() {
+        return System.currentTimeMillis() -
+                mSharedPreferences.getLong(SESSION_ID_TIMESTAMP_KEY, 0)
+                > 30 * 60 * 1000;
+    }
+
+    public void renewSessionIdTimestamp() {
+        mSharedPreferences
+                .edit()
+                .putLong(SESSION_ID_TIMESTAMP_KEY, System.currentTimeMillis())
+                .apply();
     }
 
     public void clearSessionId() {

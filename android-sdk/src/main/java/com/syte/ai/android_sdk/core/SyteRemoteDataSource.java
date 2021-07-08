@@ -12,7 +12,6 @@ import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
-import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
@@ -67,9 +66,14 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         mRecommendationRemoteDataSource = new RecommendationRemoteDataSource(mSyteService, configuration);
     }
 
+    private void renewTimestamp() {
+        mConfiguration.getStorage().renewSessionIdTimestamp();
+    }
+
     SyteResult<SimilarProductsResult> getSimilarProducts(
             SimilarProductsRequestData similarProductsRequestData
     ) {
+        renewTimestamp();
         return mRecommendationRemoteDataSource.getSimilarProducts(similarProductsRequestData);
     }
 
@@ -77,6 +81,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             SimilarProductsRequestData similarProductsRequestData,
             SyteCallback<SimilarProductsResult> callback
     ) {
+        renewTimestamp();
         mRecommendationRemoteDataSource.getSimilarProductsAsync(
                 similarProductsRequestData,
                 new SyteCallback<SimilarProductsResult>() {
@@ -91,6 +96,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLookRequestData shopTheLookRequestData
     ) {
+        renewTimestamp();
         return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData);
     }
 
@@ -98,6 +104,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             ShopTheLookRequestData shopTheLookRequestData,
             SyteCallback<ShopTheLookResult> callback
     ) {
+        renewTimestamp();
         mRecommendationRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
                 new SyteCallback<ShopTheLookResult>() {
@@ -112,6 +119,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     SyteResult<PersonalizationResult> getPersonalization(
             PersonalizationRequestData personalizationRequestData
     ) {
+        renewTimestamp();
         return mRecommendationRemoteDataSource.getPersonalization(personalizationRequestData);
     }
 
@@ -119,6 +127,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             PersonalizationRequestData personalizationRequestData,
             SyteCallback<PersonalizationResult> callback
     ) {
+        renewTimestamp();
         mRecommendationRemoteDataSource.getPersonalizationAsync(
                 personalizationRequestData,
                 new SyteCallback<PersonalizationResult>() {
@@ -132,6 +141,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     @Override
     SyteResult<AccountDataService> initialize() {
+        renewTimestamp();
         Response<ResponseBody> response = null;
         SyteResult<AccountDataService> syteResult = new SyteResult<>();
         try {
@@ -154,6 +164,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     @Override
     void initializeAsync(SyteCallback<AccountDataService> callback) {
+        renewTimestamp();
         mSyteService.initialize(mConfiguration.getAccountId()).enqueue(
                 new Callback<ResponseBody>() {
                     @Override
@@ -186,7 +197,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         if (requestData == null) {
             return null;
         }
-
+        renewTimestamp();
         try {
             return onBoundsResult(requestData,
                     mSyteService.getBounds(
@@ -224,7 +235,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     void getBoundsAsync(UrlImageSearchRequestData requestData,
                         AccountDataService accountDataService,
                         SyteCallback<BoundsResult> callback) {
-
+        renewTimestamp();
         mSyteService.getBounds(
                 mConfiguration.getAccountId(),
                 mConfiguration.getSignature(),
@@ -279,6 +290,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             @Nullable CropCoordinates cropCoordinates,
             AccountDataService accountDataService
     ) {
+        renewTimestamp();
         SyteResult<OffersResult> syteResult = new SyteResult<>();
         try {
             Response<ResponseBody> response = generateOffersCall(
@@ -302,6 +314,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             CropCoordinates cropCoordinates,
             AccountDataService accountDataService,
             SyteCallback<OffersResult> callback) {
+        renewTimestamp();
         generateOffersCall(
                 bound.getOffersUrl(),
                 cropCoordinates,
@@ -335,6 +348,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             boolean sync,
             BoundsResultCallback resultCallback
     ) throws IOException {
+        renewTimestamp();
         SyteResult<BoundsResult> syteResult = new SyteResult<>();
         syteResult.isSuccessful = response.isSuccessful();
         syteResult.resultCode = response.code();

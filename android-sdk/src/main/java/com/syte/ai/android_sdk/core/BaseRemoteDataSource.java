@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
-import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
@@ -15,15 +14,8 @@ import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
 abstract class BaseRemoteDataSource {

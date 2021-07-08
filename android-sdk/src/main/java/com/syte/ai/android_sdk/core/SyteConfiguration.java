@@ -1,7 +1,8 @@
-package com.syte.ai.android_sdk.data;
+package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 
+import com.syte.ai.android_sdk.core.SyteStorage;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
 import org.jetbrains.annotations.Nullable;
@@ -99,6 +100,10 @@ public class SyteConfiguration {
         stringBuilder.append("]");
 
         return stringBuilder.toString();
+    }
+
+    SyteStorage getStorage() {
+        return mStorage;
     }
 
     public void addSessionSkus(List<String> sessionSkus) {

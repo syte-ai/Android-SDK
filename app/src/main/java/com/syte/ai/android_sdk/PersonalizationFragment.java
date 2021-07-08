@@ -13,12 +13,10 @@ import android.widget.EditText;
 
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
-import com.syte.ai.android_sdk.data.SyteConfiguration;
+import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
-import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
 import java.util.Arrays;

@@ -4,7 +4,6 @@ import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.RecommendationEngineClient;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.data.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.events.EventInitialization;

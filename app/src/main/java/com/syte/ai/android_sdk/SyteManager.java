@@ -6,7 +6,7 @@ import android.net.Uri;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
-import com.syte.ai.android_sdk.data.SyteConfiguration;
+import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.AccountDataService;
