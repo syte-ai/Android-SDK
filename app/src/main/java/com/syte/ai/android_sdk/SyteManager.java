@@ -119,6 +119,12 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                         url,
                         SyteProductType.DISCOVERY_BUTTON
                 );
+                if (!SDKApplication.getInstance().getSessionSKUs().isEmpty()) {
+                    for (String skuPdp : SDKApplication.getInstance().getSessionSKUs()) {
+                        mInitSyte.addViewedProduct(skuPdp);
+                    }
+                    urlImageSearchRequestData.setPersonalizedRanking(true);
+                }
                 urlImageSearchRequestData.setSku(sku);
                 urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
                 SyteResult<BoundsResult> result = mInitSyte.retrieveImageSearchClient().getBounds(
@@ -143,7 +149,12 @@ public class SyteManager implements SyteCallback<AccountDataService> {
             public void run() {
                 ImageSearchRequestData imageSearchRequestData = new ImageSearchRequestData(imageUri);
                 imageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
-
+                if (!SDKApplication.getInstance().getSessionSKUs().isEmpty()) {
+                    for (String skuPdp : SDKApplication.getInstance().getSessionSKUs()) {
+                        mInitSyte.addViewedProduct(skuPdp);
+                    }
+                    imageSearchRequestData.setPersonalizedRanking(true);
+                }
                 Context context = mUrlImageSearchFragment == null ?
                         mWildImageSearchFragment.requireActivity().getApplicationContext() :
                         mUrlImageSearchFragment.requireActivity().getApplicationContext();
@@ -171,6 +182,12 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                 url,
                 SyteProductType.DISCOVERY_BUTTON
         );
+        if (!SDKApplication.getInstance().getSessionSKUs().isEmpty()) {
+            for (String skuPdp : SDKApplication.getInstance().getSessionSKUs()) {
+                mInitSyte.addViewedProduct(skuPdp);
+            }
+            urlImageSearchRequestData.setPersonalizedRanking(true);
+        }
         urlImageSearchRequestData.setSku(sku);
         urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
         mInitSyte.retrieveImageSearchClient().getBoundsAsync(urlImageSearchRequestData, new SyteCallback<BoundsResult>() {
@@ -188,6 +205,12 @@ public class SyteManager implements SyteCallback<AccountDataService> {
     public void getBoundsWildAsync(Uri imageUri, boolean retrieveOffersForTheFirstBound) {
         ImageSearchRequestData imageSearchRequestData = new ImageSearchRequestData(imageUri);
         imageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
+        if (!SDKApplication.getInstance().getSessionSKUs().isEmpty()) {
+            for (String sku : SDKApplication.getInstance().getSessionSKUs()) {
+                mInitSyte.addViewedProduct(sku);
+            }
+            imageSearchRequestData.setPersonalizedRanking(true);
+        }
 
         Context context = mUrlImageSearchFragment == null ?
                 mWildImageSearchFragment.requireActivity().getApplicationContext() :

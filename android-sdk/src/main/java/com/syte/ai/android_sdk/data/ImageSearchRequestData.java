@@ -9,6 +9,7 @@ public class ImageSearchRequestData {
     private final Uri mImageUri;
     private CropCoordinates mCoordinates;
     private boolean mRetrieveOffersForTheFirstBound = true;
+    private boolean mPersonalizedRanking = false;
 
     public ImageSearchRequestData(Uri imageUri) {
         this.mImageUri = imageUri;
@@ -34,6 +35,13 @@ public class ImageSearchRequestData {
         return mRetrieveOffersForTheFirstBound;
     }
 
+    public void setPersonalizedRanking(boolean personalizedRanking) {
+        mPersonalizedRanking = personalizedRanking;
+    }
+
+    public boolean getPersonalizedRanking() {
+        return mPersonalizedRanking;
+    }
 
     @Override
     public boolean equals(Object o) {

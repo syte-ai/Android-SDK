@@ -219,7 +219,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                                     .getCropper()
                                     .getCatalog(),
                             requestData.getSku(),
-                            requestData.getImageUrl()
+                            requestData.getImageUrl(),
+                            requestData.getPersonalizedRanking() ?
+                                    mConfiguration.getSessionSkusString() : null
                     ).execute(),
                     requestData.getFirstBoundOffersCoordinates(),
                     accountDataService,
@@ -255,7 +257,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                         .getCropper()
                         .getCatalog(),
                 requestData.getSku(),
-                requestData.getImageUrl()
+                requestData.getImageUrl(),
+                requestData.getPersonalizedRanking() ?
+                        mConfiguration.getSessionSkusString() : null
         ).enqueue(new Callback<ResponseBody>() {
 
             @Override
@@ -568,6 +572,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 );
                 urlImageSearchRequestData.setFirstBoundOffersCoordinates(
                         requestData.getFirstBoundOffersCoordinates()
+                );
+                urlImageSearchRequestData.setPersonalizedRanking(
+                        requestData.getPersonalizedRanking()
                 );
                 return urlImageSearchRequestData;
             } catch (JSONException e) {

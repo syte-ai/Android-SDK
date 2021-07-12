@@ -15,7 +15,6 @@ public interface SyteService {
     @GET("accounts/{accountId}")
     Call<ResponseBody> initialize(@Path("accountId") String accountId);
 
-    //TODO include session SKUs here
     @GET("v1.1/offers/bb")
     Call<ResponseBody> getBounds(@Query("account_id") String accountId,
                                  @Query("sig") String signature,
@@ -25,7 +24,8 @@ public interface SyteService {
                                  @Query("locale") String locale,
                                  @Query("catalog") String catalog,
                                  @Query("sku") String sku,
-                                 @Query("imageUrl") String imageUrl);
+                                 @Query("imageUrl") String imageUrl,
+                                 @Query("session_skus") String sessionSkus);
 
     @GET
     Call<ResponseBody> getOffers(

@@ -13,6 +13,7 @@ public class UrlImageSearchRequestData {
     @Nullable private String mSku;
     private boolean mRetrieveOffersForTheFirstBound = true;
     private CropCoordinates mCoordinates;
+    private boolean mPersonalizedRanking = false;
 
     public UrlImageSearchRequestData(String imageUrl, SyteProductType productType) {
         this.mImageUrl = imageUrl;
@@ -50,6 +51,14 @@ public class UrlImageSearchRequestData {
 
     public boolean isRetrieveOffersForTheFirstBound() {
         return mRetrieveOffersForTheFirstBound;
+    }
+
+    public void setPersonalizedRanking(boolean personalizedRanking) {
+        mPersonalizedRanking = personalizedRanking;
+    }
+
+    public boolean getPersonalizedRanking() {
+        return mPersonalizedRanking;
     }
 
     @Override
