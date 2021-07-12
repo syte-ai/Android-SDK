@@ -52,7 +52,7 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
     public SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLookRequestData shopTheLookRequestData
     ) {
-        return mSyteRemoteDataSource.getShopTheLook(shopTheLookRequestData);
+        return mSyteRemoteDataSource.getShopTheLook(shopTheLookRequestData, mAccountDataService);
     }
 
     @Override
@@ -62,6 +62,7 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
     ) {
         mSyteRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
+                mAccountDataService,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {

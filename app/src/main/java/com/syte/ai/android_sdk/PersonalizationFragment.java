@@ -31,6 +31,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
 
     private RecommendationEngineClient mRecommendationEngineClient;
     private SyteConfiguration mSyteConfiguration;
+    private InitSyte mInitSyte;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +48,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
 
         initViews();
 
-        InitSyte initSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.getInstance();
 
         try {
             mSyteConfiguration = new SyteConfiguration(
@@ -59,10 +60,10 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
             syteInitializationException.printStackTrace();
         }
         try {
-            initSyte.startSessionAsync(mSyteConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(mSyteConfiguration, new SyteCallback<AccountDataService>() {
                 @Override
                 public void onResult(SyteResult<AccountDataService> syteResult) {
-                    mRecommendationEngineClient = initSyte.retrieveRecommendationEngineClient();
+                    mRecommendationEngineClient = mInitSyte.retrieveRecommendationEngineClient();
                 }
             });
         } catch (SyteInitializationException syteInitializationException) { }
@@ -80,7 +81,9 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
         PersonalizationRequestData personalizationRequestData =
                 new PersonalizationRequestData();
         List<String> sessionSkus = Arrays.asList(mSKUEditText.getText().toString().split(",").clone());
-        mSyteConfiguration.addSessionSkus(sessionSkus);
+        for (String sku : sessionSkus) {
+            mInitSyte.addSkuPdp(sku);
+        }
         switch (v.getId()) {
             case R.id.personalization_sync_btn:
                 new Thread(new Runnable() {

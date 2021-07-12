@@ -28,6 +28,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
     private boolean mSessionStarted = false;
     private BoundsResult mBoundsResult = null;
     private OffersResult mOffersResult = null;
+    private boolean mZipOffers = false;
 
     private SimilarProductsResult mSimilarProductsResult;
     private ShopTheLookResult mShopTheLookResult;
@@ -54,6 +55,14 @@ public class SyteManager implements SyteCallback<AccountDataService> {
 
     public void subscribe(BoundsFragment fragment) {
         mBoundsFragment = fragment;
+    }
+
+    public void zipOffers(boolean zip) {
+        mZipOffers = zip;
+    }
+
+    public boolean zipOffers() {
+        return mZipOffers;
     }
 
     public void getOffersSync(Bound bound) {

@@ -66,6 +66,10 @@ class SyteStorage {
                 .edit()
                 .putLong(SESSION_ID_PREF_KEY, -1)
                 .apply();
+        mSharedPreferences
+                .edit()
+                .putLong(SESSION_ID_TIMESTAMP_KEY, 0)
+                .apply();
     }
 
     public String getUserId() {

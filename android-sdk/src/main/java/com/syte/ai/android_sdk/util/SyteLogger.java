@@ -18,6 +18,10 @@ public class SyteLogger {
         mLogLevel = logLevel;
     }
 
+    public static LogLevel getLogLevel() {
+        return mLogLevel;
+    }
+
     public static void v(String TAG, String message) {
         if (mLogLevel.ordinal() > LogLevel.VERBOSE.ordinal()) {
             return;

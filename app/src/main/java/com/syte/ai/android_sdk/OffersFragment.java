@@ -44,8 +44,12 @@ public class OffersFragment extends Fragment {
         } else if (syteManager.getSimilarProductsResult() != null) {
             offerList = syteManager.getSimilarProductsResult().getSimilars();
         } else if (syteManager.getShopTheLookResult() != null) {
-            for (ShopTheLookResponseItem item : syteManager.getShopTheLookResult().getItems()) {
-                offerList.addAll(item.getOffers());
+            if (!syteManager.zipOffers()) {
+                for (ShopTheLookResponseItem item : syteManager.getShopTheLookResult().getItems()) {
+                    offerList.addAll(item.getOffers());
+                }
+            } else {
+                offerList.addAll(syteManager.getShopTheLookResult().getAllOffers(true));
             }
         } else if (syteManager.getPersonalizationResult() != null) {
             offerList = syteManager.getPersonalizationResult().getItems();

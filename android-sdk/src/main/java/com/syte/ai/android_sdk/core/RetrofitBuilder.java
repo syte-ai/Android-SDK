@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.core;
 
+import com.syte.ai.android_sdk.util.SyteLogger;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -15,7 +17,11 @@ class RetrofitBuilder {
 
     static Retrofit build(String url) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if (SyteLogger.getLogLevel().ordinal() < SyteLogger.LogLevel.WARN.ordinal()) {
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @NotNull

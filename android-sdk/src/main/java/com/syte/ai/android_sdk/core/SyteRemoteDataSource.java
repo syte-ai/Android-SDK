@@ -94,19 +94,22 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     SyteResult<ShopTheLookResult> getShopTheLook(
-            ShopTheLookRequestData shopTheLookRequestData
+            ShopTheLookRequestData shopTheLookRequestData,
+            AccountDataService accountDataService
     ) {
         renewTimestamp();
-        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData);
+        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData, accountDataService);
     }
 
     void getShopTheLookAsync(
             ShopTheLookRequestData shopTheLookRequestData,
+            AccountDataService accountDataService,
             SyteCallback<ShopTheLookResult> callback
     ) {
         renewTimestamp();
         mRecommendationRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
+                accountDataService,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {
@@ -620,6 +623,12 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 callback.onResult(null);
             }
         });
+    }
+
+    @Override
+    public void applyConfiguration(SyteConfiguration configuration) {
+        super.applyConfiguration(configuration);
+        mRecommendationRemoteDataSource.setConfiguration(configuration);
     }
 
     private byte[] prepareImage(

@@ -8,6 +8,7 @@ import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.events.EventInitialization;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
+import com.syte.ai.android_sdk.util.SyteLogger;
 
 class InitSyteImpl extends InitSyte {
 
@@ -98,6 +99,7 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public void endSession() {
+        mConfiguration.getStorage().clearSessionId();
     }
 
     @Override
@@ -107,6 +109,12 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public void addSkuPdp(String sku) {
+        mConfiguration.addSessionSku(sku);
+    }
+
+    @Override
+    public void setLogLevel(SyteLogger.LogLevel logLevel) {
+        SyteLogger.setLogLevel(logLevel);
     }
 
     private boolean validateConfig(SyteConfiguration configuration) {

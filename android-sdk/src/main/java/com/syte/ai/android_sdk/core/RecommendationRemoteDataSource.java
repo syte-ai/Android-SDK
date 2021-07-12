@@ -6,6 +6,7 @@ import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
+import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
@@ -96,12 +97,15 @@ class RecommendationRemoteDataSource {
         });
     }
 
-    public SyteResult<ShopTheLookResult> getShopTheLook(ShopTheLookRequestData shopTheLookRequestData) {
+    public SyteResult<ShopTheLookResult> getShopTheLook(
+            ShopTheLookRequestData shopTheLookRequestData,
+            AccountDataService accountDataService
+    ) {
 
         try {
             Response<ResponseBody> result =
                     generateShopTheLookCall(shopTheLookRequestData).execute();
-            return onShopTheLookResult(result);
+            return onShopTheLookResult(result, accountDataService);
         } catch (IOException | JSONException e) {
             //TODO handle error
         }
@@ -114,12 +118,13 @@ class RecommendationRemoteDataSource {
 
     public void getShopTheLookAsync(
             ShopTheLookRequestData shopTheLookRequestData,
+            AccountDataService accountDataService,
             SyteCallback<ShopTheLookResult> callback) {
         generateShopTheLookCall(shopTheLookRequestData).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    callback.onResult(onShopTheLookResult(response));
+                    callback.onResult(onShopTheLookResult(response, accountDataService));
                 } catch (IOException | JSONException e) {
                     //TODO handle error
                 }
@@ -208,7 +213,8 @@ class RecommendationRemoteDataSource {
     }
 
     private SyteResult<ShopTheLookResult> onShopTheLookResult(
-            Response<ResponseBody> result
+            Response<ResponseBody> result,
+            AccountDataService accountDataService
     ) throws IOException, JSONException {
         if (result.body() == null) {
             // TODO handle error here
@@ -219,6 +225,7 @@ class RecommendationRemoteDataSource {
                 responseString,
                 ShopTheLookResult.class
         );
+        ctlResult.setAccountDataService(accountDataService);
 
         // TODO put in a separate method
         JSONObject jsonObject = new JSONObject(responseString);

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.syte.ai.android_sdk.core.InitSyte;
@@ -26,6 +27,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
     private Button mGetShopTheLookAsync;
     private EditText mImageUrlEditText;
     private EditText mSKUEditText;
+    private CheckBox mEnableZipCheckBox;
 
     private RecommendationEngineClient mRecommendationEngineClient;
 
@@ -42,6 +44,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
         mGetShopTheLookAsync = view.findViewById(R.id.ctl_async);
         mImageUrlEditText = view.findViewById(R.id.image_url_et);
         mSKUEditText = view.findViewById(R.id.sku_et);
+        mEnableZipCheckBox = view.findViewById(R.id.zip_cb);
 
         initViews();
 
@@ -81,6 +84,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                         mSKUEditText.getText().toString(),
                         mImageUrlEditText.getText().toString()
                 );
+        SDKApplication.getInstance().getSyteManager().zipOffers(mEnableZipCheckBox.isChecked());
         switch (v.getId()) {
             case R.id.ctl_sync:
                 new Thread(new Runnable() {

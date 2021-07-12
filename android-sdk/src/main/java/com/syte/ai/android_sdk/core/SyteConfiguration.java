@@ -58,16 +58,16 @@ public class SyteConfiguration {
         return mStorage.getSessionId();
     }
 
-    public void addSessionSku(String sessionSku) {
+    void addSessionSku(String sessionSku) {
         mSessionSkus.add(sessionSku);
     }
 
-    public List<String> getSessionSkus() {
+    List<String> getSessionSkus() {
         return mSessionSkus;
     }
 
     @Nullable
-    public String getSessionSkusString() {
+    String getSessionSkusString() {
         if (mSessionSkus.isEmpty()) {
             return null;
         }
@@ -83,7 +83,7 @@ public class SyteConfiguration {
     }
 
     @Nullable
-    public String getSessionSkusJSONArray() {
+    String getSessionSkusJSONArray() {
         if (mSessionSkus.isEmpty()) {
             return null;
         }
@@ -106,7 +106,7 @@ public class SyteConfiguration {
         return mStorage;
     }
 
-    public void addSessionSkus(List<String> sessionSkus) {
+    void addSessionSkus(List<String> sessionSkus) {
         this.mSessionSkus.addAll(sessionSkus);
     }
 

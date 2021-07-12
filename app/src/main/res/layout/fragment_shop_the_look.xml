@@ -29,6 +29,14 @@
             android:layout_margin="10dp"
             android:textColor="@color/black" />
 
+        <CheckBox
+            android:id="@+id/zip_cb"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply zip config"/>
 
         <Button
             android:id="@+id/ctl_sync"

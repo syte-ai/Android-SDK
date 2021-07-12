@@ -7,6 +7,7 @@ import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
+import com.syte.ai.android_sdk.util.SyteLogger;
 
 
 public abstract class InitSyte {
@@ -34,5 +35,7 @@ public abstract class InitSyte {
     public abstract void fireEvent(BaseSyteEvent event);
 
     public abstract void addSkuPdp(String sku);
+
+    public abstract void setLogLevel(SyteLogger.LogLevel logLevel);
 
 }
