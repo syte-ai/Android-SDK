@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
@@ -19,15 +18,11 @@ import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
-import java.util.Arrays;
-import java.util.List;
-
 
 public class PersonalizationFragment extends BaseFragment implements View.OnClickListener {
 
     private Button mPersonalizationSync;
     private Button mPersonalizationAsync;
-    private EditText mSKUEditText;
 
     private RecommendationEngineClient mRecommendationEngineClient;
     private SyteConfiguration mSyteConfiguration;
@@ -44,7 +39,6 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
         super.onViewCreated(view, savedInstanceState);
         mPersonalizationSync = view.findViewById(R.id.personalization_sync_btn);
         mPersonalizationAsync = view.findViewById(R.id.personalization_async_btn);
-        mSKUEditText = view.findViewById(R.id.sku_et);
 
         initViews();
 
@@ -56,6 +50,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
                     "9186",
                     "602e43d2d6ddcd558359f91f"
             );
+            mSyteConfiguration.setLocale(SDKApplication.getInstance().getLocale());
         } catch (SyteInitializationException syteInitializationException) {
             syteInitializationException.printStackTrace();
         }
@@ -73,17 +68,16 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
     private void initViews() {
         mPersonalizationSync.setOnClickListener(this);
         mPersonalizationAsync.setOnClickListener(this);
-        mSKUEditText.setText("13705596,15126559");
     }
 
     @Override
     public void onClick(View v) {
         PersonalizationRequestData personalizationRequestData =
                 new PersonalizationRequestData();
-        List<String> sessionSkus = Arrays.asList(mSKUEditText.getText().toString().split(",").clone());
-        for (String sku : sessionSkus) {
-            mInitSyte.addSkuPdp(sku);
+        for (String sku : SDKApplication.getInstance().getSessionSKUs()) {
+            mInitSyte.addViewedProduct(sku);
         }
+        personalizationRequestData.setFieldsToReturn(SDKApplication.getInstance().getRecommendationReturnField());
         switch (v.getId()) {
             case R.id.personalization_sync_btn:
                 new Thread(new Runnable() {

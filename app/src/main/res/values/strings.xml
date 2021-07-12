@@ -97,4 +97,6 @@
     <string name="get_similars">GET SIMILARS</string>
     <string name="shop_the_look">Shop The Look</string>
     <string name="personalization">Personalization</string>
+    <string name="configuration">Configuration</string>
+    <string name="fire_events">Fire Events</string>
 </resources>

@@ -28,6 +28,9 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
     private EditText mImageUrlEditText;
     private EditText mSKUEditText;
     private CheckBox mEnableZipCheckBox;
+    private InitSyte mInitSyte;
+    private EditText mLimitET;
+    private EditText mUrlRefererET;
 
     private RecommendationEngineClient mRecommendationEngineClient;
 
@@ -45,10 +48,12 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
         mImageUrlEditText = view.findViewById(R.id.image_url_et);
         mSKUEditText = view.findViewById(R.id.sku_et);
         mEnableZipCheckBox = view.findViewById(R.id.zip_cb);
+        mLimitET = view.findViewById(R.id.limit_per_bound);
+        mUrlRefererET = view.findViewById(R.id.url_referer);
 
         initViews();
 
-        InitSyte initSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.getInstance();
         SyteConfiguration syteConfiguration = null;
         try {
             syteConfiguration = new SyteConfiguration(
@@ -56,14 +61,15 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                     "9165",
                     "601c206d0a7f780efb9360f3"
             );
+            syteConfiguration.setLocale(SDKApplication.getInstance().getLocale());
         } catch (SyteInitializationException syteInitializationException) {
             syteInitializationException.printStackTrace();
         }
         try {
-            initSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
                 @Override
                 public void onResult(SyteResult<AccountDataService> syteResult) {
-                    mRecommendationEngineClient = initSyte.retrieveRecommendationEngineClient();
+                    mRecommendationEngineClient = mInitSyte.retrieveRecommendationEngineClient();
                 }
             });
         } catch (SyteInitializationException syteInitializationException) {}
@@ -75,6 +81,8 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
         mGetShopTheLookAsync.setOnClickListener(this);
         mImageUrlEditText.setText("https://sytestorageeu.blob.core.windows.net/text-static-feeds/boohoo_direct/PZZ70556-105.jpg?se=2023-10-31T19%3A05%3A46Z&sp=r&sv=2018-03-28&sr=b&sig=DQe1/iuTzLpl/hZhMzmb5jJF8qw41GdNlREzZvunw4k%3D");
         mSKUEditText.setText("PZZ70556-105");
+        mLimitET.setText("3");
+        mUrlRefererET.setText("mobile_sdk");
     }
 
     @Override
@@ -84,6 +92,15 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                         mSKUEditText.getText().toString(),
                         mImageUrlEditText.getText().toString()
                 );
+        if (!SDKApplication.getInstance().getSessionSKUs().isEmpty()) {
+            for (String sku : SDKApplication.getInstance().getSessionSKUs()) {
+                mInitSyte.addViewedProduct(sku);
+            }
+            shopTheLookRequestData.setPersonalizedRanking(true);
+        }
+        shopTheLookRequestData.setLimitPerBound(Integer.parseInt(mLimitET.getText().toString()));
+        shopTheLookRequestData.setSyteUrlReferer(mUrlRefererET.getText().toString());
+        shopTheLookRequestData.setFieldsToReturn(SDKApplication.getInstance().getRecommendationReturnField());
         SDKApplication.getInstance().getSyteManager().zipOffers(mEnableZipCheckBox.isChecked());
         switch (v.getId()) {
             case R.id.ctl_sync:

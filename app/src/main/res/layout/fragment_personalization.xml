@@ -12,14 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/sku_et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
-            android:textColor="@color/black" />
-
         <Button
             android:id="@+id/personalization_sync_btn"
             android:layout_width="wrap_content"

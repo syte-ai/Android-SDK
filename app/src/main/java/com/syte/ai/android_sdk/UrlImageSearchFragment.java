@@ -28,6 +28,7 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
     private EditText mY1;
     private EditText mX2;
     private EditText mY2;
+    private CheckBox mEnableCropCB;
 
     private SyteManager mSyteManager;
 
@@ -49,6 +50,7 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
         mY1 = view.findViewById(R.id.y1);
         mX2 = view.findViewById(R.id.x2);
         mY2 = view.findViewById(R.id.y2);
+        mEnableCropCB = view.findViewById(R.id.crop_cb);
 
         mSyteManager = SDKApplication.getInstance().getSyteManager();
         initViews();
@@ -86,16 +88,21 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
         mFetchOffersForTheFirstBoundCheckBox.setChecked(true);
         mImageUrlEditText.setText("https://cdn-images.farfetch-contents.com/13/70/55/96/13705596_18130188_1000.jpg");
         mSKUEditText.setText("13705596");
+        mEnableCropCB.setChecked(true);
     }
 
     @Override
     public void onClick(View v) {
-        mSyteManager.setCoordinates(new CropCoordinates(
-                Double.parseDouble(mX1.getText().toString()),
-                Double.parseDouble(mY1.getText().toString()),
-                Double.parseDouble(mX2.getText().toString()),
-                Double.parseDouble(mY2.getText().toString())
-        ));
+        if (mEnableCropCB.isChecked()) {
+            mSyteManager.setCoordinates(new CropCoordinates(
+                    Double.parseDouble(mX1.getText().toString()),
+                    Double.parseDouble(mY1.getText().toString()),
+                    Double.parseDouble(mX2.getText().toString()),
+                    Double.parseDouble(mY2.getText().toString())
+            ));
+        } else {
+            mSyteManager.setCoordinates(null);
+        }
         switch (v.getId()) {
             case R.id.bounds_sync_btn:
                 mSyteManager.getBoundsSync(

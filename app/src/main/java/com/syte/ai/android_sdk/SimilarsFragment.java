@@ -26,6 +26,9 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
     private Button mGetSimilarsAsync;
     private EditText mImageUrlEditText;
     private EditText mSKUEditText;
+    private InitSyte mInitSyte;
+    private EditText mLimitET;
+    private EditText mUrlRefererET;
 
     private RecommendationEngineClient mRecommendationEngineClient;
 
@@ -42,10 +45,12 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
         mGetSimilarsAsync = view.findViewById(R.id.similars_async_btn);
         mImageUrlEditText = view.findViewById(R.id.image_url_et);
         mSKUEditText = view.findViewById(R.id.sku_et);
+        mLimitET = view.findViewById(R.id.limit);
+        mUrlRefererET = view.findViewById(R.id.url_referer);
 
         initViews();
 
-        InitSyte initSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.getInstance();
         SyteConfiguration syteConfiguration = null;
         try {
             syteConfiguration = new SyteConfiguration(
@@ -53,14 +58,15 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
                     "9186",
                     "602e43d2d6ddcd558359f91f"
             );
+            syteConfiguration.setLocale(SDKApplication.getInstance().getLocale());
         } catch (SyteInitializationException syteInitializationException) {
             syteInitializationException.printStackTrace();
         }
         try {
-            initSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
                 @Override
                 public void onResult(SyteResult<AccountDataService> syteResult) {
-                    mRecommendationEngineClient = initSyte.retrieveRecommendationEngineClient();
+                    mRecommendationEngineClient = mInitSyte.retrieveRecommendationEngineClient();
                 }
             });
         } catch (SyteInitializationException syteInitializationException) { }
@@ -72,6 +78,8 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
         mGetSimilarsAsync.setOnClickListener(this);
         mImageUrlEditText.setText("https://cdn-images.farfetch-contents.com/13/70/55/96/13705596_18130188_1000.jpg");
         mSKUEditText.setText("13705596");
+        mLimitET.setText("7");
+        mUrlRefererET.setText("mobile_sdk");
     }
 
     @Override
@@ -81,6 +89,15 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
                         mSKUEditText.getText().toString(),
                         mImageUrlEditText.getText().toString()
                 );
+        if (!SDKApplication.getInstance().getSessionSKUs().isEmpty()) {
+            for (String sku : SDKApplication.getInstance().getSessionSKUs()) {
+                mInitSyte.addViewedProduct(sku);
+            }
+            similarProductsRequestData.setPersonalizedRanking(true);
+        }
+        similarProductsRequestData.setFieldsToReturn(SDKApplication.getInstance().getRecommendationReturnField());
+        similarProductsRequestData.setLimit(Integer.parseInt(mLimitET.getText().toString()));
+        similarProductsRequestData.setSyteUrlReferer(mUrlRefererET.getText().toString());
         switch (v.getId()) {
             case R.id.similars_sync_btn:
                 new Thread(new Runnable() {

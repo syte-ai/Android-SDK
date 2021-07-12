@@ -108,7 +108,7 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void addSkuPdp(String sku) {
+    public void addViewedProduct(String sku) {
         mConfiguration.addSessionSku(sku);
     }
 

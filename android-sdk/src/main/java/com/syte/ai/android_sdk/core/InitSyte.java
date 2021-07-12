@@ -34,7 +34,7 @@ public abstract class InitSyte {
 
     public abstract void fireEvent(BaseSyteEvent event);
 
-    public abstract void addSkuPdp(String sku);
+    public abstract void addViewedProduct(String sku);
 
     public abstract void setLogLevel(SyteLogger.LogLevel logLevel);
 

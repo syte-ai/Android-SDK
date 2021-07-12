@@ -66,4 +66,12 @@ public class Navigator {
 
     }
 
+    public void configFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new ConfigurationFragment(), null)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
 }
