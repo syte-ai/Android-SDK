@@ -42,7 +42,7 @@ public class OffersFragment extends Fragment {
         if (syteManager.getLastRetrievedOffers() != null) {
             offerList = syteManager.getLastRetrievedOffers().getOffers();
         } else if (syteManager.getSimilarProductsResult() != null) {
-            offerList = syteManager.getSimilarProductsResult().getSimilars();
+            offerList = syteManager.getSimilarProductsResult().getItems();
         } else if (syteManager.getShopTheLookResult() != null) {
             if (!syteManager.zipOffers()) {
                 for (ShopTheLookResponseItem item : syteManager.getShopTheLookResult().getItems()) {

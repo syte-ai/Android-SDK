@@ -58,11 +58,15 @@ public class SyteConfiguration {
         return mStorage.getSessionId();
     }
 
-    void addSessionSku(String sessionSku) {
+    void addViewedProduct(String sessionSku) {
         mSessionSkus.add(sessionSku);
     }
 
-    List<String> getSessionSkus() {
+    void addViewedProducts(List<String> sessionSkus) {
+        this.mSessionSkus.addAll(sessionSkus);
+    }
+
+    List<String> getViewedProducts() {
         return mSessionSkus;
     }
 
@@ -104,10 +108,6 @@ public class SyteConfiguration {
 
     SyteStorage getStorage() {
         return mStorage;
-    }
-
-    void addSessionSkus(List<String> sessionSkus) {
-        this.mSessionSkus.addAll(sessionSkus);
     }
 
 }

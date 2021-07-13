@@ -20,9 +20,9 @@ public abstract class InitSyte {
 
     public abstract void startSessionAsync(SyteConfiguration configuration, SyteCallback<AccountDataService> callback) throws SyteInitializationException;
 
-    public abstract SyteConfiguration getCurrentConfiguration();
+    public abstract SyteConfiguration getConfiguration();
 
-    public abstract void applyConfiguration(SyteConfiguration configuration);
+    public abstract void setConfiguration(SyteConfiguration configuration);
 
     public abstract AccountDataService getAccountDataService();
 

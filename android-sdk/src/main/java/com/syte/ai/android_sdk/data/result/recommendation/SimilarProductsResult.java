@@ -9,7 +9,7 @@ public class SimilarProductsResult{
 	@SerializedName("response")
 	private List<Offer> data;
 
-	public List<Offer> getSimilars(){
+	public List<Offer> getItems(){
 		return data;
 	}
 

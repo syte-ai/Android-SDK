@@ -195,11 +195,11 @@ class RecommendationRemoteDataSource {
         // TODO put in a separate method
         JSONObject jsonObject = new JSONObject(responseString);
         JSONArray similarsArray = jsonObject.getJSONArray("response");
-        for (int i = 0; i < similarsResult.getSimilars().size(); i++) {
+        for (int i = 0; i < similarsResult.getItems().size(); i++) {
             JSONObject offer = similarsArray.getJSONObject(i);
             if (offer.has("original_data")) {
                 similarsResult
-                        .getSimilars()
+                        .getItems()
                         .get(i)
                         .setOriginalData(offer.getJSONObject("original_data"));
             }

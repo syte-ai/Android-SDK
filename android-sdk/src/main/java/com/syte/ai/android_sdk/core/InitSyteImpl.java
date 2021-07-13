@@ -70,12 +70,12 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteConfiguration getCurrentConfiguration() {
+    public SyteConfiguration getConfiguration() {
         return mConfiguration;
     }
 
     @Override
-    public void applyConfiguration(SyteConfiguration configuration) {
+    public void setConfiguration(SyteConfiguration configuration) {
         mConfiguration = configuration;
         mRemoteDataSource.applyConfiguration(configuration);
     }
@@ -109,7 +109,7 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public void addViewedProduct(String sku) {
-        mConfiguration.addSessionSku(sku);
+        mConfiguration.addViewedProduct(sku);
     }
 
     @Override

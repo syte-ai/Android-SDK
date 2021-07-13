@@ -33,6 +33,7 @@ abstract public class BaseSyteEvent {
         return mEventsTags;
     }
 
+    //TODO move this method from here
     public String getTagsString() {
         StringBuilder stringBuilder = new StringBuilder();
         for(EventsTag tag : mEventsTags) {
