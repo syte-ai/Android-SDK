@@ -21,6 +21,7 @@ import com.syte.ai.android_sdk.data.result.offers.OffersResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
+import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
@@ -42,10 +43,14 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private static final String TAG = SyteRemoteDataSource.class.getSimpleName();
+
+    private static final String SYTE_URL = "https://cdn.syteapi.com";
+    private static final String EXIF_REMOVAL_URL = "https://imagemod.syteapi.com";
 
     private interface BoundsResultCallback {
         void onResult(SyteResult<BoundsResult> result);
@@ -55,19 +60,21 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         void onResult(UrlImageSearchRequestData requestData); //TODO add error description
     }
 
+    private final Retrofit mRetrofit;
+    private final Retrofit mExifRemovalRetrofit;
     private final SyteService mSyteService;
     private final ExifRemovalService mExifRemovalService;
     private final RecommendationRemoteDataSource mRecommendationRemoteDataSource;
 
     SyteRemoteDataSource(SyteConfiguration configuration) {
-        super(configuration);
+        mRetrofit = RetrofitBuilder.build(SYTE_URL);
+        mExifRemovalRetrofit = RetrofitBuilder.build(EXIF_REMOVAL_URL);
+
         mSyteService = mRetrofit.create(SyteService.class);
         mExifRemovalService = mExifRemovalRetrofit.create(ExifRemovalService.class);
         mRecommendationRemoteDataSource = new RecommendationRemoteDataSource(mSyteService, configuration);
-    }
 
-    private void renewTimestamp() {
-        mConfiguration.getStorage().renewSessionIdTimestamp();
+        mConfiguration = configuration;
     }
 
     SyteResult<SimilarProductsResult> getSimilarProducts(
@@ -142,7 +149,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    @Override
     SyteResult<AccountDataService> initialize() {
         renewTimestamp();
         Response<ResponseBody> response = null;
@@ -165,7 +171,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         return syteResult;
     }
 
-    @Override
     void initializeAsync(SyteCallback<AccountDataService> callback) {
         renewTimestamp();
         mSyteService.initialize(mConfiguration.getAccountId()).enqueue(
@@ -195,53 +200,11 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    @Override
-    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, AccountDataService accountDataService) {
-        if (requestData == null) {
-            return null;
-        }
-        renewTimestamp();
-        try {
-            return onBoundsResult(requestData,
-                    mSyteService.getBounds(
-                            mConfiguration.getAccountId(),
-                            mConfiguration.getSignature(),
-                            mConfiguration.getUserId(),
-                            Long.toString(mConfiguration.getSessionId()),
-                            requestData.getProductType().name,
-                            mConfiguration.getLocale(),
-                            accountDataService
-                                    .getData()
-                                    .getProducts()
-                                    .getSyteapp()
-                                    .getFeatures()
-                                    .getBoundingBox()
-                                    .getCropper()
-                                    .getCatalog(),
-                            requestData.getSku(),
-                            requestData.getImageUrl(),
-                            requestData.getPersonalizedRanking() ?
-                                    mConfiguration.getSessionSkusString() : null
-                    ).execute(),
-                    requestData.getFirstBoundOffersCoordinates(),
-                    accountDataService,
-                    true,
-                    null
-            );
-        } catch (IOException e) {
-            //TODO handle error here
-            SyteResult<BoundsResult> result = new SyteResult<>();
-            result.isSuccessful = false;
-            return result;
-        }
-    }
-
-    @Override
-    void getBoundsAsync(UrlImageSearchRequestData requestData,
-                        AccountDataService accountDataService,
-                        SyteCallback<BoundsResult> callback) {
-        renewTimestamp();
-        mSyteService.getBounds(
+    private Call<ResponseBody> generateBoundsCall(
+            UrlImageSearchRequestData requestData,
+            AccountDataService accountDataService
+    ) {
+        return mSyteService.getBounds(
                 mConfiguration.getAccountId(),
                 mConfiguration.getSignature(),
                 mConfiguration.getUserId(),
@@ -260,7 +223,35 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 requestData.getImageUrl(),
                 requestData.getPersonalizedRanking() ?
                         mConfiguration.getSessionSkusString() : null
-        ).enqueue(new Callback<ResponseBody>() {
+        );
+    }
+
+    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, AccountDataService accountDataService) {
+        if (requestData == null) {
+            return null;
+        }
+        renewTimestamp();
+        try {
+            return onBoundsResult(requestData,
+                    generateBoundsCall(requestData, accountDataService).execute(),
+                    requestData.getFirstBoundOffersCoordinates(),
+                    accountDataService,
+                    true,
+                    null
+            );
+        } catch (IOException e) {
+            //TODO handle error here
+            SyteResult<BoundsResult> result = new SyteResult<>();
+            result.isSuccessful = false;
+            return result;
+        }
+    }
+
+    void getBoundsAsync(UrlImageSearchRequestData requestData,
+                        AccountDataService accountDataService,
+                        SyteCallback<BoundsResult> callback) {
+        renewTimestamp();
+        generateBoundsCall(requestData, accountDataService).enqueue(new Callback<ResponseBody>() {
 
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
@@ -291,7 +282,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         });
     }
 
-    @Override
     SyteResult<OffersResult> getOffers(
             Bound bound,
             @Nullable CropCoordinates cropCoordinates,
@@ -315,7 +305,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         }
     }
 
-    @Override
     void getOffersAsync(
             Bound bound,
             CropCoordinates cropCoordinates,
@@ -369,7 +358,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             modifiedResponseString =
                     response.body().string().replace(requestData.getImageUrl(), "bounds");
         } catch (IOException e) {
-            //TODO
+            //TODO handle error
         }
 
         if (modifiedResponseString == null) {
@@ -460,7 +449,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         return mSyteService.getOffers(
                 actualUrl,
                 coordinatesBase64,
-                cropEnabled ? "general" : null,
+                cropEnabled ? Catalog.GENERAL.getName() : null,
                 cropEnabled ? accountDataService
                         .getData()
                         .getProducts()
@@ -498,7 +487,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         } else return null;
     }
 
-    @Override
     public SyteResult<BoundsResult> getBoundsWild(
             Context context,
             ImageSearchRequestData requestData,
@@ -521,7 +509,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         }
     }
 
-    @Override
     void getBoundsWildAsync(
             Context context,
             ImageSearchRequestData requestData,
@@ -633,8 +620,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     @Override
-    public void applyConfiguration(SyteConfiguration configuration) {
-        super.applyConfiguration(configuration);
+    public void setConfiguration(SyteConfiguration configuration) {
+        super.setConfiguration(configuration);
         mRecommendationRemoteDataSource.setConfiguration(configuration);
     }
 
@@ -659,57 +646,12 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 context,
                 size,
                 bitmap,
-                getImageScale(accountDataService)
+                Utils.getImageScale(accountDataService)
         );
 
         SyteLogger.i(TAG, "Compressed image size: " + file.length() + " bytes");
 
-        return getFileBytes(file);
-    }
-
-    private byte[] getFileBytes(File file) {
-        int size = (int) file.length();
-        byte[] bytes = new byte[size];
-
-        try {
-            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-            buf.read(bytes, 0, bytes.length);
-            buf.close();
-        } catch (IOException e) {
-            //TODO handle error here
-        }
-
-        return bytes;
-    }
-
-    private ImageProcessor.Scale getImageScale(AccountDataService accountDataService) {
-        //TODO check for nulls here
-        String imageScale = accountDataService
-                .getData()
-                .getProducts()
-                .getSyteapp()
-                .getFeatures()
-                .getCameraHandler()
-                .getPhotoReductionSize();
-
-        ImageProcessor.Scale scale;
-
-        switch (imageScale.toLowerCase()) {
-            case "small":
-                scale = ImageProcessor.Scale.SMALL;
-                break;
-            case "medium":
-                scale = ImageProcessor.Scale.MEDIUM;
-                break;
-            case "large":
-                scale = ImageProcessor.Scale.LARGE;
-                break;
-            default:
-                scale = ImageProcessor.Scale.MEDIUM;
-                break;
-        }
-
-        return scale;
+        return Utils.getFileBytes(file);
     }
 
 }

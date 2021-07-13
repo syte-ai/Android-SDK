@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class RecommendationRemoteDataSource {
+class RecommendationRemoteDataSource extends BaseRemoteDataSource {
 
     enum RecommendationProduct {
         SIMILAR_PRODUCTS("similars"),
@@ -42,20 +42,14 @@ class RecommendationRemoteDataSource {
         }
     }
 
-
-    private SyteConfiguration mSyteConfiguration;
     private SyteService mSyteService;
 
     RecommendationRemoteDataSource(
             SyteService syteService,
             SyteConfiguration syteConfiguration
     ) {
-        mSyteConfiguration = syteConfiguration;
+        mConfiguration = syteConfiguration;
         mSyteService = syteService;
-    }
-
-    public void setConfiguration(SyteConfiguration syteConfiguration) {
-        mSyteConfiguration = syteConfiguration;
     }
 
     public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarProductsRequestData similarProductsRequestData) {
@@ -289,18 +283,18 @@ class RecommendationRemoteDataSource {
 
     private Call<ResponseBody> generateSimilarsCall(SimilarProductsRequestData similarProductsRequestData) {
         return mSyteService.getSimilars(
-                mSyteConfiguration.getAccountId(),
-                mSyteConfiguration.getSignature(),
-                mSyteConfiguration.getUserId(),
-                Long.toString(mSyteConfiguration.getSessionId()),
+                mConfiguration.getAccountId(),
+                mConfiguration.getSignature(),
+                mConfiguration.getUserId(),
+                Long.toString(mConfiguration.getSessionId()),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
-                mSyteConfiguration.getLocale(),
+                mConfiguration.getLocale(),
                 similarProductsRequestData.getFieldsToReturn().getName(),
                 "sku:" + similarProductsRequestData.getSku(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 similarProductsRequestData.getPersonalizedRanking() ?
-                        mSyteConfiguration.getSessionSkusString() : null,
+                        mConfiguration.getSessionSkusString() : null,
                 similarProductsRequestData.getLimit(),
                 similarProductsRequestData.getSyteUrlReferer(),
                 similarProductsRequestData.getImageUrl()
@@ -309,18 +303,18 @@ class RecommendationRemoteDataSource {
 
     private Call<ResponseBody> generateShopTheLookCall(ShopTheLookRequestData shopTheLookRequestData) {
         return mSyteService.getShopTheLook(
-                mSyteConfiguration.getAccountId(),
-                mSyteConfiguration.getSignature(),
-                mSyteConfiguration.getUserId(),
-                Long.toString(mSyteConfiguration.getSessionId()),
+                mConfiguration.getAccountId(),
+                mConfiguration.getSignature(),
+                mConfiguration.getUserId(),
+                Long.toString(mConfiguration.getSessionId()),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
-                mSyteConfiguration.getLocale(),
+                mConfiguration.getLocale(),
                 shopTheLookRequestData.getFieldsToReturn().getName(),
                 "sku:" + shopTheLookRequestData.getSku(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 shopTheLookRequestData.getPersonalizedRanking() ?
-                        mSyteConfiguration.getSessionSkusString() : null,
+                        mConfiguration.getSessionSkusString() : null,
                 shopTheLookRequestData.getLimit(),
                 shopTheLookRequestData.getSyteUrlReferer(),
                 shopTheLookRequestData.getLimitPerBound() == -1 ? null :
@@ -335,15 +329,15 @@ class RecommendationRemoteDataSource {
         RequestBody body =
                 RequestBody.create(mediaType,
                         "{\n    " +
-                                    "\"user_uuid\": \"" + mSyteConfiguration.getUserId() + "\",\n    " +
-                                    "\"session_skus\": " + mSyteConfiguration.getSessionSkusJSONArray() + ",\n    " +
+                                    "\"user_uuid\": \"" + mConfiguration.getUserId() + "\",\n    " +
+                                    "\"session_skus\": " + mConfiguration.getSessionSkusJSONArray() + ",\n    " +
                                     "\"model_version\": \"" + personalizationRequestData.getModelVersion() + "\"" +
                                 "\n}");
         return mSyteService.getPersonalization(
-                mSyteConfiguration.getAccountId(),
-                mSyteConfiguration.getSignature(),
+                mConfiguration.getAccountId(),
+                mConfiguration.getSignature(),
                 RecommendationProduct.PERSONALIZATION.getName(),
-                mSyteConfiguration.getLocale(),
+                mConfiguration.getLocale(),
                 personalizationRequestData.getFieldsToReturn().getName(),
                 RecommendationProduct.PERSONALIZATION.getName(),
                 RecommendationProduct.PERSONALIZATION.getName(),

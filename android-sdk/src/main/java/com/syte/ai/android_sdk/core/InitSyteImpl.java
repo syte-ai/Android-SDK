@@ -77,7 +77,8 @@ class InitSyteImpl extends InitSyte {
     @Override
     public void setConfiguration(SyteConfiguration configuration) {
         mConfiguration = configuration;
-        mRemoteDataSource.applyConfiguration(configuration);
+        mRemoteDataSource.setConfiguration(configuration);
+        mEventsRemoteDataSource.setConfiguration(configuration);
     }
 
     @Override

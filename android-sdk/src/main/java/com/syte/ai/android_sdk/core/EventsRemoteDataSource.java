@@ -11,12 +11,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-class EventsRemoteDataSource {
+class EventsRemoteDataSource extends BaseRemoteDataSource {
 
     private static final String TAG = EventsRemoteDataSource.class.getSimpleName();
 
     private static final String SYTE_EVENT_URL = "https://syteapi.com";
-    private SyteConfiguration mConfiguration;
     private SyteEventService mService;
 
     EventsRemoteDataSource(SyteConfiguration configuration) {
@@ -26,6 +25,7 @@ class EventsRemoteDataSource {
     }
 
     void fireEvent(BaseSyteEvent event) {
+        renewTimestamp();
         MediaType mediaType = MediaType.parse("application/octet-stream");
         RequestBody body = RequestBody.create(
                 mediaType,
