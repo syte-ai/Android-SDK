@@ -12,7 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.syte.ai.android_sdk.data.result.offers.Offer;
+import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResponseItem;
+
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OffersFragment extends Fragment {
 
@@ -27,11 +33,29 @@ public class OffersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.offers_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        OffersAdapter adapter = new OffersAdapter(
-                SDKApplication
-                        .getInstance()
-                        .getUrlImageSearchManager()
-                        .getLastRetrievedOffers().getOffers());
+        SyteManager syteManager = SDKApplication
+                .getInstance()
+                .getSyteManager();
+
+        List<Offer> offerList = new ArrayList<>();
+
+        if (syteManager.getLastRetrievedOffers() != null) {
+            offerList = syteManager.getLastRetrievedOffers().getOffers();
+        } else if (syteManager.getSimilarProductsResult() != null) {
+            offerList = syteManager.getSimilarProductsResult().getItems();
+        } else if (syteManager.getShopTheLookResult() != null) {
+            if (!syteManager.zipOffers()) {
+                for (ShopTheLookResponseItem item : syteManager.getShopTheLookResult().getItems()) {
+                    offerList.addAll(item.getOffers());
+                }
+            } else {
+                offerList.addAll(syteManager.getShopTheLookResult().getAllOffers(true));
+            }
+        } else if (syteManager.getPersonalizationResult() != null) {
+            offerList = syteManager.getPersonalizationResult().getItems();
+        }
+
+        OffersAdapter adapter = new OffersAdapter(offerList);
         recyclerView.setAdapter(adapter);
     }
 

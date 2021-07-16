@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UrlImageSearchFragment"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/load_image_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:text="Load Image"
+            android:textColor="@color/black"
+            app:backgroundTint="@android:color/background_light" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Crop (x1, y1, x2, y2):"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/x1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="0"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/y1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="0"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/x2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/y2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="1"
+            android:layout_margin="10dp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/crop_cb"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable Crop"/>
+
+        <Button
+            android:id="@+id/bounds_sync_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:text="Get Bounds Sync"
+            android:textColor="@color/black"
+            app:backgroundTint="@android:color/background_light" />
+
+        <Button
+            android:id="@+id/bounds_async_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:text="Get Bounds Async"
+            android:textColor="@color/black"
+            app:backgroundTint="@android:color/background_light" />
+
+        <CheckBox
+            android:id="@+id/fetch_offers_for_the_first_bound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:text="Fetch Offers For The First Bound"
+            android:textColor="@color/black" />
+
+
+    </LinearLayout>
+
+</FrameLayout>

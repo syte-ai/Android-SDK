@@ -8,7 +8,7 @@ public class SyteLogger {
         VERBOSE, INFO, DEBUG, WARN, ERROR;
     }
 
-    private static LogLevel mLogLevel = LogLevel.ERROR;
+    private static LogLevel mLogLevel = LogLevel.VERBOSE;
 
     private static String appendTag(String TAG) {
         return ":SYTE:" + TAG;
@@ -16,6 +16,10 @@ public class SyteLogger {
 
     public static void setLogLevel(LogLevel logLevel) {
         mLogLevel = logLevel;
+    }
+
+    public static LogLevel getLogLevel() {
+        return mLogLevel;
     }
 
     public static void v(String TAG, String message) {

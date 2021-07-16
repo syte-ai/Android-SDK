@@ -12,6 +12,8 @@ public class UrlImageSearchRequestData {
     private final SyteProductType mProductType;
     @Nullable private String mSku;
     private boolean mRetrieveOffersForTheFirstBound = true;
+    private CropCoordinates mCoordinates;
+    private boolean mPersonalizedRanking = false;
 
     public UrlImageSearchRequestData(String imageUrl, SyteProductType productType) {
         this.mImageUrl = imageUrl;
@@ -35,12 +37,28 @@ public class UrlImageSearchRequestData {
         return mSku;
     }
 
+    public void setFirstBoundOffersCoordinates(CropCoordinates coordinates) {
+        this.mCoordinates = coordinates;
+    }
+
+    public CropCoordinates getFirstBoundOffersCoordinates() {
+        return mCoordinates;
+    }
+
     public void setRetrieveOffersForTheFirstBound(boolean retrieveOffersForTheFirstBound) {
         mRetrieveOffersForTheFirstBound = retrieveOffersForTheFirstBound;
     }
 
     public boolean isRetrieveOffersForTheFirstBound() {
         return mRetrieveOffersForTheFirstBound;
+    }
+
+    public void setPersonalizedRanking(boolean personalizedRanking) {
+        mPersonalizedRanking = personalizedRanking;
+    }
+
+    public boolean getPersonalizedRanking() {
+        return mPersonalizedRanking;
     }
 
     @Override

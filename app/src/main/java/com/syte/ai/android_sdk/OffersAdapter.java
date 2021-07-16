@@ -78,14 +78,18 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
         viewHolder.description.setText(mData.get(position).getDescription());
         viewHolder.offer.setText(mData.get(position).getOffer());
         viewHolder.price.setText(mData.get(position).getPrice());
+        if (mData.get(position).getBbCategories() != null)
         viewHolder.bbCategories.setText(mData.get(position).getBbCategories().toString());
         viewHolder.id.setText(mData.get(position).getId());
         viewHolder.floatOriginalPrice.setText(mData.get(position).getFloatOriginalPrice() + "");
+        if (mData.get(position).getCategories() != null)
         viewHolder.categories.setText(mData.get(position).getCategories().toString());
         viewHolder.sku.setText(mData.get(position).getSku());
         viewHolder.brand.setText(mData.get(position).getBrand());
+        if (mData.get(position).getImageUrl() != null)
         Picasso.get().load(mData.get(position).getImageUrl()).into(viewHolder.imageView);
         try {
+            if (mData.get(position).getOriginalData() != null)
             viewHolder.originalDataTitle.setText(mData.get(position).getOriginalData().getString("title"));
         } catch (JSONException e) {}
     }

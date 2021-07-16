@@ -36,4 +36,5 @@ public class BoundsResult {
 	public String toString() {
 		return bounds.toString() + "\nFirst bound offers result:" + firstBoundOffersResult;
 	}
+
 }

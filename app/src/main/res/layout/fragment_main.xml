@@ -9,6 +9,18 @@
     android:background="@android:color/white">
 
     <Button
+        android:id="@+id/config_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/configuration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="@android:color/background_light"
+        android:textColor="@color/black"/>
+
+    <Button
         android:id="@+id/init_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +28,7 @@
         android:text="@string/initialization"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/config_btn"
         app:backgroundTint="@android:color/background_light"
         android:textColor="@color/black"/>
 
@@ -31,6 +43,67 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/init_btn" />
+
+    <Button
+        android:id="@+id/wild_search_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/wild_search"
+        android:textColor="@color/black"
+        app:backgroundTint="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/url_search_btn" />
+
+    <Button
+        android:id="@+id/similars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/get_similars"
+        android:textColor="@color/black"
+        app:backgroundTint="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wild_search_btn" />
+
+    <Button
+        android:id="@+id/ctl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/shop_the_look"
+        android:textColor="@color/black"
+        app:backgroundTint="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/similars" />
+
+    <Button
+        android:id="@+id/personalization"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/personalization"
+        android:textColor="@color/black"
+        app:backgroundTint="@android:color/background_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ctl" />
+
+    <Button
+        android:id="@+id/events_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/fire_events"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/personalization"
+        app:backgroundTint="@android:color/background_light"
+        android:textColor="@color/black"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
