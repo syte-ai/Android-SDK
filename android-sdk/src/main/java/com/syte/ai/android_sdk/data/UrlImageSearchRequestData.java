@@ -10,7 +10,7 @@ public class UrlImageSearchRequestData {
 
     private final String mImageUrl;
     private final SyteProductType mProductType;
-    @Nullable private String mSku;
+    @Nullable private String mSku = null;
     private boolean mRetrieveOffersForTheFirstBound = true;
     private CropCoordinates mCoordinates;
     private boolean mPersonalizedRanking = false;

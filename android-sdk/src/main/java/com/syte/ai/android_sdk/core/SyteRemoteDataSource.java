@@ -384,6 +384,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 return syteResult;
             } else {
                 generateOffersCall(
+                        //TODO check bounds size
                         syteResult.data.getBounds().get(0).getOffersUrl(),
                         cropCoordinates,
                         accountDataService
@@ -406,8 +407,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                     }
                 });
             }
-        }
-        if (resultCallback != null) {
+        } else if (resultCallback != null) {
             resultCallback.onResult(syteResult);
         }
         return syteResult;

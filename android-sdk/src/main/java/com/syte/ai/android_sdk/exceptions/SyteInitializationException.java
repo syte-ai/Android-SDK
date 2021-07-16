@@ -1,4 +1,4 @@
 package com.syte.ai.android_sdk.exceptions;
 
-public class SyteInitializationException extends Exception {
+public class SyteInitializationException extends RuntimeException {
 }

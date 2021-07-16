@@ -71,11 +71,17 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public SyteConfiguration getConfiguration() {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         return mConfiguration;
     }
 
     @Override
     public void setConfiguration(SyteConfiguration configuration) {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         mConfiguration = configuration;
         mRemoteDataSource.setConfiguration(configuration);
         mEventsRemoteDataSource.setConfiguration(configuration);
@@ -83,11 +89,17 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public AccountDataService getAccountDataService() {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         return mAccountDataService;
     }
 
     @Override
     public RecommendationEngineClient retrieveRecommendationEngineClient() {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         return new RecommendationEngineClientImpl(
                 mRemoteDataSource, mAccountDataService
         );
@@ -95,21 +107,33 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public ImageSearchClient retrieveImageSearchClient() {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         return new ImageSearchClientImpl(mRemoteDataSource, mAccountDataService);
     }
 
     @Override
     public void endSession() {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         mConfiguration.getStorage().clearSessionId();
     }
 
     @Override
     public void fireEvent(BaseSyteEvent event) {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         mEventsRemoteDataSource.fireEvent(event);
     }
 
     @Override
     public void addViewedProduct(String sku) {
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException();
+        }
         mConfiguration.addViewedProduct(sku);
     }
 
@@ -120,10 +144,6 @@ class InitSyteImpl extends InitSyte {
 
     private boolean validateConfig(SyteConfiguration configuration) {
         return true;
-    }
-
-    private boolean checkInitialized() {
-        return mState == SyteState.INITIALIZED;
     }
 
 }
