@@ -36,11 +36,6 @@ public class RecommendationEngineClientImplTest extends BaseTest {
         assertEquals(result.resultCode, 200);
         assertEquals(result.data.getItems().size(), 7);
         assertNotNull(result.data.getItems().get(0).getOriginalData());
-        try {
-            assertEquals(result.data.getItems().get(0).getOriginalData().getString("id"), "TZZ91621-135");
-        } catch (JSONException e) {
-            fail();
-        }
         assertNotNull(result.data.getItems().get(0).getSku());
     }
 
@@ -148,11 +143,6 @@ public class RecommendationEngineClientImplTest extends BaseTest {
                 assertEquals(result.resultCode, 200);
                 assertEquals(result.data.getItems().size(), 7);
                 assertNotNull(result.data.getItems().get(0).getOriginalData());
-                try {
-                    assertEquals(result.data.getItems().get(0).getOriginalData().getString("id"), "TZZ91621-135");
-                } catch (JSONException e) {
-                    fail();
-                }
                 assertNotNull(result.data.getItems().get(0).getSku());
                 latch.countDown();
             }
@@ -172,11 +162,6 @@ public class RecommendationEngineClientImplTest extends BaseTest {
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
         assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
-        try {
-            assertEquals(result.data.getItems().get(0).getOffers().get(0).getOriginalData().getString("id"), "FZZ69821-10");
-        } catch (JSONException e) {
-            fail();
-        }
     }
 
     @Test
@@ -360,11 +345,6 @@ public class RecommendationEngineClientImplTest extends BaseTest {
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
         assertNotNull(result.data.getItems());
-        try {
-            assertEquals(result.data.getItems().get(0).getOriginalData().getString("id"), "TZZ91621-135");
-        } catch (JSONException e) {
-            fail();
-        }
     }
 
     @Test

@@ -22,16 +22,12 @@ public class SyteConfiguration {
 
     private SyteStorage mStorage;
 
-    public SyteConfiguration(Context context, String accountId, String signature) throws SyteInitializationException {
+    public SyteConfiguration(Context context, String accountId, String signature) {
         this.mAccountId = accountId;
         this.mSignature = signature;
-        try {
-            this.mStorage = new SyteStorage(context);
-            this.mSessionId = Long.toString(mStorage.getSessionId());
-            this.mUserId = mStorage.getUserId();
-        } catch (Exception e) {
-            throw new SyteInitializationException();
-        }
+        this.mStorage = new SyteStorage(context);
+        this.mSessionId = Long.toString(mStorage.getSessionId());
+        this.mUserId = mStorage.getUserId();
     }
 
     public void setLocale(String locale) {

@@ -11,6 +11,8 @@ import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.syte.ai.android_sdk.exceptions.SyteGeneralException;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
 import java.io.File;
@@ -41,8 +43,7 @@ class ImageProcessor {
     static final float LARGE_IMAGE_MAX_WIDTH = 2000f;
     static final float LARGE_IMAGE_MAX_HEIGHT = 2000f;
 
-    File compress(Context context, long size, Bitmap bitmap, Scale scale) {
-        //TODO handle errors here
+    File compress(Context context, long size, Bitmap bitmap, Scale scale) throws SyteGeneralException {
         Compress compress = Compress.Companion.with(context, bitmap);
         compress.setFormat(Bitmap.CompressFormat.JPEG);
         compress.setQuality(SCALE_QUALITY);
@@ -51,7 +52,7 @@ class ImageProcessor {
         if (!file.exists()) {
             boolean result = file.mkdir();
             if (!result) {
-                //TODO throw exception here
+                throw new SyteGeneralException("Could not create file. Please, check your permissions.");
             }
         }
         compress.setTargetDir(dir);
@@ -96,12 +97,12 @@ class ImageProcessor {
     }
 
     @Nullable
-    Bitmap rotateImageIfNeeded(Context context, Uri uri) {
+    Bitmap rotateImageIfNeeded(Context context, Uri uri) throws SyteWrongInputException {
         InputStream inputStream = null;
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
         } catch (FileNotFoundException e) {
-            // TODO handle error here
+            throw new SyteWrongInputException("Could not open stream for the URI: " + e.getMessage());
         }
 
         Matrix matrix = handleRotation(inputStream);
@@ -132,12 +133,12 @@ class ImageProcessor {
         return 0;
     }
 
-    private Matrix handleRotation(InputStream inputStream) {
+    private Matrix handleRotation(InputStream inputStream) throws SyteWrongInputException {
         ExifInterface exifInterface = null;
         try {
             exifInterface = new ExifInterface(inputStream);
         } catch (IOException e) {
-            //TODO handle error here
+            throw new SyteWrongInputException("Could not handle image rotation: " + e.getMessage());
         }
         int orientation = exifInterface.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
@@ -157,22 +158,20 @@ class ImageProcessor {
     }
 
     @Nullable
-    private Bitmap getSourceBitmap(Context context, Uri uri) {
+    private Bitmap getSourceBitmap(Context context, Uri uri) throws SyteWrongInputException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             try {
                 return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.getContentResolver(), uri));
             } catch (IOException e) {
-                //TODO handle error here
+                throw new SyteWrongInputException("Could not decode bitmap: " + e.getMessage());
             }
         } else {
             try {
                 return MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             } catch (IOException e) {
-                //TODO handle error here
+                throw new SyteWrongInputException("Could not decode bitmap: " + e.getMessage());
             }
         }
-
-        return null;
     }
 
 }

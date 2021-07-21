@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
@@ -83,10 +84,19 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        SyteResult<PersonalizationResult> result = mRecommendationEngineClient.getPersonalization(
+                                personalizationRequestData
+                        );
+                        if (result.errorMessage != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), result.errorMessage, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                         SDKApplication.getInstance().getSyteManager().setPersonalizationResult(
-                                mRecommendationEngineClient.getPersonalization(
-                                        personalizationRequestData
-                                ).data
+                                result.data
                         );
                         new Navigator(requireActivity().getSupportFragmentManager()).offersFragment();
                     }
@@ -98,6 +108,9 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
                         new SyteCallback<PersonalizationResult>() {
                             @Override
                             public void onResult(SyteResult<PersonalizationResult> syteResult) {
+                                if (syteResult.errorMessage != null) {
+                                    Toast.makeText(getActivity(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                                }
                                 SDKApplication.getInstance().getSyteManager().setPersonalizationResult(
                                         syteResult.data
                                 );

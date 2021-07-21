@@ -1,5 +1,6 @@
 package com.syte.ai.android_sdk.data.result.offers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 public class OffersResult {
 
     @SerializedName("ads")
-    private List<Offer> offers;
+    private List<Offer> offers = new ArrayList<>();
 
     @SerializedName("currency_symbol")
     private String currencySymbol;

@@ -27,9 +27,7 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public SyteResult<AccountDataService> startSession(SyteConfiguration configuration) throws SyteInitializationException {
-        if (!validateConfig(configuration)) {
-            throw new SyteInitializationException();
-        }
+        InputValidator.validateInput(configuration);
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
@@ -42,15 +40,15 @@ class InitSyteImpl extends InitSyte {
             result.isSuccessful = false;
             mState = SyteState.IDLE;
         }
-        fireEvent(new EventInitialization());
+        if (mState == SyteState.INITIALIZED) {
+            fireEvent(new EventInitialization());
+        }
         return result;
     }
 
     @Override
     public void startSessionAsync(SyteConfiguration configuration, SyteCallback<AccountDataService> callback) throws SyteInitializationException {
-        if (!validateConfig(configuration)) {
-            throw new SyteInitializationException();
-        }
+        InputValidator.validateInput(configuration);
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
@@ -63,7 +61,9 @@ class InitSyteImpl extends InitSyte {
                 } else {
                     mState = SyteState.IDLE;
                 }
-                fireEvent(new EventInitialization());
+                if (mState == SyteState.INITIALIZED) {
+                    fireEvent(new EventInitialization());
+                }
                 callback.onResult(syteResult);
             }
         });
@@ -71,17 +71,14 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public SyteConfiguration getConfiguration() {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         return mConfiguration;
     }
 
     @Override
     public void setConfiguration(SyteConfiguration configuration) {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        InputValidator.validateInput(configuration);
+        verifyInitialized();
         mConfiguration = configuration;
         mRemoteDataSource.setConfiguration(configuration);
         mEventsRemoteDataSource.setConfiguration(configuration);
@@ -89,17 +86,13 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public AccountDataService getAccountDataService() {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         return mAccountDataService;
     }
 
     @Override
     public RecommendationEngineClient retrieveRecommendationEngineClient() {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         return new RecommendationEngineClientImpl(
                 mRemoteDataSource, mAccountDataService
         );
@@ -107,33 +100,25 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public ImageSearchClient retrieveImageSearchClient() {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         return new ImageSearchClientImpl(mRemoteDataSource, mAccountDataService);
     }
 
     @Override
     public void endSession() {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         mConfiguration.getStorage().clearSessionId();
     }
 
     @Override
     public void fireEvent(BaseSyteEvent event) {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         mEventsRemoteDataSource.fireEvent(event);
     }
 
     @Override
     public void addViewedProduct(String sku) {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException();
-        }
+        verifyInitialized();
         mConfiguration.addViewedProduct(sku);
     }
 
@@ -142,8 +127,11 @@ class InitSyteImpl extends InitSyte {
         SyteLogger.setLogLevel(logLevel);
     }
 
-    private boolean validateConfig(SyteConfiguration configuration) {
-        return true;
+    private void verifyInitialized() throws SyteInitializationException {
+        // Disable for now
+//        if (mState != SyteState.INITIALIZED) {
+//            throw new SyteInitializationException("Syte is not initialized.");
+//        }
     }
 
 }

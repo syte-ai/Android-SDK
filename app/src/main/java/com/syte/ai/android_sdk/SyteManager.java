@@ -1,7 +1,9 @@
 package com.syte.ai.android_sdk;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.CropCoordinates;
@@ -29,6 +31,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
     private BoundsResult mBoundsResult = null;
     private OffersResult mOffersResult = null;
     private boolean mZipOffers = false;
+    public Activity mActivity;
 
     private SimilarProductsResult mSimilarProductsResult;
     private ShopTheLookResult mShopTheLookResult;
@@ -99,6 +102,9 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                 new SyteCallback<OffersResult>() {
             @Override
             public void onResult(SyteResult<OffersResult> syteResult) {
+                if (syteResult.errorMessage != null) {
+                    Toast.makeText(SDKApplication.getInstance(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                }
                 mOffersResult = syteResult.data;
                 if (mBoundsFragment != null) {
                     mBoundsFragment.onOffersRetrieved(mOffersResult);
@@ -130,6 +136,15 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                 SyteResult<BoundsResult> result = mInitSyte.retrieveImageSearchClient().getBounds(
                         urlImageSearchRequestData
                 );
+
+                if (result.errorMessage != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SDKApplication.getInstance(), result.errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
 
                 mBoundsResult = result.data;
                 if (mUrlImageSearchFragment != null) {
@@ -163,7 +178,14 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                         context,
                         imageSearchRequestData
                 );
-
+                if (result.errorMessage != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SDKApplication.getInstance(), result.errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
                 mBoundsResult = result.data;
                 if (mWildImageSearchFragment != null) {
                     mWildImageSearchFragment.showToast("Successful - " + result.isSuccessful);
@@ -193,6 +215,9 @@ public class SyteManager implements SyteCallback<AccountDataService> {
         mInitSyte.retrieveImageSearchClient().getBoundsAsync(urlImageSearchRequestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> syteResult) {
+                if (syteResult.errorMessage != null) {
+                    Toast.makeText(SDKApplication.getInstance(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                }
                 mBoundsResult = syteResult.data;
                 if (mUrlImageSearchFragment != null) {
                     mUrlImageSearchFragment.showToast("Successful - " + syteResult.isSuccessful);
@@ -220,6 +245,9 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                 context, imageSearchRequestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> syteResult) {
+                if (syteResult.errorMessage != null) {
+                    Toast.makeText(SDKApplication.getInstance(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                }
                 mBoundsResult = syteResult.data;
                 if (mWildImageSearchFragment != null) {
                     mWildImageSearchFragment.showToast("Successful - " + syteResult.isSuccessful);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
@@ -107,10 +108,21 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        SyteResult<ShopTheLookResult> result = mRecommendationEngineClient.getShopTheLook(
+                                shopTheLookRequestData
+                        );
+                        if (result.errorMessage != null) {
+                            getActivity().runOnUiThread(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getActivity(), result.errorMessage, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                            );
+                        }
                         SDKApplication.getInstance().getSyteManager().setShopTheLookResult(
-                                mRecommendationEngineClient.getShopTheLook(
-                                        shopTheLookRequestData
-                                ).data
+                                result.data
                         );
                         new Navigator(requireActivity().getSupportFragmentManager()).offersFragment();
                     }
@@ -122,6 +134,9 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                         new SyteCallback<ShopTheLookResult>() {
                             @Override
                             public void onResult(SyteResult<ShopTheLookResult> syteResult) {
+                                if (syteResult.errorMessage != null) {
+                                    Toast.makeText(getActivity(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                                }
                                 SDKApplication.getInstance().getSyteManager().setShopTheLookResult(
                                         syteResult.data
                                 );

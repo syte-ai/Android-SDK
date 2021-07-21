@@ -18,13 +18,7 @@ public class SyteStorageTest {
 
     @Before
     public void setUp() {
-        try {
-            mStorage = new SyteStorage(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        } catch (GeneralSecurityException e) {
-            fail("Can not create storage: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Can not create storage: " + e.getMessage());
-        }
+        mStorage = new SyteStorage(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 
     @Test

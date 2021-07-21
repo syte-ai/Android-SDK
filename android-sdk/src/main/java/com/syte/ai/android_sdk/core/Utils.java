@@ -9,23 +9,18 @@ import java.io.IOException;
 
 class Utils {
 
-    static byte[] getFileBytes(File file) {
+    static byte[] getFileBytes(File file) throws IOException {
         int size = (int) file.length();
         byte[] bytes = new byte[size];
 
-        try {
-            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-            buf.read(bytes, 0, bytes.length);
-            buf.close();
-        } catch (IOException e) {
-            //TODO handle error here
-        }
+        BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+        buf.read(bytes, 0, bytes.length);
+        buf.close();
 
         return bytes;
     }
 
     static ImageProcessor.Scale getImageScale(AccountDataService accountDataService) {
-        //TODO check for nulls here
         String imageScale = accountDataService
                 .getData()
                 .getProducts()

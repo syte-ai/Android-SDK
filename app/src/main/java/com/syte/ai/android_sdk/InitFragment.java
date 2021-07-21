@@ -64,7 +64,11 @@ public class InitFragment extends Fragment {
                                         if (accountDataService.data != null) {
                                             mAccountDataServiceEt.setText(accountDataService.data.toString());
                                         }
-                                        Toast.makeText(getActivity(), "Successful - " + accountDataService.isSuccessful, Toast.LENGTH_LONG).show();
+                                        if (accountDataService.errorMessage != null) {
+                                            Toast.makeText(getActivity(), accountDataService.errorMessage, Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(getActivity(), "Successful - " + accountDataService.isSuccessful, Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 });
                             } catch (Exception e) {
@@ -84,7 +88,11 @@ public class InitFragment extends Fragment {
                                 if (syteResult.data != null) {
                                     mAccountDataServiceEt.setText(syteResult.data.toString());
                                 }
-                                Toast.makeText(getActivity(), "Successful - " + syteResult.isSuccessful, Toast.LENGTH_LONG).show();
+                                if (syteResult.errorMessage != null) {
+                                    Toast.makeText(getActivity(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "Successful - " + syteResult.isSuccessful, Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                     } catch (SyteInitializationException e) {}

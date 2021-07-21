@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
@@ -103,10 +104,19 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        SyteResult<SimilarProductsResult> result = mRecommendationEngineClient.getSimilarProducts(
+                                similarProductsRequestData
+                        );
+                        if (result.errorMessage != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), result.errorMessage, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                         SDKApplication.getInstance().getSyteManager().setSimilarProductsResult(
-                                mRecommendationEngineClient.getSimilarProducts(
-                                        similarProductsRequestData
-                                ).data
+                                result.data
                         );
                         new Navigator(requireActivity().getSupportFragmentManager()).offersFragment();
                     }
@@ -118,6 +128,9 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
                         new SyteCallback<SimilarProductsResult>() {
                             @Override
                             public void onResult(SyteResult<SimilarProductsResult> syteResult) {
+                                if (syteResult.errorMessage != null) {
+                                    Toast.makeText(getActivity(), syteResult.errorMessage, Toast.LENGTH_LONG).show();
+                                }
                                 SDKApplication.getInstance().getSyteManager().setSimilarProductsResult(
                                         syteResult.data
                                 );

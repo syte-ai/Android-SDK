@@ -11,6 +11,7 @@ import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 class RecommendationEngineClientImpl implements RecommendationEngineClient {
 
@@ -29,6 +30,13 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
     public SyteResult<SimilarProductsResult> getSimilarProducts(
             SimilarProductsRequestData similarProductsRequestData
     ) {
+        try {
+            InputValidator.validateInput(similarProductsRequestData);
+        } catch (SyteWrongInputException e) {
+            SyteResult<SimilarProductsResult> result = new SyteResult<>();
+            result.errorMessage = e.getMessage();
+            return result;
+        }
         return mSyteRemoteDataSource.getSimilarProducts(similarProductsRequestData);
     }
 
@@ -37,12 +45,23 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
             SimilarProductsRequestData similarProductsRequestData,
             SyteCallback<SimilarProductsResult> callback
     ) {
+        try {
+            InputValidator.validateInput(similarProductsRequestData);
+        } catch (SyteWrongInputException e) {
+            if (callback != null) {
+                SyteResult<SimilarProductsResult> result = new SyteResult<>();
+                result.errorMessage = e.getMessage();
+                callback.onResult(result);
+            }
+        }
         mSyteRemoteDataSource.getSimilarProductsAsync(
                 similarProductsRequestData,
                 new SyteCallback<SimilarProductsResult>() {
                     @Override
                     public void onResult(SyteResult<SimilarProductsResult> syteResult) {
-                        callback.onResult(syteResult);
+                        if (callback != null) {
+                            callback.onResult(syteResult);
+                        }
                     }
                 }
         );
@@ -52,6 +71,13 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
     public SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLookRequestData shopTheLookRequestData
     ) {
+        try {
+            InputValidator.validateInput(shopTheLookRequestData);
+        } catch (SyteWrongInputException e) {
+            SyteResult<ShopTheLookResult> result = new SyteResult<>();
+            result.errorMessage = e.getMessage();
+            return result;
+        }
         return mSyteRemoteDataSource.getShopTheLook(shopTheLookRequestData, mAccountDataService);
     }
 
@@ -60,13 +86,24 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
             ShopTheLookRequestData shopTheLookRequestData,
             SyteCallback<ShopTheLookResult> callback
     ) {
+        try {
+            InputValidator.validateInput(shopTheLookRequestData);
+        } catch (SyteWrongInputException e) {
+            SyteResult<ShopTheLookResult> result = new SyteResult<>();
+            result.errorMessage = e.getMessage();
+            if (callback != null) {
+                callback.onResult(result);
+            }
+        }
         mSyteRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
                 mAccountDataService,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {
-                        callback.onResult(syteResult);
+                        if (callback != null) {
+                            callback.onResult(syteResult);
+                        }
                     }
                 }
         );
@@ -76,6 +113,13 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
     public SyteResult<PersonalizationResult> getPersonalization(
             PersonalizationRequestData personalizationRequestData
     ) {
+        try {
+            InputValidator.validateInput(personalizationRequestData);
+        } catch (SyteWrongInputException e) {
+            SyteResult<PersonalizationResult> result = new SyteResult<>();
+            result.errorMessage = e.getMessage();
+            return result;
+        }
         return mSyteRemoteDataSource.getPersonalization(personalizationRequestData);
     }
 
@@ -84,12 +128,23 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
             PersonalizationRequestData personalizationRequestData,
             SyteCallback<PersonalizationResult> callback
     ) {
+        try {
+            InputValidator.validateInput(personalizationRequestData);
+        } catch (SyteWrongInputException e) {
+            SyteResult<PersonalizationResult> result = new SyteResult<>();
+            result.errorMessage = e.getMessage();
+            if (callback != null) {
+                callback.onResult(result);
+            }
+        }
         mSyteRemoteDataSource.getPersonalizationAsync(
                 personalizationRequestData,
                 new SyteCallback<PersonalizationResult>() {
                     @Override
                     public void onResult(SyteResult<PersonalizationResult> syteResult) {
-                        callback.onResult(syteResult);
+                        if (callback != null) {
+                            callback.onResult(syteResult);
+                        }
                     }
                 }
         );

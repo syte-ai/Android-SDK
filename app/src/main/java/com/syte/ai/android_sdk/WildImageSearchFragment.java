@@ -71,12 +71,14 @@ public class WildImageSearchFragment extends BaseFragment implements View.OnClic
     }
 
     public void onBoundsRetrieved(BoundsResult result) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new Navigator(getActivity().getSupportFragmentManager()).boundsFragment();
-            }
-        });
+        if (result != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new Navigator(getActivity().getSupportFragmentManager()).boundsFragment();
+                }
+            });
+        }
     }
 
     @Override
