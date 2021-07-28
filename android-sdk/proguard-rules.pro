@@ -1,21 +1,59 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-keepparameternames
+-keepclasseswithmembernames,includedescriptorclasses class * {
+    public <methods>;
+}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keep class com.google.gson.** { *; }
+-keep class retrofit2.** { *; }
+-keep class me.shouheng.compress.** { *; }
+-keep class androidx.exifinterface.** { *; }
+-keep class androidx.security.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-keep class * implements com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-keep interface * { *; }
+
+-keep class com.syte.ai.android_sdk.* {
+    public<methods>;
+    public<fields>;
+}
+-keep class com.syte.ai.android_sdk.data.** { *; }
+-keep class com.syte.ai.android_sdk.data.result.** { *; }
+-keep class com.syte.ai.android_sdk.data.result.account.** { *; }
+-keep class com.syte.ai.android_sdk.data.result.offers.** { *; }
+-keep class com.syte.ai.android_sdk.data.result.recommendation.** { *; }
+-keep class com.syte.ai.android_sdk.enums.* {
+    public<methods>;
+    public<fields>;
+}
+-keep class com.syte.ai.android_sdk.events.* {
+    public<methods>;
+    public<fields>;
+}
+-keep class com.syte.ai.android_sdk.exceptions.* {
+    public<methods>;
+    public<fields>;
+}
+-keep class com.syte.ai.android_sdk.util.* {
+    public<methods>;
+    public<fields>;
+}
+-keep class com.syte.ai.android_sdk.core.InitSyte {
+    public<methods>;
+}
+-keep class com.syte.ai.android_sdk.core.SyteConfiguration {
+    public<init>(android.content.Context, java.lang.String, java.lang.String);
+    void setLocale(java.lang.String);
+    java.lang.String getLocale();
+    java.lang.String getAccountId();
+    java.lang.String getSignature();
+    java.lang.String getUserId();
+    java.lang.Long getSessionId();
+}

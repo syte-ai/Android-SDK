@@ -1,10 +1,11 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.app;
 
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;

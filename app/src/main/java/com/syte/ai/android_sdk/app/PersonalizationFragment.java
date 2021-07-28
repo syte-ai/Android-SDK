@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.app;
 
 import android.os.Bundle;
 
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.core.SyteConfiguration;

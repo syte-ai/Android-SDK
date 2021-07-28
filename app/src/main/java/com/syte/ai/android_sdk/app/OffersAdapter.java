@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.app;
 
 import android.view.LayoutInflater;
 import android.view.View;

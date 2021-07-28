@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.app;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -96,7 +96,7 @@ public class WildImageSearchFragment extends BaseFragment implements View.OnClic
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK) {
             mSelectedImageUri = data.getData();

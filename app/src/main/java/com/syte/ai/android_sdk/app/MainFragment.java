@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.app;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;

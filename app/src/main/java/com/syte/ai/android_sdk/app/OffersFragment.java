@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk;
+package com.syte.ai.android_sdk.app;
 
 import android.os.Bundle;
 
@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import com.syte.ai.android_sdk.data.result.offers.Offer;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResponseItem;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class OffersFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.offers_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

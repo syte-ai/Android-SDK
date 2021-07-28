@@ -12,7 +12,7 @@ import com.syte.ai.android_sdk.util.SyteLogger;
 
 public abstract class InitSyte {
 
-    public static synchronized InitSyte getInstance() {
+    public static InitSyte getInstance() {
         return new InitSyteImpl();
     }
 
