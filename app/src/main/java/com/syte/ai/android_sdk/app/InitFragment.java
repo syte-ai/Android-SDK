@@ -13,11 +13,15 @@ import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
+import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
+import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
+import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
 public class InitFragment extends Fragment {
@@ -50,7 +54,7 @@ public class InitFragment extends Fragment {
                     "602e43d2d6ddcd558359f91f"
             );
             mUserCredentialsTv.setText("UserId - " + syteConfiguration.getUserId() + "\nSessionId - " + syteConfiguration.getSessionId());
-            InitSyte initSyte = InitSyte.getInstance();
+            InitSyte initSyte = InitSyte.newInstance();
             mInitSyncBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -58,7 +62,7 @@ public class InitFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
-                                SyteResult<AccountDataService> accountDataService = initSyte.startSession(syteConfiguration);
+                                SyteResult<SytePlatformSettings> accountDataService = initSyte.startSession(syteConfiguration);
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -83,9 +87,9 @@ public class InitFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        initSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
+                        initSyte.startSessionAsync(syteConfiguration, new SyteCallback<SytePlatformSettings>() {
                             @Override
-                            public void onResult(SyteResult<AccountDataService> syteResult) {
+                            public void onResult(SyteResult<SytePlatformSettings> syteResult) {
                                 if (syteResult.data != null) {
                                     mAccountDataServiceEt.setText(syteResult.data.toString());
                                 }

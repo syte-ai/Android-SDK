@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -27,7 +27,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
     private Button mPersonalizationSync;
     private Button mPersonalizationAsync;
 
-    private RecommendationEngineClient mRecommendationEngineClient;
+    private ProductRecommendationClient mProductRecommendationClient;
     private SyteConfiguration mSyteConfiguration;
     private InitSyte mInitSyte;
 
@@ -45,7 +45,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
 
         initViews();
 
-        mInitSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.newInstance();
 
         try {
             mSyteConfiguration = new SyteConfiguration(
@@ -58,10 +58,10 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
             syteInitializationException.printStackTrace();
         }
         try {
-            mInitSyte.startSessionAsync(mSyteConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(mSyteConfiguration, new SyteCallback<SytePlatformSettings>() {
                 @Override
-                public void onResult(SyteResult<AccountDataService> syteResult) {
-                    mRecommendationEngineClient = mInitSyte.retrieveRecommendationEngineClient();
+                public void onResult(SyteResult<SytePlatformSettings> syteResult) {
+                    mProductRecommendationClient = mInitSyte.getProductRecommendationClient();
                 }
             });
         } catch (SyteInitializationException syteInitializationException) { }
@@ -86,7 +86,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        SyteResult<PersonalizationResult> result = mRecommendationEngineClient.getPersonalization(
+                        SyteResult<PersonalizationResult> result = mProductRecommendationClient.getPersonalization(
                                 personalizationRequestData
                         );
                         if (result.errorMessage != null) {
@@ -105,7 +105,7 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
                 }).start();
                 break;
             case R.id.personalization_async_btn:
-                mRecommendationEngineClient.getPersonalizationAsync(
+                mProductRecommendationClient.getPersonalizationAsync(
                         personalizationRequestData,
                         new SyteCallback<PersonalizationResult>() {
                             @Override

@@ -14,7 +14,7 @@ import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
@@ -32,9 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Set;
 
@@ -101,21 +99,21 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLookRequestData shopTheLookRequestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         renewTimestamp();
-        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData, accountDataService);
+        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData, sytePlatformSettings);
     }
 
     void getShopTheLookAsync(
             ShopTheLookRequestData shopTheLookRequestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<ShopTheLookResult> callback
     ) {
         renewTimestamp();
         mRecommendationRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
-                accountDataService,
+                sytePlatformSettings,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {
@@ -148,10 +146,10 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    SyteResult<AccountDataService> initialize() {
+    SyteResult<SytePlatformSettings> initialize() {
         renewTimestamp();
         Response<ResponseBody> response = null;
-        SyteResult<AccountDataService> syteResult = new SyteResult<>();
+        SyteResult<SytePlatformSettings> syteResult = new SyteResult<>();
         try {
             response = mSyteService.initialize(mConfiguration.getAccountId()).execute();
         } catch (IOException e) {
@@ -162,7 +160,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 return handleEmptyBody(response);
             }
             syteResult.data =
-                    new Gson().fromJson(response.body().string(), AccountDataService.class);
+                    new Gson().fromJson(response.body().string(), SytePlatformSettings.class);
         } catch (IOException e) {
             return handleException(response, e);
         }
@@ -171,19 +169,19 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         return syteResult;
     }
 
-    void initializeAsync(SyteCallback<AccountDataService> callback) {
+    void initializeAsync(SyteCallback<SytePlatformSettings> callback) {
         renewTimestamp();
         mSyteService.initialize(mConfiguration.getAccountId()).enqueue(
                 new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
-                        SyteResult<AccountDataService> syteResult = new SyteResult<>();
+                        SyteResult<SytePlatformSettings> syteResult = new SyteResult<>();
                         try {
                             if (response.body() == null) {
                                 callback.onResult(handleEmptyBody(response));
                             }
                             syteResult.data =
-                                    new Gson().fromJson(response.body().string(), AccountDataService.class);
+                                    new Gson().fromJson(response.body().string(), SytePlatformSettings.class);
                         } catch (IOException e) {
                             callback.onResult(handleException(response, e));
                         }
@@ -202,11 +200,11 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private Call<ResponseBody> generateBoundsCall(
             UrlImageSearchRequestData requestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         String catalog;
         try {
-            catalog = accountDataService
+            catalog = sytePlatformSettings
                     .getData()
                     .getProducts()
                     .getSyteapp()
@@ -232,15 +230,15 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, AccountDataService accountDataService) {
+    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, SytePlatformSettings sytePlatformSettings) {
         renewTimestamp();
         Response<ResponseBody> response = null;
         try {
-            response = generateBoundsCall(requestData, accountDataService).execute();
+            response = generateBoundsCall(requestData, sytePlatformSettings).execute();
             return onBoundsResult(requestData,
                     response,
                     requestData.getFirstBoundOffersCoordinates(),
-                    accountDataService,
+                    sytePlatformSettings,
                     true,
                     null
             );
@@ -250,10 +248,10 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     void getBoundsAsync(UrlImageSearchRequestData requestData,
-                        AccountDataService accountDataService,
+                        SytePlatformSettings sytePlatformSettings,
                         SyteCallback<BoundsResult> callback) {
         renewTimestamp();
-        generateBoundsCall(requestData, accountDataService).enqueue(new Callback<ResponseBody>() {
+        generateBoundsCall(requestData, sytePlatformSettings).enqueue(new Callback<ResponseBody>() {
 
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
@@ -263,7 +261,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                             requestData,
                             response,
                             requestData.getFirstBoundOffersCoordinates(),
-                            accountDataService,
+                            sytePlatformSettings,
                             false,
                             new BoundsResultCallback() {
                                 @Override
@@ -287,7 +285,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     SyteResult<OffersResult> getOffers(
             Bound bound,
             @Nullable CropCoordinates cropCoordinates,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         renewTimestamp();
         SyteResult<OffersResult> syteResult = new SyteResult<>();
@@ -296,7 +294,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             response = generateOffersCall(
                     bound.getOffersUrl(),
                     cropCoordinates,
-                    accountDataService
+                    sytePlatformSettings
             ).execute();
             syteResult.isSuccessful = response.isSuccessful();
             syteResult.resultCode = response.code();
@@ -313,13 +311,13 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     void getOffersAsync(
             Bound bound,
             CropCoordinates cropCoordinates,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<OffersResult> callback) {
         renewTimestamp();
         generateOffersCall(
                 bound.getOffersUrl(),
                 cropCoordinates,
-                accountDataService
+                sytePlatformSettings
         ).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -348,7 +346,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             UrlImageSearchRequestData requestData,
             Response<ResponseBody> response,
             @Nullable CropCoordinates cropCoordinates,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             boolean sync,
             @Nullable BoundsResultCallback resultCallback
     ) throws IOException {
@@ -405,7 +403,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                     offersResponse = generateOffersCall(
                             syteResult.data.getBounds().get(0).getOffersUrl(),
                             cropCoordinates,
-                            accountDataService
+                            sytePlatformSettings
                     ).execute();
                 } catch (IOException e) {
                     return handleException(response, e);
@@ -416,7 +414,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 generateOffersCall(
                         syteResult.data.getBounds().get(0).getOffersUrl(),
                         cropCoordinates,
-                        accountDataService
+                        sytePlatformSettings
                 ).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -449,7 +447,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private Call<ResponseBody> generateOffersCall(
             String offersUrl,
             CropCoordinates cropCoordinates,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         boolean cropEnabled = cropCoordinates != null;
         String actualUrl = null;
@@ -483,7 +481,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 actualUrl,
                 coordinatesBase64,
                 cropEnabled ? Catalog.GENERAL.getName() : null,
-                cropEnabled ? accountDataService
+                cropEnabled ? sytePlatformSettings
                         .getData()
                         .getProducts()
                         .getSyteapp()
@@ -523,19 +521,19 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     public SyteResult<BoundsResult> getBoundsWild(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
 
         ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
                 this,
-                accountDataService
+                sytePlatformSettings
         );
         UrlImageSearchRequestData urlImageSearchRequestData;
         try {
             urlImageSearchRequestData = prepareUrlImageSearchRequestData(
                     context,
                     requestData,
-                    accountDataService
+                    sytePlatformSettings
             );
         } catch (Exception e) {
             return handleException(null, e);
@@ -546,17 +544,17 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     void getBoundsWildAsync(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<BoundsResult> callback
     ) {
         ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
                 this,
-                accountDataService
+                sytePlatformSettings
         );
         prepareUrlImageSearchRequestDataAsync(
                 context,
                 requestData,
-                accountDataService,
+                sytePlatformSettings,
                 new ExifRemovalResultCallback() {
                     @Override
                     public void onResult(UrlImageSearchRequestData requestData, Throwable e) {
@@ -573,10 +571,10 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private UrlImageSearchRequestData prepareUrlImageSearchRequestData(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) throws IOException, JSONException, SyteGeneralException {
 
-        byte[] bytes = prepareImage(context, requestData, accountDataService);
+        byte[] bytes = prepareImage(context, requestData, sytePlatformSettings);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), bytes);
 
@@ -611,12 +609,12 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private void prepareUrlImageSearchRequestDataAsync(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             ExifRemovalResultCallback callback
     ) {
         byte[] bytes = new byte[0];
         try {
-            bytes = prepareImage(context, requestData, accountDataService);
+            bytes = prepareImage(context, requestData, sytePlatformSettings);
         } catch (Exception e) {
             callback.onResult(null, e);
         }
@@ -674,7 +672,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private byte[] prepareImage(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService) throws IOException {
+            SytePlatformSettings sytePlatformSettings) throws IOException, SyteGeneralException {
 
         ImageProcessor imageProcessor = new ImageProcessor();
         Bitmap bitmap = imageProcessor.rotateImageIfNeeded(
@@ -692,7 +690,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 context,
                 size,
                 bitmap,
-                Utils.getImageScale(accountDataService)
+                Utils.getImageScale(sytePlatformSettings)
         );
 
         SyteLogger.i(TAG, "Compressed image size: " + file.length() + " bytes");

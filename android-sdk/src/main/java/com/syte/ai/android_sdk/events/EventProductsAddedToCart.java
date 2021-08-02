@@ -7,6 +7,9 @@ import com.syte.ai.android_sdk.enums.EventsTag;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Default Syte event
+ */
 public class EventProductsAddedToCart extends BaseSyteEvent {
 
     @SerializedName("products")

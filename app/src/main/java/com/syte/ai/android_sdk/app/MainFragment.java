@@ -14,7 +14,7 @@ import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.enums.Placement;
@@ -115,11 +115,11 @@ public class MainFragment extends BaseFragment {
         mFireEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitSyte initSyte = InitSyte.getInstance();
+                InitSyte initSyte = InitSyte.newInstance();
                 try {
-                    initSyte.startSessionAsync(new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3"), new SyteCallback<AccountDataService>() {
+                    initSyte.startSessionAsync(new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3"), new SyteCallback<SytePlatformSettings>() {
                         @Override
-                        public void onResult(SyteResult<AccountDataService> syteResult) {
+                        public void onResult(SyteResult<SytePlatformSettings> syteResult) {
                             initSyte.fireEvent(
                                     new EventCheckoutStart(
                                             2,

@@ -5,6 +5,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
+/**
+ * Default Syte event
+ */
 public class EventPageView extends BaseSyteEvent {
 
     @SerializedName("sku")

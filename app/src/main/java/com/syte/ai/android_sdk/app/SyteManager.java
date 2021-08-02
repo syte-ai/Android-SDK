@@ -12,7 +12,7 @@ import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
@@ -22,7 +22,7 @@ import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
-public class SyteManager implements SyteCallback<AccountDataService> {
+public class SyteManager implements SyteCallback<SytePlatformSettings> {
 
     private UrlImageSearchFragment mUrlImageSearchFragment;
     private WildImageSearchFragment mWildImageSearchFragment;
@@ -73,7 +73,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mOffersResult = mInitSyte.retrieveImageSearchClient().getOffers(
+                mOffersResult = mInitSyte.getImageSearchClient().getOffers(
                         bound,
                         null
                 ).data;
@@ -97,7 +97,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
     }
 
     public void getOffersAsync(Bound bound) {
-        mInitSyte.retrieveImageSearchClient().getOffersAsync(
+        mInitSyte.getImageSearchClient().getOffersAsync(
                 bound,
                 mCropCoordinates,
                 new SyteCallback<OffersResult>() {
@@ -134,7 +134,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                 }
                 urlImageSearchRequestData.setSku(sku);
                 urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
-                SyteResult<BoundsResult> result = mInitSyte.retrieveImageSearchClient().getBounds(
+                SyteResult<BoundsResult> result = mInitSyte.getImageSearchClient().getBounds(
                         urlImageSearchRequestData
                 );
 
@@ -175,7 +175,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                         mWildImageSearchFragment.requireActivity().getApplicationContext() :
                         mUrlImageSearchFragment.requireActivity().getApplicationContext();
 
-                SyteResult<BoundsResult> result = mInitSyte.retrieveImageSearchClient().getBounds(
+                SyteResult<BoundsResult> result = mInitSyte.getImageSearchClient().getBounds(
                         context,
                         imageSearchRequestData
                 );
@@ -213,7 +213,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
         }
         urlImageSearchRequestData.setSku(sku);
         urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(retrieveOffersForTheFirstBound);
-        mInitSyte.retrieveImageSearchClient().getBoundsAsync(urlImageSearchRequestData, new SyteCallback<BoundsResult>() {
+        mInitSyte.getImageSearchClient().getBoundsAsync(urlImageSearchRequestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> syteResult) {
                 if (syteResult.errorMessage != null) {
@@ -242,7 +242,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
                 mWildImageSearchFragment.requireActivity().getApplicationContext() :
                 mUrlImageSearchFragment.requireActivity().getApplicationContext();
 
-        mInitSyte.retrieveImageSearchClient().getBoundsAsync(
+        mInitSyte.getImageSearchClient().getBoundsAsync(
                 context, imageSearchRequestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> syteResult) {
@@ -262,7 +262,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
         if (mUrlImageSearchFragment == null && mWildImageSearchFragment == null) {
             return;
         }
-        mInitSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.newInstance();
         Context context = mUrlImageSearchFragment == null ?
                 mWildImageSearchFragment.requireActivity().getApplicationContext() :
                 mUrlImageSearchFragment.requireActivity().getApplicationContext();
@@ -275,7 +275,7 @@ public class SyteManager implements SyteCallback<AccountDataService> {
     }
 
     @Override
-    public void onResult(SyteResult<AccountDataService> syteResult) {
+    public void onResult(SyteResult<SytePlatformSettings> syteResult) {
         // We can work with the Syte SDK now
         if (syteResult.isSuccessful) {
             mSessionStarted = true;

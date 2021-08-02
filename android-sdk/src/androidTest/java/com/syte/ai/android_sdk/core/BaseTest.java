@@ -3,8 +3,9 @@ package com.syte.ai.android_sdk.core;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,13 +46,13 @@ public class BaseTest {
 
     protected void startSessionInternal() {
         try {
-            SyteResult<AccountDataService> accountDataService = mInitSyte.startSession(mConfiguration);
+            SyteResult<SytePlatformSettings> accountDataService = mInitSyte.startSession(mConfiguration);
             assertNotNull(accountDataService.data);
             assertEquals(accountDataService.resultCode, 200);
             assertTrue(accountDataService.isSuccessful);
 
             assertEquals(accountDataService.data.getData().getAccountId(), 9165);
-        } catch (SyteInitializationException syteInitializationException) {
+        } catch (SyteInitializationException | SyteWrongInputException syteInitializationException) {
             fail("Unable to start session: " + syteInitializationException.getMessage());
         }
     }

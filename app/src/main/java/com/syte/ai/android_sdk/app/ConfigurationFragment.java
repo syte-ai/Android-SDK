@@ -14,15 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.syte.ai.android_sdk.core.InitSyte;
-import com.syte.ai.android_sdk.core.SyteConfiguration;
-import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
-import com.syte.ai.android_sdk.events.BaseSyteEvent;
-import com.syte.ai.android_sdk.events.EventCheckoutStart;
-import com.syte.ai.android_sdk.events.Product;
-import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
 import java.util.Arrays;
 import java.util.HashSet;

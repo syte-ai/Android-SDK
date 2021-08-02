@@ -13,13 +13,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -35,7 +35,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
     private EditText mLimitET;
     private EditText mUrlRefererET;
 
-    private RecommendationEngineClient mRecommendationEngineClient;
+    private ProductRecommendationClient mProductRecommendationClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +56,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
 
         initViews();
 
-        mInitSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.newInstance();
         SyteConfiguration syteConfiguration = null;
         try {
             syteConfiguration = new SyteConfiguration(
@@ -69,10 +69,10 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
             syteInitializationException.printStackTrace();
         }
         try {
-            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<SytePlatformSettings>() {
                 @Override
-                public void onResult(SyteResult<AccountDataService> syteResult) {
-                    mRecommendationEngineClient = mInitSyte.retrieveRecommendationEngineClient();
+                public void onResult(SyteResult<SytePlatformSettings> syteResult) {
+                    mProductRecommendationClient = mInitSyte.getProductRecommendationClient();
                 }
             });
         } catch (SyteInitializationException syteInitializationException) {}
@@ -110,7 +110,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        SyteResult<ShopTheLookResult> result = mRecommendationEngineClient.getShopTheLook(
+                        SyteResult<ShopTheLookResult> result = mProductRecommendationClient.getShopTheLook(
                                 shopTheLookRequestData
                         );
                         if (result.errorMessage != null) {
@@ -131,7 +131,7 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
                 }).start();
                 break;
             case R.id.ctl_async:
-                mRecommendationEngineClient.getShopTheLookAsync(
+                mProductRecommendationClient.getShopTheLookAsync(
                         shopTheLookRequestData,
                         new SyteCallback<ShopTheLookResult>() {
                             @Override

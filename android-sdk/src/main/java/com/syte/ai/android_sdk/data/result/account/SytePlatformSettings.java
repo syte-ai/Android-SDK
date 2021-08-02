@@ -2,7 +2,7 @@ package com.syte.ai.android_sdk.data.result.account;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AccountDataService{
+public class SytePlatformSettings {
 
 	@SerializedName("data")
 	private Data data;

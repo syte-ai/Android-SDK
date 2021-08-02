@@ -1,19 +1,17 @@
 package com.syte.ai.android_sdk.core;
 
-import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.Personalization;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
 
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -24,7 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class RecommendationEngineClientImplTest extends BaseTest {
+public class ProductRecommendationClientImplTest extends BaseTest {
 
     @Test
     public void getSimilarProducts() {
@@ -133,7 +131,7 @@ public class RecommendationEngineClientImplTest extends BaseTest {
     public void getSimilarProductsAsync() throws InterruptedException {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
-        RecommendationEngineClient client = mInitSyte.retrieveRecommendationEngineClient();
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         client.getSimilarProductsAsync(createSimilarProductsRequestData(), new SyteCallback<SimilarProductsResult>() {
             @Override
             public void onResult(SyteResult<SimilarProductsResult> result) {
@@ -318,7 +316,7 @@ public class RecommendationEngineClientImplTest extends BaseTest {
     public void getShopTheLookAsync() throws InterruptedException {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
-        RecommendationEngineClient client = mInitSyte.retrieveRecommendationEngineClient();
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         client.getShopTheLookAsync(createShopTheLookRequestData(), new SyteCallback<ShopTheLookResult>() {
             @Override
             public void onResult(SyteResult<ShopTheLookResult> result) {
@@ -436,7 +434,7 @@ public class RecommendationEngineClientImplTest extends BaseTest {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
 
-        RecommendationEngineClient client = mInitSyte.retrieveRecommendationEngineClient();
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         client.getPersonalizationAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
             @Override
             public void onResult(SyteResult<PersonalizationResult> result) {
@@ -469,17 +467,17 @@ public class RecommendationEngineClientImplTest extends BaseTest {
     }
 
     private SyteResult<PersonalizationResult> getPersonalizationInternal(@Nullable PersonalizationRequestData requestData) {
-        RecommendationEngineClient client = mInitSyte.retrieveRecommendationEngineClient();
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         return client.getPersonalization(requestData == null ? createPersonalizationRequestData() : requestData);
     }
 
     private SyteResult<SimilarProductsResult> getSimilarsInternal(@Nullable SimilarProductsRequestData requestData) {
-        RecommendationEngineClient client = mInitSyte.retrieveRecommendationEngineClient();
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         return client.getSimilarProducts(requestData == null ? createSimilarProductsRequestData() : requestData);
     }
 
     private SyteResult<ShopTheLookResult> getShopTheLookInternal(@Nullable ShopTheLookRequestData requestData) {
-        RecommendationEngineClient client = mInitSyte.retrieveRecommendationEngineClient();
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         return client.getShopTheLook(requestData == null ? createShopTheLookRequestData() : requestData);
     }
 

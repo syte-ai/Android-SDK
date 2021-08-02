@@ -1,29 +1,29 @@
 package com.syte.ai.android_sdk.core;
 
 
-import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
-class RecommendationEngineClientImpl implements RecommendationEngineClient {
+class ProductRecommendationClientImpl implements ProductRecommendationClient {
 
     private final SyteRemoteDataSource mSyteRemoteDataSource;
-    private final AccountDataService mAccountDataService;
+    private final SytePlatformSettings mSytePlatformSettings;
 
-    RecommendationEngineClientImpl(
+    ProductRecommendationClientImpl(
             SyteRemoteDataSource syteRemoteDataSource,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         mSyteRemoteDataSource = syteRemoteDataSource;
-        mAccountDataService = accountDataService;
+        mSytePlatformSettings = sytePlatformSettings;
     }
 
     @Override
@@ -78,7 +78,7 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getShopTheLook(shopTheLookRequestData, mAccountDataService);
+        return mSyteRemoteDataSource.getShopTheLook(shopTheLookRequestData, mSytePlatformSettings);
     }
 
     @Override
@@ -97,7 +97,7 @@ class RecommendationEngineClientImpl implements RecommendationEngineClient {
         }
         mSyteRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
-                mAccountDataService,
+                mSytePlatformSettings,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {

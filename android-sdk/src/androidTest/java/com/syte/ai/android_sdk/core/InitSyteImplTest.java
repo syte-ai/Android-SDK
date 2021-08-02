@@ -2,10 +2,11 @@ package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import org.junit.Test;
 
@@ -29,9 +30,9 @@ public class InitSyteImplTest extends BaseTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         try {
-            mInitSyte.startSessionAsync(mConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(mConfiguration, new SyteCallback<SytePlatformSettings>() {
                 @Override
-                public void onResult(SyteResult<AccountDataService> syteResult) {
+                public void onResult(SyteResult<SytePlatformSettings> syteResult) {
                     assertNotNull(syteResult.data);
                     assertEquals(syteResult.resultCode, 200);
                     assertTrue(syteResult.isSuccessful);
@@ -63,7 +64,11 @@ public class InitSyteImplTest extends BaseTest {
         startSessionInternal();
         SyteConfiguration configuration = mInitSyte.getConfiguration();
         configuration.setLocale("test_locale");
-        mInitSyte.setConfiguration(configuration);
+        try {
+            mInitSyte.setConfiguration(configuration);
+        } catch (SyteWrongInputException e) {
+            e.printStackTrace();
+        }
 
         assertEquals("test_locale", mInitSyte.getConfiguration().getLocale());
     }
@@ -71,7 +76,11 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void setConfigurationNotInitialized() {
         try {
-            mInitSyte.setConfiguration(mConfiguration);
+            try {
+                mInitSyte.setConfiguration(mConfiguration);
+            } catch (SyteWrongInputException e) {
+                e.printStackTrace();
+            }
             fail("Configuration was set successfully while in IDLE state"); // We should not get here
         } catch (SyteInitializationException exception) {
             // We are good
@@ -81,13 +90,13 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void retrieveRecommendationEngineClient() {
         startSessionInternal();
-        assertNotNull(mInitSyte.retrieveRecommendationEngineClient());
+        assertNotNull(mInitSyte.getProductRecommendationClient());
     }
 
     @Test
     public void retrieveRecommendationEngineClientNotInitialized() {
         try {
-            mInitSyte.retrieveRecommendationEngineClient();
+            mInitSyte.getProductRecommendationClient();
             fail("Configuration was set successfully while in IDLE state"); // We should not get here
         } catch (SyteInitializationException exception) {
             // We are good
@@ -97,13 +106,13 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void retrieveImageSearchClient() {
         startSessionInternal();
-        assertNotNull(mInitSyte.retrieveImageSearchClient());
+        assertNotNull(mInitSyte.getImageSearchClient());
     }
 
     @Test
     public void retrieveImageSearchClientNotInitialized() {
         try {
-            mInitSyte.retrieveImageSearchClient();
+            mInitSyte.getImageSearchClient();
             fail("Configuration was set successfully while in IDLE state"); // We should not get here
         } catch (SyteInitializationException exception) {
             // We are good

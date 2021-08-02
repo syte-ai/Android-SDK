@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
+/**
+ * Default Syte event
+ */
 public class EventShopTheLookOfferClick extends BaseSyteEvent {
 
     @SerializedName("sku")

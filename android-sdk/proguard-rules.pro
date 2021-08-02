@@ -25,10 +25,6 @@
     public<fields>;
 }
 -keep class com.syte.ai.android_sdk.data.** { *; }
--keep class com.syte.ai.android_sdk.data.result.** { *; }
--keep class com.syte.ai.android_sdk.data.result.account.** { *; }
--keep class com.syte.ai.android_sdk.data.result.offers.** { *; }
--keep class com.syte.ai.android_sdk.data.result.recommendation.** { *; }
 -keep class com.syte.ai.android_sdk.enums.* {
     public<methods>;
     public<fields>;

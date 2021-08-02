@@ -1,16 +1,19 @@
 package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.ImageSearchClient;
-import com.syte.ai.android_sdk.RecommendationEngineClient;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.ProductRecommendationClient;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.events.EventInitialization;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
 class InitSyteImpl extends InitSyte {
+
+    private static final String TAG = "InitSyte";
 
     private enum SyteState {
         IDLE, INITIALIZED
@@ -18,7 +21,7 @@ class InitSyteImpl extends InitSyte {
 
     private SyteConfiguration mConfiguration;
     private SyteRemoteDataSource mRemoteDataSource;
-    private AccountDataService mAccountDataService;
+    private SytePlatformSettings mSytePlatformSettings;
     private EventsRemoteDataSource mEventsRemoteDataSource;
     private SyteState mState = SyteState.IDLE;
 
@@ -26,15 +29,15 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteResult<AccountDataService> startSession(SyteConfiguration configuration) throws SyteInitializationException {
+    public SyteResult<SytePlatformSettings> startSession(SyteConfiguration configuration) throws SyteWrongInputException {
         InputValidator.validateInput(configuration);
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
-        SyteResult<AccountDataService> result = new SyteResult<>();
+        SyteResult<SytePlatformSettings> result = new SyteResult<>();
         try {
             result = mRemoteDataSource.initialize();
-            mAccountDataService = result.data;
+            mSytePlatformSettings = result.data;
             mState = SyteState.INITIALIZED;
         } catch (Exception e) {
             result.isSuccessful = false;
@@ -47,16 +50,23 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void startSessionAsync(SyteConfiguration configuration, SyteCallback<AccountDataService> callback) throws SyteInitializationException {
-        InputValidator.validateInput(configuration);
+    public void startSessionAsync(SyteConfiguration configuration, SyteCallback<SytePlatformSettings> callback) throws SyteInitializationException {
+        try {
+            InputValidator.validateInput(configuration);
+        } catch (SyteWrongInputException e) {
+            SyteLogger.e(TAG, e.getMessage());
+            SyteResult<SytePlatformSettings> syteResult = new SyteResult<>();
+            syteResult.errorMessage = e.getMessage();
+            callback.onResult(syteResult);
+        }
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
-        mRemoteDataSource.initializeAsync(new SyteCallback<AccountDataService>() {
+        mRemoteDataSource.initializeAsync(new SyteCallback<SytePlatformSettings>() {
             @Override
-            public void onResult(SyteResult<AccountDataService> syteResult) {
+            public void onResult(SyteResult<SytePlatformSettings> syteResult) {
                 if (syteResult.isSuccessful) {
-                    mAccountDataService = syteResult.data;
+                    mSytePlatformSettings = syteResult.data;
                     mState = SyteState.INITIALIZED;
                 } else {
                     mState = SyteState.IDLE;
@@ -71,12 +81,11 @@ class InitSyteImpl extends InitSyte {
 
     @Override
     public SyteConfiguration getConfiguration() {
-        verifyInitialized();
         return mConfiguration;
     }
 
     @Override
-    public void setConfiguration(SyteConfiguration configuration) {
+    public void setConfiguration(SyteConfiguration configuration) throws SyteWrongInputException {
         InputValidator.validateInput(configuration);
         verifyInitialized();
         mConfiguration = configuration;
@@ -85,23 +94,23 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public AccountDataService getAccountDataService() {
+    public SytePlatformSettings getSytePlatformSettings() {
         verifyInitialized();
-        return mAccountDataService;
+        return mSytePlatformSettings;
     }
 
     @Override
-    public RecommendationEngineClient retrieveRecommendationEngineClient() {
+    public ProductRecommendationClient getProductRecommendationClient() {
         verifyInitialized();
-        return new RecommendationEngineClientImpl(
-                mRemoteDataSource, mAccountDataService
+        return new ProductRecommendationClientImpl(
+                mRemoteDataSource, mSytePlatformSettings
         );
     }
 
     @Override
-    public ImageSearchClient retrieveImageSearchClient() {
+    public ImageSearchClient getImageSearchClient() {
         verifyInitialized();
-        return new ImageSearchClientImpl(mRemoteDataSource, mAccountDataService);
+        return new ImageSearchClientImpl(mRemoteDataSource, mSytePlatformSettings);
     }
 
     @Override
@@ -128,7 +137,6 @@ class InitSyteImpl extends InitSyte {
     }
 
     private void verifyInitialized() throws SyteInitializationException {
-        // Disable for now
 //        if (mState != SyteState.INITIALIZED) {
 //            throw new SyteInitializationException("Syte is not initialized.");
 //        }

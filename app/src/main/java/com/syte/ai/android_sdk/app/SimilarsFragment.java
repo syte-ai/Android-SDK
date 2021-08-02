@@ -12,13 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.syte.ai.android_sdk.RecommendationEngineClient;
+import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -33,7 +33,7 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
     private EditText mLimitET;
     private EditText mUrlRefererET;
 
-    private RecommendationEngineClient mRecommendationEngineClient;
+    private ProductRecommendationClient mProductRecommendationClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +53,7 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
 
         initViews();
 
-        mInitSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.newInstance();
         SyteConfiguration syteConfiguration = null;
         try {
             syteConfiguration = new SyteConfiguration(
@@ -66,10 +66,10 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
             syteInitializationException.printStackTrace();
         }
         try {
-            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<AccountDataService>() {
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<SytePlatformSettings>() {
                 @Override
-                public void onResult(SyteResult<AccountDataService> syteResult) {
-                    mRecommendationEngineClient = mInitSyte.retrieveRecommendationEngineClient();
+                public void onResult(SyteResult<SytePlatformSettings> syteResult) {
+                    mProductRecommendationClient = mInitSyte.getProductRecommendationClient();
                 }
             });
         } catch (SyteInitializationException syteInitializationException) { }
@@ -106,7 +106,7 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        SyteResult<SimilarProductsResult> result = mRecommendationEngineClient.getSimilarProducts(
+                        SyteResult<SimilarProductsResult> result = mProductRecommendationClient.getSimilarProducts(
                                 similarProductsRequestData
                         );
                         if (result.errorMessage != null) {
@@ -125,7 +125,7 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
                 }).start();
                 break;
             case R.id.similars_async_btn:
-                mRecommendationEngineClient.getSimilarProductsAsync(
+                mProductRecommendationClient.getSimilarProductsAsync(
                         similarProductsRequestData,
                         new SyteCallback<SimilarProductsResult>() {
                             @Override

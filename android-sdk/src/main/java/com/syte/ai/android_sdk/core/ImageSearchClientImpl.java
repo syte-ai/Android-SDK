@@ -8,7 +8,7 @@ import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.ImageSearchRequestData;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
@@ -17,11 +17,11 @@ import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 class ImageSearchClientImpl implements ImageSearchClient {
 
     private final SyteRemoteDataSource mSyteRemoteDataSource;
-    private final AccountDataService mAccountDataService;
+    private final SytePlatformSettings mSytePlatformSettings;
 
-    ImageSearchClientImpl(SyteRemoteDataSource syteRemoteDataSource, AccountDataService accountDataService) {
+    ImageSearchClientImpl(SyteRemoteDataSource syteRemoteDataSource, SytePlatformSettings sytePlatformSettings) {
         mSyteRemoteDataSource = syteRemoteDataSource;
-        mAccountDataService = accountDataService;
+        mSytePlatformSettings = sytePlatformSettings;
     }
 
     @Override
@@ -38,7 +38,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
         return mSyteRemoteDataSource.getBoundsWild(
                 context,
                 imageSearchRequestData,
-                mAccountDataService
+                mSytePlatformSettings
         );
     }
 
@@ -51,7 +51,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getBounds(urlImageSearchRequestData, mAccountDataService);
+        return mSyteRemoteDataSource.getBounds(urlImageSearchRequestData, mSytePlatformSettings);
     }
 
     @Override
@@ -63,7 +63,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getOffers(bound, cropCoordinates, mAccountDataService);
+        return mSyteRemoteDataSource.getOffers(bound, cropCoordinates, mSytePlatformSettings);
     }
 
     @Override
@@ -77,7 +77,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
                 callback.onResult(result);
             }
         }
-        mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, mAccountDataService, callback);
+        mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, mSytePlatformSettings, callback);
     }
 
     @Override
@@ -96,7 +96,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
                 callback.onResult(result);
             }
         }
-        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearchRequestData, mAccountDataService, callback);
+        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearchRequestData, mSytePlatformSettings, callback);
     }
 
     @Override
@@ -110,7 +110,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
                 callback.onResult(result);
             }
         }
-        mSyteRemoteDataSource.getBoundsAsync(urlImageSearchRequestData, mAccountDataService, callback);
+        mSyteRemoteDataSource.getBoundsAsync(urlImageSearchRequestData, mSytePlatformSettings, callback);
     }
 
 }

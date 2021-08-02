@@ -1,6 +1,6 @@
 package com.syte.ai.android_sdk.core;
 
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -20,8 +20,8 @@ class Utils {
         return bytes;
     }
 
-    static ImageProcessor.Scale getImageScale(AccountDataService accountDataService) {
-        String imageScale = accountDataService
+    static ImageProcessor.Scale getImageScale(SytePlatformSettings sytePlatformSettings) {
+        String imageScale = sytePlatformSettings
                 .getData()
                 .getProducts()
                 .getSyteapp()

@@ -12,7 +12,7 @@ import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 class InputValidator {
 
-    public static void validateInput(ImageSearchRequestData requestData) {
+    public static void validateInput(ImageSearchRequestData requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -21,7 +21,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(UrlImageSearchRequestData requestData) {
+    public static void validateInput(UrlImageSearchRequestData requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -33,19 +33,19 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(Bound bound) {
+    public static void validateInput(Bound bound) throws SyteWrongInputException {
         if (bound == null) {
             throw new SyteWrongInputException("Bound can not be null");
         }
     }
 
-    public static void validateInput(Context context) {
+    public static void validateInput(Context context) throws SyteWrongInputException {
         if (context == null) {
             throw new SyteWrongInputException("Context can not be null.");
         }
     }
 
-    public static void validateInput(SyteConfiguration configuration) {
+    public static void validateInput(SyteConfiguration configuration) throws SyteWrongInputException {
         if (configuration == null) {
             throw new SyteWrongInputException("Configuration can not be null.");
         }
@@ -57,7 +57,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(SimilarProductsRequestData requestData) {
+    public static void validateInput(SimilarProductsRequestData requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -69,7 +69,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(ShopTheLookRequestData requestData) {
+    public static void validateInput(ShopTheLookRequestData requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -81,7 +81,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(PersonalizationRequestData requestData) {
+    public static void validateInput(PersonalizationRequestData requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }

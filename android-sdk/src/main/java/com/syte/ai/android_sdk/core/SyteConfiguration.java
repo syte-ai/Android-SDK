@@ -10,6 +10,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SDK configuration
+ */
 public class SyteConfiguration {
 
     private final String mAccountId;
@@ -22,6 +25,12 @@ public class SyteConfiguration {
 
     private SyteStorage mStorage;
 
+    /**
+     *
+     * @param context context
+     * @param accountId contact Syte for this value
+     * @param signature contact Syte for this value
+     */
     public SyteConfiguration(Context context, String accountId, String signature) {
         this.mAccountId = accountId;
         this.mSignature = signature;
@@ -30,26 +39,50 @@ public class SyteConfiguration {
         this.mUserId = mStorage.getUserId();
     }
 
+    /**
+     * Method to set locale. Will be used in requests.
+     * @param locale locale to use
+     */
     public void setLocale(String locale) {
         this.mLocale = locale;
     }
 
+    /**
+     * Getter for locale
+     * @return locale
+     */
     public String getLocale() {
         return mLocale;
     }
 
+    /**
+     * Getter for account ID
+     * @return account ID
+     */
     public String getAccountId() {
         return mAccountId;
     }
 
+    /**
+     * Getter for signature
+     * @return signature
+     */
     public String getSignature() {
         return mSignature;
     }
 
+    /**
+     * Getter for user ID
+     * @return user ID. This value is generated automatically.
+     */
     public String getUserId() {
         return mStorage.getUserId();
     }
 
+    /**
+     * Getter for session ID
+     * @return session ID. This value is generated automatically.
+     */
     public Long getSessionId() {
         return mStorage.getSessionId();
     }

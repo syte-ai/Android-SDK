@@ -79,7 +79,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     public void getOffers() {
         startSessionInternal();
         SyteResult<BoundsResult> boundsResult = getBoundsInternal(null);
-        ImageSearchClient client = mInitSyte.retrieveImageSearchClient();
+        ImageSearchClient client = mInitSyte.getImageSearchClient();
         SyteResult<OffersResult> offersResult = client.getOffers(boundsResult.data.getBounds().get(1), null);
         assertNotNull(offersResult);
         assertNotNull(offersResult.data);
@@ -92,7 +92,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     public void getOffersWithCrop() {
         startSessionInternal();
         SyteResult<BoundsResult> boundsResult = getBoundsInternal(null);
-        ImageSearchClient client = mInitSyte.retrieveImageSearchClient();
+        ImageSearchClient client = mInitSyte.getImageSearchClient();
 
         CropCoordinates coordinates = new CropCoordinates(
                 0,
@@ -114,7 +114,7 @@ public class ImageSearchClientImplTest extends BaseTest {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
         SyteResult<BoundsResult> boundsResult = getBoundsInternal(null);
-        ImageSearchClient client = mInitSyte.retrieveImageSearchClient();
+        ImageSearchClient client = mInitSyte.getImageSearchClient();
         client.getOffersAsync(boundsResult.data.getBounds().get(1), null, new SyteCallback<OffersResult>() {
             @Override
             public void onResult(SyteResult<OffersResult> offersResult) {
@@ -133,7 +133,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsAsync() throws InterruptedException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.retrieveImageSearchClient();
+        ImageSearchClient client = mInitSyte.getImageSearchClient();
         CountDownLatch latch = new CountDownLatch(1);
         UrlImageSearchRequestData requestData = createUrlImageSearchRequestData();
         client.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
@@ -153,7 +153,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     }
 
     private SyteResult<BoundsResult> getBoundsInternal(@Nullable UrlImageSearchRequestData urlImageSearchRequestData) {
-        ImageSearchClient client = mInitSyte.retrieveImageSearchClient();
+        ImageSearchClient client = mInitSyte.getImageSearchClient();
         UrlImageSearchRequestData requestData = urlImageSearchRequestData == null ? createUrlImageSearchRequestData() : urlImageSearchRequestData;
         return client.getBounds(requestData);
     }

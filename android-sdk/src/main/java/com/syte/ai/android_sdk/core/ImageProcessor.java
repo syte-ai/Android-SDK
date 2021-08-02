@@ -97,12 +97,12 @@ class ImageProcessor {
     }
 
     @Nullable
-    Bitmap rotateImageIfNeeded(Context context, Uri uri) throws SyteWrongInputException {
+    Bitmap rotateImageIfNeeded(Context context, Uri uri) throws SyteGeneralException {
         InputStream inputStream = null;
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
         } catch (FileNotFoundException e) {
-            throw new SyteWrongInputException("Could not open stream for the URI: " + e.getMessage());
+            throw new SyteGeneralException("Could not open stream for the URI: " + e.getMessage());
         }
 
         Matrix matrix = handleRotation(inputStream);
@@ -133,12 +133,12 @@ class ImageProcessor {
         return 0;
     }
 
-    private Matrix handleRotation(InputStream inputStream) throws SyteWrongInputException {
+    private Matrix handleRotation(InputStream inputStream) throws SyteGeneralException {
         ExifInterface exifInterface = null;
         try {
             exifInterface = new ExifInterface(inputStream);
         } catch (IOException e) {
-            throw new SyteWrongInputException("Could not handle image rotation: " + e.getMessage());
+            throw new SyteGeneralException("Could not handle image rotation: " + e.getMessage());
         }
         int orientation = exifInterface.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
@@ -158,18 +158,18 @@ class ImageProcessor {
     }
 
     @Nullable
-    private Bitmap getSourceBitmap(Context context, Uri uri) throws SyteWrongInputException {
+    private Bitmap getSourceBitmap(Context context, Uri uri) throws SyteGeneralException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             try {
                 return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.getContentResolver(), uri));
             } catch (IOException e) {
-                throw new SyteWrongInputException("Could not decode bitmap: " + e.getMessage());
+                throw new SyteGeneralException("Could not decode bitmap: " + e.getMessage());
             }
         } else {
             try {
                 return MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             } catch (IOException e) {
-                throw new SyteWrongInputException("Could not decode bitmap: " + e.getMessage());
+                throw new SyteGeneralException("Could not decode bitmap: " + e.getMessage());
             }
         }
     }
