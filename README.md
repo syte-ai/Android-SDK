@@ -11,7 +11,6 @@ Note: This SDK requires Android API 21 or higher.
 
 	`allprojects {
 		repositories {
-			...
 			maven { url 'https://jitpack.io' }
 		}
 	}`
