@@ -66,6 +66,11 @@ Event fires automatically: https://syteapi.com/et?name=syte_init&account_id=[acc
  
 API used: https://cdn.syteapi.com/accounts/[account_id]
 
+## Image Search
+
+Object detection ("bounds") and a similarity search ("Items") per object detected in the image. 
+Search can be performed with a wild image or image URL.
+
 # URL image search
 To use the Url image Search functionality do the following:
 
