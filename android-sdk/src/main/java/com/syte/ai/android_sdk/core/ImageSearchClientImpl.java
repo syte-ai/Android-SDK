@@ -76,6 +76,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
             if (callback != null) {
                 callback.onResult(result);
             }
+            return;
         }
         mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, mSytePlatformSettings, callback);
     }
@@ -95,6 +96,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
             if (callback != null) {
                 callback.onResult(result);
             }
+            return;
         }
         mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearchRequestData, mSytePlatformSettings, callback);
     }
@@ -109,6 +111,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
             if (callback != null) {
                 callback.onResult(result);
             }
+            return;
         }
         mSyteRemoteDataSource.getBoundsAsync(urlImageSearchRequestData, mSytePlatformSettings, callback);
     }

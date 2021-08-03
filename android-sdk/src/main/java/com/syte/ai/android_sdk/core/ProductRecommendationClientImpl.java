@@ -53,6 +53,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
                 result.errorMessage = e.getMessage();
                 callback.onResult(result);
             }
+            return;
         }
         mSyteRemoteDataSource.getSimilarProductsAsync(
                 similarProductsRequestData,
@@ -94,6 +95,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
             if (callback != null) {
                 callback.onResult(result);
             }
+            return;
         }
         mSyteRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
@@ -136,6 +138,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
             if (callback != null) {
                 callback.onResult(result);
             }
+            return;
         }
         mSyteRemoteDataSource.getPersonalizationAsync(
                 personalizationRequestData,
