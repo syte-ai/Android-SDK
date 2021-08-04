@@ -30,15 +30,11 @@ afterEvaluate {
     publishing {
         publications {
             maven(MavenPublication) {
-//                from components.release
                 groupId 'com.syte.ai'
-                //You can either define these here or get them from project conf elsewhere
                 artifactId 'android_sdk'
                 version '1.0'
                 artifact "$buildDir/outputs/aar/android-sdk-release.aar"
-                //aar artifact you want to publish
 
-                //generate pom nodes for dependencies
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each { dependency ->
@@ -50,13 +46,6 @@ afterEvaluate {
                 }
             }
         }
-
-//        //publish to filesystem repo
-//        repositories {
-//            maven {
-//                url "../app/build/sytesdkRepo"
-//            }
-//        }
     }
 }
 

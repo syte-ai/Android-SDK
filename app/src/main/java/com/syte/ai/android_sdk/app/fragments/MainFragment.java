@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.app;
+package com.syte.ai.android_sdk.app.fragments;
 
 import android.os.Bundle;
 
@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.app.Navigator;
+import com.syte.ai.android_sdk.app.R;
+import com.syte.ai.android_sdk.app.common.BaseFragment;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -38,11 +41,12 @@ import com.syte.ai.android_sdk.events.EventSimilarItemsShowLayout;
 import com.syte.ai.android_sdk.events.Product;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 public class MainFragment extends BaseFragment {
 
-    private Button mInitButton;
     private Button mUrlSearchButton;
     private Button mWildSearchButton;
     private Button mGetSimilarsButton;
@@ -53,7 +57,7 @@ public class MainFragment extends BaseFragment {
     private Navigator mNavigator;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
@@ -61,14 +65,8 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mNavigator = new Navigator(getActivity().getSupportFragmentManager());
-        mInitButton = view.findViewById(R.id.init_btn);
-        mInitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mNavigator.initFragment();
-            }
-        });
         mUrlSearchButton = view.findViewById(R.id.url_search_btn);
         mUrlSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,15 +109,16 @@ public class MainFragment extends BaseFragment {
                 mNavigator.configFragment();
             }
         });
+
         mFireEventsButton = view.findViewById(R.id.events_btn);
         mFireEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InitSyte initSyte = InitSyte.newInstance();
                 try {
-                    initSyte.startSessionAsync(new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3"), new SyteCallback<SytePlatformSettings>() {
+                    initSyte.startSessionAsync(new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3"), new SyteCallback<Boolean>() {
                         @Override
-                        public void onResult(SyteResult<SytePlatformSettings> syteResult) {
+                        public void onResult(SyteResult<Boolean> syteResult) {
                             initSyte.fireEvent(
                                     new EventCheckoutStart(
                                             2,

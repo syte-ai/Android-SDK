@@ -1,4 +1,4 @@
-package com.syte.ai.android_sdk.app;
+package com.syte.ai.android_sdk.app.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 
 import java.util.List;

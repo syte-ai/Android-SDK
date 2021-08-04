@@ -1,7 +1,5 @@
 package com.syte.ai.android_sdk.enums;
 
-// TODO make this extendable!
-
 /**
  * Default tags for Syte events.
  */

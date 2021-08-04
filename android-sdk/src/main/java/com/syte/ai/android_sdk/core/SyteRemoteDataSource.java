@@ -226,7 +226,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 requestData.getSku(),
                 requestData.getImageUrl(),
                 requestData.getPersonalizedRanking() ?
-                        mConfiguration.getSessionSkusString() : null
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null
         );
     }
 
@@ -530,7 +530,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
         UrlImageSearchRequestData urlImageSearchRequestData;
         try {
-            urlImageSearchRequestData = prepareUrlImageSearchRequestData(
+            urlImageSearchRequestData = prepareImageSearchRequestData(
                     context,
                     requestData,
                     sytePlatformSettings
@@ -551,7 +551,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 this,
                 sytePlatformSettings
         );
-        prepareUrlImageSearchRequestDataAsync(
+        prepareImageSearchRequestDataAsync(
                 context,
                 requestData,
                 sytePlatformSettings,
@@ -568,7 +568,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    private UrlImageSearchRequestData prepareUrlImageSearchRequestData(
+    private UrlImageSearchRequestData prepareImageSearchRequestData(
             Context context,
             ImageSearchRequestData requestData,
             SytePlatformSettings sytePlatformSettings
@@ -606,7 +606,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         }
     }
 
-    private void prepareUrlImageSearchRequestDataAsync(
+    private void prepareImageSearchRequestDataAsync(
             Context context,
             ImageSearchRequestData requestData,
             SytePlatformSettings sytePlatformSettings,
@@ -640,6 +640,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                         );
                         urlImageSearchRequestData.setFirstBoundOffersCoordinates(
                                 requestData.getFirstBoundOffersCoordinates()
+                        );
+                        urlImageSearchRequestData.setPersonalizedRanking(
+                                requestData.getPersonalizedRanking()
                         );
                         callback.onResult(urlImageSearchRequestData, null);
                     } catch (IOException | JSONException e) {

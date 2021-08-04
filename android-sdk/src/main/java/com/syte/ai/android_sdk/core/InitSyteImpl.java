@@ -11,6 +11,9 @@ import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
+import java.util.HashSet;
+import java.util.Set;
+
 class InitSyteImpl extends InitSyte {
 
     private static final String TAG = "InitSyte";
@@ -29,20 +32,27 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteResult<SytePlatformSettings> startSession(SyteConfiguration configuration) throws SyteWrongInputException {
+    public SyteResult<Boolean> startSession(SyteConfiguration configuration) throws SyteWrongInputException {
         InputValidator.validateInput(configuration);
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
-        SyteResult<SytePlatformSettings> result = new SyteResult<>();
+        SyteResult<Boolean> result = new SyteResult<>();
+        SyteResult<SytePlatformSettings> responseResult = new SyteResult<>();
         try {
-            result = mRemoteDataSource.initialize();
-            mSytePlatformSettings = result.data;
+            responseResult = mRemoteDataSource.initialize();
+            mSytePlatformSettings = responseResult.data;
+            result.data = responseResult.isSuccessful;
+            result.isSuccessful = responseResult.isSuccessful;
+            result.errorMessage = responseResult.errorMessage;
             mState = SyteState.INITIALIZED;
         } catch (Exception e) {
+            result.data = false;
             result.isSuccessful = false;
+            result.errorMessage = e.getMessage();
             mState = SyteState.IDLE;
         }
+        result.resultCode = responseResult.resultCode;
         if (mState == SyteState.INITIALIZED) {
             fireEvent(new EventInitialization());
         }
@@ -50,12 +60,13 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void startSessionAsync(SyteConfiguration configuration, SyteCallback<SytePlatformSettings> callback) throws SyteInitializationException {
+    public void startSessionAsync(SyteConfiguration configuration, SyteCallback<Boolean> callback) {
         try {
             InputValidator.validateInput(configuration);
         } catch (SyteWrongInputException e) {
             SyteLogger.e(TAG, e.getMessage());
-            SyteResult<SytePlatformSettings> syteResult = new SyteResult<>();
+            SyteResult<Boolean> syteResult = new SyteResult<>();
+            syteResult.data = false;
             syteResult.errorMessage = e.getMessage();
             callback.onResult(syteResult);
         }
@@ -74,7 +85,12 @@ class InitSyteImpl extends InitSyte {
                 if (mState == SyteState.INITIALIZED) {
                     fireEvent(new EventInitialization());
                 }
-                callback.onResult(syteResult);
+                SyteResult<Boolean> result = new SyteResult<>();
+                result.data = syteResult.isSuccessful;
+                result.resultCode = syteResult.resultCode;
+                result.isSuccessful = syteResult.isSuccessful;
+                result.errorMessage = syteResult.errorMessage;
+                callback.onResult(result);
             }
         });
     }
@@ -117,6 +133,8 @@ class InitSyteImpl extends InitSyte {
     public void endSession() {
         verifyInitialized();
         mConfiguration.getStorage().clearSessionId();
+        mConfiguration.getStorage().clearViewedProducts();
+        mConfiguration = null;
     }
 
     @Override
@@ -126,9 +144,19 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void addViewedProduct(String sku) {
+    public void addViewedProduct(String sku) throws SyteWrongInputException {
         verifyInitialized();
+        InputValidator.validateInput(sku);
         mConfiguration.addViewedProduct(sku);
+    }
+
+    @Override
+    public Set<String> getViewedProducts() {
+        if (mConfiguration != null) {
+            return mConfiguration.getViewedProducts();
+        } else {
+            return new HashSet<>();
+        }
     }
 
     @Override
@@ -137,9 +165,9 @@ class InitSyteImpl extends InitSyte {
     }
 
     private void verifyInitialized() throws SyteInitializationException {
-//        if (mState != SyteState.INITIALIZED) {
-//            throw new SyteInitializationException("Syte is not initialized.");
-//        }
+        if (mState != SyteState.INITIALIZED) {
+            throw new SyteInitializationException("Syte is not initialized.");
+        }
     }
 
 }

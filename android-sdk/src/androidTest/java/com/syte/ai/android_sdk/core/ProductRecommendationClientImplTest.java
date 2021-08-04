@@ -10,6 +10,7 @@ import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
@@ -290,8 +291,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
         assertEquals(result.data.getItems().get(0).getOffers().size(), 4);
-        assertEquals(result.data.getAllOffers(false).get(0).getBbCategories().get(0), "Trousers");
-        assertEquals(result.data.getAllOffers(false).get(1).getBbCategories().get(0), "Trousers");
+        assertEquals(result.data.getAllItems(false).get(0).getBbCategories().get(0), "Trousers");
+        assertEquals(result.data.getAllItems(false).get(1).getBbCategories().get(0), "Trousers");
     }
 
     @Test
@@ -308,8 +309,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
         assertEquals(result.data.getItems().get(0).getOffers().size(), 4);
-        assertEquals(result.data.getAllOffers(true).get(0).getBbCategories().get(0), "Trousers");
-        assertEquals(result.data.getAllOffers(true).get(1).getBbCategories().get(0), "Necklaces");
+        assertEquals(result.data.getAllItems(true).get(0).getBbCategories().get(0), "Trousers");
+        assertEquals(result.data.getAllItems(true).get(1).getBbCategories().get(0), "Necklaces");
     }
 
     @Test
@@ -334,7 +335,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalization() {
+    public void getPersonalization() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(null);
@@ -346,7 +347,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationWithNonDefaultLimit() {
+    public void getPersonalizationWithNonDefaultLimit() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
         PersonalizationRequestData requestData = new PersonalizationRequestData();
@@ -361,7 +362,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationWithNonDefaultSyteUrlReferer() {
+    public void getPersonalizationWithNonDefaultSyteUrlReferer() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
         PersonalizationRequestData requestData = new PersonalizationRequestData();
@@ -376,7 +377,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationWithNonDefaultReturnFieldsSku() {
+    public void getPersonalizationWithNonDefaultReturnFieldsSku() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
         PersonalizationRequestData requestData = new PersonalizationRequestData();
@@ -394,7 +395,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationWithNonDefaultReturnFieldsImageUrl() {
+    public void getPersonalizationWithNonDefaultReturnFieldsImageUrl() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
         PersonalizationRequestData requestData = new PersonalizationRequestData();
@@ -412,7 +413,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationWithNonDefaultReturnFieldsImageUrlAndSku() {
+    public void getPersonalizationWithNonDefaultReturnFieldsImageUrlAndSku() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
         PersonalizationRequestData requestData = new PersonalizationRequestData();
@@ -430,7 +431,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationAsync() {
+    public void getPersonalizationAsync() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
 

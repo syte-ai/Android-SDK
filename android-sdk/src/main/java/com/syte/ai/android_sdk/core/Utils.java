@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Set;
 
 class Utils {
 
@@ -47,6 +48,39 @@ class Utils {
         }
 
         return scale;
+    }
+
+    public static String viewedProductsString(Set<String> viewedProducts) {
+        if (viewedProducts.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String sku : viewedProducts) {
+            sb.append(sku);
+            sb.append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    public static String viewedProductsJSONArray(Set<String> viewedProducts) {
+        if (viewedProducts.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+        for (String sku : viewedProducts) {
+            stringBuilder.append("\"");
+            stringBuilder.append(sku);
+            stringBuilder.append("\"");
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 
 }

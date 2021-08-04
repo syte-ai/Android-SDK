@@ -11,6 +11,8 @@ import com.syte.ai.android_sdk.util.SyteLogger;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 
 public abstract class InitSyte {
 
@@ -31,7 +33,7 @@ public abstract class InitSyte {
      * @return Result indicating whether the session was started successfully.
      * @throws SyteWrongInputException
      */
-    public abstract SyteResult<SytePlatformSettings> startSession(SyteConfiguration configuration) throws SyteWrongInputException;
+    public abstract SyteResult<Boolean> startSession(SyteConfiguration configuration) throws SyteWrongInputException;
 
     /**
      * Starts the user session.
@@ -40,7 +42,7 @@ public abstract class InitSyte {
      * @param configuration {@link SyteConfiguration}
      * @param callback callback with result. Is invoked on the UI thread.
      */
-    public abstract void startSessionAsync(SyteConfiguration configuration, SyteCallback<SytePlatformSettings> callback);
+    public abstract void startSessionAsync(SyteConfiguration configuration, SyteCallback<Boolean> callback);
 
     /**
      * Retrieve current configuration.
@@ -91,8 +93,13 @@ public abstract class InitSyte {
      * Save product ID into the local storage. All saved viewed products will be used for personalization.
      * @param sku product ID
      */
-    //TODO remove viewed products once session is ended.
-    public abstract void addViewedProduct(String sku);
+    public abstract void addViewedProduct(String sku) throws SyteWrongInputException;
+
+    /**
+     * Get all product IDs that were viewed during this session.
+     * @return list of product IDs.
+     */
+    public abstract Set<String> getViewedProducts();
 
     /**
      * Set log level.

@@ -22,7 +22,7 @@ public class BaseTest {
 
     @Before
     public void setUp() {
-        mInitSyte = InitSyte.getInstance();
+        mInitSyte = InitSyte.newInstance();
         try {
             mConfiguration = new SyteConfiguration(
                     InstrumentationRegistry.getInstrumentation().getTargetContext(),
@@ -46,12 +46,11 @@ public class BaseTest {
 
     protected void startSessionInternal() {
         try {
-            SyteResult<SytePlatformSettings> accountDataService = mInitSyte.startSession(mConfiguration);
-            assertNotNull(accountDataService.data);
+            SyteResult<Boolean> accountDataService = mInitSyte.startSession(mConfiguration);
+            assertTrue(accountDataService.data);
             assertEquals(accountDataService.resultCode, 200);
             assertTrue(accountDataService.isSuccessful);
 
-            assertEquals(accountDataService.data.getData().getAccountId(), 9165);
         } catch (SyteInitializationException | SyteWrongInputException syteInitializationException) {
             fail("Unable to start session: " + syteInitializationException.getMessage());
         }

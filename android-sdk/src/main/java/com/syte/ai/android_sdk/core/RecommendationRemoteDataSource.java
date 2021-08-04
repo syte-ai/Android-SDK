@@ -284,7 +284,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 similarProductsRequestData.getPersonalizedRanking() ?
-                        mConfiguration.getSessionSkusString() : null,
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 similarProductsRequestData.getLimit(),
                 similarProductsRequestData.getSyteUrlReferer(),
                 similarProductsRequestData.getImageUrl()
@@ -304,7 +304,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 shopTheLookRequestData.getPersonalizedRanking() ?
-                        mConfiguration.getSessionSkusString() : null,
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 shopTheLookRequestData.getLimit(),
                 shopTheLookRequestData.getSyteUrlReferer(),
                 shopTheLookRequestData.getLimitPerBound() == -1 ? null :
@@ -315,7 +315,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     private Call<ResponseBody> generatePersonalizationCall(PersonalizationRequestData personalizationRequestData) throws SyteWrongInputException {
-        if (mConfiguration.getSessionSkusJSONArray() == null) {
+        if (Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) == null) {
             throw new SyteWrongInputException("There are no viewed products added. Can not proceed with the personalization call.");
         }
         MediaType mediaType = MediaType.parse("text/plain");
@@ -323,7 +323,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RequestBody.create(mediaType,
                         "{\n    " +
                                     "\"user_uuid\": \"" + mConfiguration.getUserId() + "\",\n    " +
-                                    "\"session_skus\": " + mConfiguration.getSessionSkusJSONArray() + ",\n    " +
+                                    "\"session_skus\": " + Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) + ",\n    " +
                                     "\"model_version\": \"" + personalizationRequestData.getModelVersion() + "\"" +
                                 "\n}");
         return mSyteService.getPersonalization(

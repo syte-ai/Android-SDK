@@ -87,4 +87,9 @@ class InputValidator {
         }
     }
 
+    public static void validateInput(String string) throws SyteWrongInputException {
+        if (string == null || string.isEmpty()) {
+            throw new SyteWrongInputException("Viewed product can not be empty.");
+        }
+    }
 }

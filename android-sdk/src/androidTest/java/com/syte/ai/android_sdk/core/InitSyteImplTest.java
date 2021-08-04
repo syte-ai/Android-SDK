@@ -30,14 +30,14 @@ public class InitSyteImplTest extends BaseTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         try {
-            mInitSyte.startSessionAsync(mConfiguration, new SyteCallback<SytePlatformSettings>() {
+            mInitSyte.startSessionAsync(mConfiguration, new SyteCallback<Boolean>() {
                 @Override
-                public void onResult(SyteResult<SytePlatformSettings> syteResult) {
+                public void onResult(SyteResult<Boolean> syteResult) {
                     assertNotNull(syteResult.data);
                     assertEquals(syteResult.resultCode, 200);
                     assertTrue(syteResult.isSuccessful);
 
-                    assertEquals(syteResult.data.getData().getAccountId(), 9165);
+                    assertTrue(syteResult.data);
                     latch.countDown();
                 }
             });
@@ -144,7 +144,7 @@ public class InitSyteImplTest extends BaseTest {
     }
 
     @Test
-    public void addViewedProduct() {
+    public void addViewedProduct() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("test");
         assertTrue(mInitSyte.getConfiguration().getViewedProducts().contains("test"));

@@ -21,6 +21,7 @@ class SyteStorage {
     private static final String SESSION_ID_PREF_KEY = "syte_session_id_pref";
     private static final String USER_ID_PREF_KEY = "syte_user_id_pref";
     private static final String SESSION_ID_TIMESTAMP_KEY = "syte_session_id_time_pref";
+    private static final String VIEWED_PRODUCTS_KEY = "syte_viewed_products_pref";
 
     @Nullable private SharedPreferences mSharedPreferences = null;
 
@@ -66,6 +67,7 @@ class SyteStorage {
                         .apply();
             }
             renewSessionIdTimestamp();
+            clearViewedProducts();
         }
         return sessionId;
     }
@@ -100,6 +102,15 @@ class SyteStorage {
         }
     }
 
+    public void clearViewedProducts() {
+        if (mSharedPreferences != null) {
+            mSharedPreferences
+                    .edit()
+                    .putString(VIEWED_PRODUCTS_KEY, "")
+                    .apply();
+        }
+    }
+
     public String getUserId() {
         String userId = "";
         if (mSharedPreferences != null) {
@@ -115,6 +126,25 @@ class SyteStorage {
             }
         }
         return userId;
+    }
+
+    public void addViewedProduct(String sessionSku) {
+        if (mSharedPreferences != null) {
+            String viewedProducts = mSharedPreferences.getString(VIEWED_PRODUCTS_KEY, "");
+            mSharedPreferences
+                    .edit()
+                    .putString(VIEWED_PRODUCTS_KEY, viewedProducts.isEmpty() ?
+                            sessionSku : viewedProducts + "," + sessionSku)
+                    .apply();
+
+        }
+    }
+
+    public String getViewedProducts() {
+        if (mSharedPreferences != null) {
+            return mSharedPreferences.getString(VIEWED_PRODUCTS_KEY, "");
+        }
+        return "";
     }
 
 }

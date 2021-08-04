@@ -8,7 +8,12 @@ import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * SDK configuration
@@ -19,7 +24,6 @@ public class SyteConfiguration {
     private final String mSignature;
 
     private String mLocale = "en_Us";
-    private List<String> mSessionSkus = new ArrayList<>();
     private String mUserId;
     private String mSessionId;
 
@@ -88,51 +92,15 @@ public class SyteConfiguration {
     }
 
     void addViewedProduct(String sessionSku) {
-        mSessionSkus.add(sessionSku);
+        mStorage.addViewedProduct(sessionSku);
     }
 
-    void addViewedProducts(List<String> sessionSkus) {
-        this.mSessionSkus.addAll(sessionSkus);
-    }
-
-    List<String> getViewedProducts() {
-        return mSessionSkus;
-    }
-
-    @Nullable
-    String getSessionSkusString() {
-        if (mSessionSkus.isEmpty()) {
-            return null;
+    Set<String> getViewedProducts() {
+        String viewedProductsString = mStorage.getViewedProducts();
+        if (viewedProductsString == null || viewedProductsString.isEmpty()) {
+            return new LinkedHashSet<>();
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String sku : mSessionSkus) {
-            stringBuilder.append(sku);
-            stringBuilder.append(",");
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-
-        return stringBuilder.toString();
-    }
-
-    @Nullable
-    String getSessionSkusJSONArray() {
-        if (mSessionSkus.isEmpty()) {
-            return null;
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("[");
-        for (String sku : mSessionSkus) {
-            stringBuilder.append("\"");
-            stringBuilder.append(sku);
-            stringBuilder.append("\"");
-            stringBuilder.append(",");
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        stringBuilder.append("]");
-
-        return stringBuilder.toString();
+        return new LinkedHashSet<>(Arrays.asList(viewedProductsString.split(",")));
     }
 
     SyteStorage getStorage() {

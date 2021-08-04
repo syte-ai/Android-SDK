@@ -48,11 +48,11 @@ public class ShopTheLookResult {
      * Get list of all retrieved items. If zip in {@link SytePlatformSettings} is true, the items will be shuffled.
      * @return list of all retrieved items
      */
-    public List<Offer> getAllOffers() {
+    public List<Offer> getAllItems() {
         if (sytePlatformSettings == null) {
-            return getAllOffers(false);
+            return getAllItems(false);
         }
-        return getAllOffers(sytePlatformSettings
+        return getAllItems(sytePlatformSettings
                 .getData()
                 .getProducts()
                 .getSyteapp()
@@ -66,7 +66,7 @@ public class ShopTheLookResult {
      * @param forceZip - true to shuffle items (disregarding the zip value in {@link SytePlatformSettings})
      * @return list of all retrieved items
      */
-    public List<Offer> getAllOffers(boolean forceZip) {
+    public List<Offer> getAllItems(boolean forceZip) {
         List<Offer> offerList = new ArrayList<>();
         if (forceZip) {
             int maxIdx = 0;
