@@ -132,12 +132,12 @@ To use the "Recommendations" functionality, do the following:
         Personalization personalization
     );`
     
-**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **InitSyte.addViewedProduct(String)** method.
+**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **InitSyte.addViewedItem(String)** method.
 
 # Personalized ranking
 
 Enabling the personalized ranking will attach the list of viewed products to the requests. 
-To add a product to the list of viewed ones use the **InitSyte.addViewedProduct(String)** method.
+To add a product to the list of viewed ones use the **InitSyte.addViewedItem(String)** method.
 To enable this functionality use the **setPersonalizedRanking(true)** method. 
 It is supported in the following classes: **UrlImageSearch, ImageSearch, ShopTheLook, SimilarProducts**.
 Personalized ranking is disabled by default.
