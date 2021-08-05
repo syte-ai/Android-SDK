@@ -45,14 +45,12 @@ To start using the Syte SDK, instantiate the SyteConfiguration object and pass y
 Your credentials can be found in Syte’s Platform - Settings - API Keys.
 Then use the created instance to set the locale.
 
-`
     SyteConfiguration syteConfiguration = new SyteConfiguration(
         context,
         <account_id>,
         <api_signature>
     );
     syteConfiguration.setLocale("en_US);
-`
 
 Then you'll need to create a new instance of InitSyte class and start the session passing the configuration instance:
 
