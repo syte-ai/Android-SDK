@@ -2,9 +2,9 @@ package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
+import com.syte.ai.android_sdk.data.Personalization;
+import com.syte.ai.android_sdk.data.ShopTheLook;
+import com.syte.ai.android_sdk.data.SimilarProducts;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
@@ -53,7 +53,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsImageUrlNull() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = new SimilarProductsRequestData("test", null);
+        SimilarProducts requestData = new SimilarProducts("test", null);
         SyteResult<SimilarProductsResult> result =
                 mInitSyte.getProductRecommendationClient()
                         .getSimilarProducts(requestData);
@@ -67,7 +67,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsSkuNull() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = new SimilarProductsRequestData(null, "test");
+        SimilarProducts requestData = new SimilarProducts(null, "test");
         SyteResult<SimilarProductsResult> result =
                 mInitSyte.getProductRecommendationClient()
                         .getSimilarProducts(requestData);
@@ -81,7 +81,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultLimit() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = createSimilarProductsRequestData();
+        SimilarProducts requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
 
         SyteResult<SimilarProductsResult> result = getSimilarsInternal(requestData);
@@ -97,7 +97,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultSyteUrlReferer() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = createSimilarProductsRequestData();
+        SimilarProducts requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
 
@@ -114,7 +114,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultReturnFieldsSku() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = createSimilarProductsRequestData();
+        SimilarProducts requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
         requestData.setFieldsToReturn(RecommendationReturnField.SKU);
@@ -133,7 +133,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultReturnFieldsImageUrl() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = createSimilarProductsRequestData();
+        SimilarProducts requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL);
@@ -152,7 +152,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultReturnFieldsImageUrlAndSku() {
         startSessionInternal();
-        SimilarProductsRequestData requestData = createSimilarProductsRequestData();
+        SimilarProducts requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL_AND_SKU);
@@ -215,7 +215,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        SimilarProductsRequestData requestData = new SimilarProductsRequestData("test", null);
+        SimilarProducts requestData = new SimilarProducts("test", null);
         client.getSimilarProductsAsync(requestData, new SyteCallback<SimilarProductsResult>() {
             @Override
             public void onResult(SyteResult<SimilarProductsResult> result) {
@@ -236,7 +236,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        SimilarProductsRequestData requestData = new SimilarProductsRequestData(null, "test");
+        SimilarProducts requestData = new SimilarProducts(null, "test");
         client.getSimilarProductsAsync(requestData, new SyteCallback<SimilarProductsResult>() {
             @Override
             public void onResult(SyteResult<SimilarProductsResult> result) {
@@ -262,7 +262,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
+        assertEquals(result.data.getItems().get(0).getItems().size(), 3);
     }
 
     @Test
@@ -281,7 +281,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getShopTheLookImageUrlNull() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = new ShopTheLookRequestData("test", null);
+        ShopTheLook requestData = new ShopTheLook("test", null);
         SyteResult<ShopTheLookResult> result =
                 mInitSyte.getProductRecommendationClient().getShopTheLook(requestData);
 
@@ -295,7 +295,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getShopTheLookSkuNull() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = new ShopTheLookRequestData(null, "test");
+        ShopTheLook requestData = new ShopTheLook(null, "test");
         SyteResult<ShopTheLookResult> result =
                 mInitSyte.getProductRecommendationClient().getShopTheLook(requestData);
 
@@ -309,7 +309,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getShopTheLookWithNonDefaultLimit() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setLimit(20);
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
 
@@ -323,7 +323,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getShopTheLookWithNonDefaultUrlReferer() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setSyteUrlReferer("test");
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
 
@@ -332,13 +332,13 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
+        assertEquals(result.data.getItems().get(0).getItems().size(), 3);
     }
 
     @Test
     public void getShopTheLookWithNonDefaultOriginalItem() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setSyteOriginalItem("test");
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
 
@@ -347,13 +347,13 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
+        assertEquals(result.data.getItems().get(0).getItems().size(), 3);
     }
 
     @Test
     public void getShopTheLookWithNonDefaultReturnFieldsSku() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setFieldsToReturn(RecommendationReturnField.SKU);
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
 
@@ -362,16 +362,16 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
-        assertNull(result.data.getItems().get(0).getOffers().get(0).getImageUrl());
-        assertNull(result.data.getItems().get(0).getOffers().get(0).getOriginalData());
-        assertNotNull(result.data.getItems().get(0).getOffers().get(0).getSku());
+        assertEquals(result.data.getItems().get(0).getItems().size(), 3);
+        assertNull(result.data.getItems().get(0).getItems().get(0).getImageUrl());
+        assertNull(result.data.getItems().get(0).getItems().get(0).getOriginalData());
+        assertNotNull(result.data.getItems().get(0).getItems().get(0).getSku());
     }
 
     @Test
     public void getShopTheLookWithNonDefaultReturnFieldsImageUrl() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL);
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
 
@@ -380,16 +380,16 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
-        assertNull(result.data.getItems().get(0).getOffers().get(0).getSku());
-        assertNull(result.data.getItems().get(0).getOffers().get(0).getOriginalData());
-        assertNotNull(result.data.getItems().get(0).getOffers().get(0).getImageUrl());
+        assertEquals(result.data.getItems().get(0).getItems().size(), 3);
+        assertNull(result.data.getItems().get(0).getItems().get(0).getSku());
+        assertNull(result.data.getItems().get(0).getItems().get(0).getOriginalData());
+        assertNotNull(result.data.getItems().get(0).getItems().get(0).getImageUrl());
     }
 
     @Test
     public void getShopTheLookWithNonDefaultReturnFieldsImageUrlAndSku() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL_AND_SKU);
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
 
@@ -398,16 +398,16 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
-        assertNull(result.data.getItems().get(0).getOffers().get(0).getOriginalData());
-        assertNotNull(result.data.getItems().get(0).getOffers().get(0).getImageUrl());
-        assertNotNull(result.data.getItems().get(0).getOffers().get(0).getSku());
+        assertEquals(result.data.getItems().get(0).getItems().size(), 3);
+        assertNull(result.data.getItems().get(0).getItems().get(0).getOriginalData());
+        assertNotNull(result.data.getItems().get(0).getItems().get(0).getImageUrl());
+        assertNotNull(result.data.getItems().get(0).getItems().get(0).getSku());
     }
 
     @Test
     public void getShopTheLookNonDefaultLimitPerBound() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setLimitPerBound(4);
 
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
@@ -417,13 +417,13 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 4);
+        assertEquals(result.data.getItems().get(0).getItems().size(), 4);
     }
 
     @Test
     public void getShopTheLookAllOffers() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setLimitPerBound(4);
 
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
@@ -433,15 +433,15 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 4);
-        assertEquals(result.data.getAllItems(false).get(0).getBbCategories().get(0), "Trousers");
-        assertEquals(result.data.getAllItems(false).get(1).getBbCategories().get(0), "Trousers");
+        assertEquals(result.data.getItems().get(0).getItems().size(), 4);
+        assertEquals(result.data.getItemsForAllLabels(false).get(0).getBbCategories().get(0), "Trousers");
+        assertEquals(result.data.getItemsForAllLabels(false).get(1).getBbCategories().get(0), "Trousers");
     }
 
     @Test
     public void getShopTheLookAllOffersZipEnabled() {
         startSessionInternal();
-        ShopTheLookRequestData requestData = createShopTheLookRequestData();
+        ShopTheLook requestData = createShopTheLookRequestData();
         requestData.setLimitPerBound(4);
 
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(requestData);
@@ -451,9 +451,9 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertNotNull(result.data.getItems());
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
-        assertEquals(result.data.getItems().get(0).getOffers().size(), 4);
-        assertEquals(result.data.getAllItems(true).get(0).getBbCategories().get(0), "Trousers");
-        assertEquals(result.data.getAllItems(true).get(1).getBbCategories().get(0), "Necklaces");
+        assertEquals(result.data.getItems().get(0).getItems().size(), 4);
+        assertEquals(result.data.getItemsForAllLabels(true).get(0).getBbCategories().get(0), "Trousers");
+        assertEquals(result.data.getItemsForAllLabels(true).get(1).getBbCategories().get(0), "Necklaces");
     }
 
     @Test
@@ -469,7 +469,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
                 assertNotNull(result.data.getItems());
                 assertTrue(result.isSuccessful);
                 assertEquals(result.resultCode, 200);
-                assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
+                assertEquals(result.data.getItems().get(0).getItems().size(), 3);
                 latch.countDown();
             }
         });
@@ -501,7 +501,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     public void getShopTheLookAsyncImageUrlNull() throws InterruptedException {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
-        ShopTheLookRequestData requestData = new ShopTheLookRequestData("test", null);
+        ShopTheLook requestData = new ShopTheLook("test", null);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         client.getShopTheLookAsync(requestData, new SyteCallback<ShopTheLookResult>() {
             @Override
@@ -522,7 +522,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     public void getShopTheLookAsyncSkuNull() throws InterruptedException {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
-        ShopTheLookRequestData requestData = new ShopTheLookRequestData(null, "test");
+        ShopTheLook requestData = new ShopTheLook(null, "test");
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         client.getShopTheLookAsync(requestData, new SyteCallback<ShopTheLookResult>() {
             @Override
@@ -542,7 +542,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalization() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
+        mInitSyte.addViewedItem("PZZ70556-105");
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(null);
         assertNotNull(result);
         assertNotNull(result.data);
@@ -565,8 +565,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalizationWithNonDefaultLimit() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
-        PersonalizationRequestData requestData = new PersonalizationRequestData();
+        mInitSyte.addViewedItem("PZZ70556-105");
+        Personalization requestData = new Personalization();
         requestData.setLimit(20);
 
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(requestData);
@@ -580,8 +580,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalizationWithNonDefaultSyteUrlReferer() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
-        PersonalizationRequestData requestData = new PersonalizationRequestData();
+        mInitSyte.addViewedItem("PZZ70556-105");
+        Personalization requestData = new Personalization();
         requestData.setSyteUrlReferer("test");
 
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(requestData);
@@ -595,8 +595,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalizationWithNonDefaultReturnFieldsSku() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
-        PersonalizationRequestData requestData = new PersonalizationRequestData();
+        mInitSyte.addViewedItem("PZZ70556-105");
+        Personalization requestData = new Personalization();
         requestData.setFieldsToReturn(RecommendationReturnField.SKU);
 
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(requestData);
@@ -613,8 +613,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalizationWithNonDefaultReturnFieldsImageUrl() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
-        PersonalizationRequestData requestData = new PersonalizationRequestData();
+        mInitSyte.addViewedItem("PZZ70556-105");
+        Personalization requestData = new Personalization();
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL);
 
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(requestData);
@@ -631,8 +631,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalizationWithNonDefaultReturnFieldsImageUrlAndSku() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
-        PersonalizationRequestData requestData = new PersonalizationRequestData();
+        mInitSyte.addViewedItem("PZZ70556-105");
+        Personalization requestData = new Personalization();
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL_AND_SKU);
 
         SyteResult<PersonalizationResult> result = getPersonalizationInternal(requestData);
@@ -649,10 +649,10 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getPersonalizationAsync() throws SyteWrongInputException, InterruptedException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("PZZ70556-105");
+        mInitSyte.addViewedItem("PZZ70556-105");
         CountDownLatch latch = new CountDownLatch(1);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        client.getPersonalizationAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
+        client.getPersonalizedProductsAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
             @Override
             public void onResult(SyteResult<PersonalizationResult> result) {
                 assertNotNull(result);
@@ -672,7 +672,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         startSessionInternal();
 
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        client.getPersonalizationAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
+        client.getPersonalizedProductsAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
             @Override
             public void onResult(SyteResult<PersonalizationResult> result) {
                 assertNotNull(result);
@@ -685,35 +685,35 @@ public class ProductRecommendationClientImplTest extends BaseTest {
 
     }
 
-    private SimilarProductsRequestData createSimilarProductsRequestData() {
-        return new SimilarProductsRequestData(
+    private SimilarProducts createSimilarProductsRequestData() {
+        return new SimilarProducts(
                 "13705596",
                 "https://cdn-images.farfetch-contents.com/13/70/55/96/13705596_18130188_1000.jpg"
         );
     }
 
-    private ShopTheLookRequestData createShopTheLookRequestData() {
-        return new ShopTheLookRequestData(
+    private ShopTheLook createShopTheLookRequestData() {
+        return new ShopTheLook(
                 "PZZ70556-105",
                 "https://sytestorageeu.blob.core.windows.net/text-static-feeds/boohoo_direct/PZZ70556-105.jpg?se=2023-10-31T19%3A05%3A46Z&sp=r&sv=2018-03-28&sr=b&sig=DQe1/iuTzLpl/hZhMzmb5jJF8qw41GdNlREzZvunw4k%3D"
         );
     }
 
-    private PersonalizationRequestData createPersonalizationRequestData() {
-        return new PersonalizationRequestData();
+    private Personalization createPersonalizationRequestData() {
+        return new Personalization();
     }
 
-    private SyteResult<PersonalizationResult> getPersonalizationInternal(@Nullable PersonalizationRequestData requestData) {
+    private SyteResult<PersonalizationResult> getPersonalizationInternal(@Nullable Personalization requestData) {
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        return client.getPersonalization(requestData == null ? createPersonalizationRequestData() : requestData);
+        return client.getPersonalizedProducts(requestData == null ? createPersonalizationRequestData() : requestData);
     }
 
-    private SyteResult<SimilarProductsResult> getSimilarsInternal(@Nullable SimilarProductsRequestData requestData) {
+    private SyteResult<SimilarProductsResult> getSimilarsInternal(@Nullable SimilarProducts requestData) {
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         return client.getSimilarProducts(requestData == null ? createSimilarProductsRequestData() : requestData);
     }
 
-    private SyteResult<ShopTheLookResult> getShopTheLookInternal(@Nullable ShopTheLookRequestData requestData) {
+    private SyteResult<ShopTheLookResult> getShopTheLookInternal(@Nullable ShopTheLook requestData) {
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         return client.getShopTheLook(requestData == null ? createShopTheLookRequestData() : requestData);
     }

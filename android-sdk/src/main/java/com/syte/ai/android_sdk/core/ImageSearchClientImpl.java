@@ -6,12 +6,12 @@ import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.ImageSearchRequestData;
-import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
+import com.syte.ai.android_sdk.data.ImageSearch;
+import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
-import com.syte.ai.android_sdk.data.result.offers.OffersResult;
+import com.syte.ai.android_sdk.data.result.offers.ItemsResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 class ImageSearchClientImpl implements ImageSearchClient {
@@ -25,9 +25,9 @@ class ImageSearchClientImpl implements ImageSearchClient {
     }
 
     @Override
-    public SyteResult<BoundsResult> getBounds(Context context, ImageSearchRequestData imageSearchRequestData) {
+    public SyteResult<BoundsResult> getBounds(Context context, ImageSearch imageSearch) {
         try {
-            InputValidator.validateInput(imageSearchRequestData);
+            InputValidator.validateInput(imageSearch);
             InputValidator.validateInput(context);
         } catch (SyteWrongInputException e) {
             SyteResult<BoundsResult> result = new SyteResult<>();
@@ -37,29 +37,29 @@ class ImageSearchClientImpl implements ImageSearchClient {
 
         return mSyteRemoteDataSource.getBoundsWild(
                 context,
-                imageSearchRequestData,
+                imageSearch,
                 mSytePlatformSettings
         );
     }
 
     @Override
-    public SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData urlImageSearchRequestData) {
+    public SyteResult<BoundsResult> getBounds(UrlImageSearch urlImageSearch) {
         try {
-            InputValidator.validateInput(urlImageSearchRequestData);
+            InputValidator.validateInput(urlImageSearch);
         } catch (SyteWrongInputException e) {
             SyteResult<BoundsResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getBounds(urlImageSearchRequestData, mSytePlatformSettings);
+        return mSyteRemoteDataSource.getBounds(urlImageSearch, mSytePlatformSettings);
     }
 
     @Override
-    public SyteResult<OffersResult> getOffers(Bound bound, CropCoordinates cropCoordinates) {
+    public SyteResult<ItemsResult> getItemsForBound(Bound bound, CropCoordinates cropCoordinates) {
         try {
             InputValidator.validateInput(bound);
         } catch (SyteWrongInputException e) {
-            SyteResult<OffersResult> result = new SyteResult<>();
+            SyteResult<ItemsResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
             return result;
         }
@@ -67,11 +67,11 @@ class ImageSearchClientImpl implements ImageSearchClient {
     }
 
     @Override
-    public void getOffersAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<OffersResult> callback) {
+    public void getItemsForBoundAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<ItemsResult> callback) {
         try {
             InputValidator.validateInput(bound);
         } catch (SyteWrongInputException e) {
-            SyteResult<OffersResult> result = new SyteResult<>();
+            SyteResult<ItemsResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
             if (callback != null) {
                 callback.onResult(result);
@@ -84,12 +84,12 @@ class ImageSearchClientImpl implements ImageSearchClient {
     @Override
     public void getBoundsAsync(
             Context context,
-            ImageSearchRequestData imageSearchRequestData,
+            ImageSearch imageSearch,
             SyteCallback<BoundsResult> callback
     ) {
         try {
             InputValidator.validateInput(context);
-            InputValidator.validateInput(imageSearchRequestData);
+            InputValidator.validateInput(imageSearch);
         } catch (SyteWrongInputException e) {
             SyteResult<BoundsResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
@@ -98,13 +98,13 @@ class ImageSearchClientImpl implements ImageSearchClient {
             }
             return;
         }
-        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearchRequestData, mSytePlatformSettings, callback);
+        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearch, mSytePlatformSettings, callback);
     }
 
     @Override
-    public void getBoundsAsync(UrlImageSearchRequestData urlImageSearchRequestData, SyteCallback<BoundsResult> callback) {
+    public void getBoundsAsync(UrlImageSearch urlImageSearch, SyteCallback<BoundsResult> callback) {
         try {
-            InputValidator.validateInput(urlImageSearchRequestData);
+            InputValidator.validateInput(urlImageSearch);
         } catch (SyteWrongInputException e) {
             SyteResult<BoundsResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
@@ -113,7 +113,7 @@ class ImageSearchClientImpl implements ImageSearchClient {
             }
             return;
         }
-        mSyteRemoteDataSource.getBoundsAsync(urlImageSearchRequestData, mSytePlatformSettings, callback);
+        mSyteRemoteDataSource.getBoundsAsync(urlImageSearch, mSytePlatformSettings, callback);
     }
 
 }

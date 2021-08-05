@@ -4,7 +4,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
@@ -179,7 +178,7 @@ public class InitSyteImplTest extends BaseTest {
         startSessionInternal();
         SyteConfiguration configuration = mInitSyte.getConfiguration();
         assertEquals(configuration.getAccountId(), "9165");
-        assertEquals(configuration.getSignature(), "601c206d0a7f780efb9360f3");
+        assertEquals(configuration.getApiSignature(), "601c206d0a7f780efb9360f3");
         assertNotEquals((long) configuration.getSessionId(), -1L);
         assertNotNull(configuration.getUserId());
     }
@@ -271,7 +270,7 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void addViewedProduct() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("test");
+        mInitSyte.addViewedItem("test");
         assertTrue(mInitSyte.getConfiguration().getViewedProducts().contains("test"));
     }
 

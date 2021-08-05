@@ -2,22 +2,29 @@ package com.syte.ai.android_sdk.data;
 
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
-public class SimilarProductsRequestData {
+/**
+ * Class that is used to configure the 'Shop the look' requests.
+ */
+public class ShopTheLook {
 
-    private String mSku;
-    private String mImageUrl;
+    private final String mSku;
+    private final String mImageUrl;
     private boolean mPersonalizedRanking = false;
     private String mSyteUrlReferer = "mobile_sdk";
     private int mLimit = 7;
+    private int mLimitPerBound = -1;
+    private String mSyteOriginalItem = null;
     private RecommendationReturnField mFieldsToReturn = RecommendationReturnField.ALL;
 
     /**
      * @param sku - product ID
      * @param imageUrl - image URL
      */
-    public SimilarProductsRequestData(String sku, String imageUrl) {
+    public ShopTheLook(String sku, String imageUrl) {
         this.mSku = sku;
         this.mImageUrl = imageUrl;
     }
@@ -94,6 +101,37 @@ public class SimilarProductsRequestData {
      */
     public int getLimit() {
         return mLimit;
+    }
+
+    /**
+     * Set max items to return per bound.
+     * @param limit
+     */
+    public void setLimitPerBound(int limit) {
+        mLimitPerBound = limit;
+    }
+
+    /**
+     * @return max items to return per bound.
+     */
+    public int getLimitPerBound() {
+        return mLimitPerBound;
+    }
+
+    /**
+     * Set Syte original item
+     * @param originalItem
+     */
+    public void setSyteOriginalItem(String originalItem) {
+        mSyteOriginalItem = originalItem;
+    }
+
+    /**
+     * @return Syte original item
+     */
+    @Nullable
+    public String getSyteOriginalItem() {
+        return mSyteOriginalItem;
     }
 
 }

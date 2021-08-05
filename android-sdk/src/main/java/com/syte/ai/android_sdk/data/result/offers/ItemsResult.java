@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName;
 /**
  * A class that represents the return result for the offers requests.
  */
-public class OffersResult {
+public class ItemsResult {
 
     @SerializedName("ads")
-    private List<Offer> offers = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     @SerializedName("currency_symbol")
     private String currencySymbol;
@@ -20,11 +20,11 @@ public class OffersResult {
     private String currencyTla;
 
     /**
-     * Getter for the list of offers.
-     * @return list of offers
+     * Getter for the list of items.
+     * @return list of items
      */
-    public List<Offer> getOffers() {
-        return offers;
+    public List<Item> getItems() {
+        return items;
     }
 
     /**

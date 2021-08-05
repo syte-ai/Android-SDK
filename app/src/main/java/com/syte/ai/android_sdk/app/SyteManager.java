@@ -6,17 +6,16 @@ import android.widget.Toast;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
-import com.syte.ai.android_sdk.data.ImageSearchRequestData;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
-import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
+import com.syte.ai.android_sdk.data.ImageSearch;
+import com.syte.ai.android_sdk.data.Personalization;
+import com.syte.ai.android_sdk.data.ShopTheLook;
+import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
-import com.syte.ai.android_sdk.data.result.offers.Offer;
-import com.syte.ai.android_sdk.data.result.offers.OffersResult;
+import com.syte.ai.android_sdk.data.result.offers.Item;
+import com.syte.ai.android_sdk.data.result.offers.ItemsResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
@@ -30,7 +29,7 @@ public class SyteManager {
 
     private final InitSyte mInitSyte = InitSyte.newInstance();
     private final Context mContext;
-    private List<Offer> mLastRetrievedItemsList;
+    private List<Item> mLastRetrievedItemsList;
     private List<Bound> mLastRetrievedBoundsList;
 
     public SyteManager(Context context) {
@@ -84,16 +83,16 @@ public class SyteManager {
     public void addViewedProducts(Set<String> viewedProducts) {
         for (String viewedProduct : viewedProducts) {
             try {
-                mInitSyte.addViewedProduct(viewedProduct);
+                mInitSyte.addViewedItem(viewedProduct);
             } catch (SyteWrongInputException e) {}
         }
     }
 
-    public void setLastRetrievedItemsList(List<Offer> itemsList) {
+    public void setLastRetrievedItemsList(List<Item> itemsList) {
         mLastRetrievedItemsList = itemsList;
     }
 
-    public List<Offer> getLastRetrievedItemsList() {
+    public List<Item> getLastRetrievedItemsList() {
         return mLastRetrievedItemsList == null ? new ArrayList<>() : mLastRetrievedItemsList;
     }
 
@@ -106,11 +105,11 @@ public class SyteManager {
     }
 
     public void personalization(
-            PersonalizationRequestData personalizationRequestData,
+            Personalization personalization,
             SyteCallback<PersonalizationResult> callback
     ) {
-        mInitSyte.getProductRecommendationClient().getPersonalizationAsync(
-                personalizationRequestData,
+        mInitSyte.getProductRecommendationClient().getPersonalizedProductsAsync(
+                personalization,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
                         showToastError(syteResult.errorMessage);
@@ -121,11 +120,11 @@ public class SyteManager {
     }
 
     public void shopTheLook(
-            ShopTheLookRequestData shopTheLookRequestData,
+            ShopTheLook shopTheLook,
             SyteCallback<ShopTheLookResult> callback
     ) {
         mInitSyte.getProductRecommendationClient().getShopTheLookAsync(
-                shopTheLookRequestData,
+                shopTheLook,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
                         showToastError(syteResult.errorMessage);
@@ -136,11 +135,11 @@ public class SyteManager {
     }
 
     public void getSimilars(
-            SimilarProductsRequestData similarProductsRequestData,
+            SimilarProducts similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
         mInitSyte.getProductRecommendationClient().getSimilarProductsAsync(
-                similarProductsRequestData,
+                similarProducts,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
                         showToastError(syteResult.errorMessage);
@@ -151,7 +150,7 @@ public class SyteManager {
     }
 
     public void urlImageSearch(
-            UrlImageSearchRequestData requestData,
+            UrlImageSearch requestData,
             SyteCallback<BoundsResult> callback
     ) {
         mInitSyte.getImageSearchClient().getBoundsAsync(
@@ -167,9 +166,9 @@ public class SyteManager {
 
     public void getOffers(
             Bound bound,
-            SyteCallback<OffersResult> callback
+            SyteCallback<ItemsResult> callback
     ) {
-        mInitSyte.getImageSearchClient().getOffersAsync(
+        mInitSyte.getImageSearchClient().getItemsForBoundAsync(
                 bound,
                 null,
                 syteResult -> {
@@ -182,7 +181,7 @@ public class SyteManager {
     }
 
     public void wildImageSearch(
-            ImageSearchRequestData requestData,
+            ImageSearch requestData,
             SyteCallback<BoundsResult> callback
     ) {
         mInitSyte.getImageSearchClient().getBoundsAsync(

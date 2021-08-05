@@ -3,10 +3,10 @@ package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
+import com.syte.ai.android_sdk.data.Personalization;
+import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
+import com.syte.ai.android_sdk.data.SimilarProducts;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
@@ -28,25 +28,25 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
 
     @Override
     public SyteResult<SimilarProductsResult> getSimilarProducts(
-            SimilarProductsRequestData similarProductsRequestData
+            SimilarProducts similarProducts
     ) {
         try {
-            InputValidator.validateInput(similarProductsRequestData);
+            InputValidator.validateInput(similarProducts);
         } catch (SyteWrongInputException e) {
             SyteResult<SimilarProductsResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getSimilarProducts(similarProductsRequestData);
+        return mSyteRemoteDataSource.getSimilarProducts(similarProducts);
     }
 
     @Override
     public void getSimilarProductsAsync(
-            SimilarProductsRequestData similarProductsRequestData,
+            SimilarProducts similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
         try {
-            InputValidator.validateInput(similarProductsRequestData);
+            InputValidator.validateInput(similarProducts);
         } catch (SyteWrongInputException e) {
             if (callback != null) {
                 SyteResult<SimilarProductsResult> result = new SyteResult<>();
@@ -56,7 +56,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
             return;
         }
         mSyteRemoteDataSource.getSimilarProductsAsync(
-                similarProductsRequestData,
+                similarProducts,
                 new SyteCallback<SimilarProductsResult>() {
                     @Override
                     public void onResult(SyteResult<SimilarProductsResult> syteResult) {
@@ -70,25 +70,25 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
 
     @Override
     public SyteResult<ShopTheLookResult> getShopTheLook(
-            ShopTheLookRequestData shopTheLookRequestData
+            ShopTheLook shopTheLook
     ) {
         try {
-            InputValidator.validateInput(shopTheLookRequestData);
+            InputValidator.validateInput(shopTheLook);
         } catch (SyteWrongInputException e) {
             SyteResult<ShopTheLookResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getShopTheLook(shopTheLookRequestData, mSytePlatformSettings);
+        return mSyteRemoteDataSource.getShopTheLook(shopTheLook, mSytePlatformSettings);
     }
 
     @Override
     public void getShopTheLookAsync(
-            ShopTheLookRequestData shopTheLookRequestData,
+            ShopTheLook shopTheLook,
             SyteCallback<ShopTheLookResult> callback
     ) {
         try {
-            InputValidator.validateInput(shopTheLookRequestData);
+            InputValidator.validateInput(shopTheLook);
         } catch (SyteWrongInputException e) {
             SyteResult<ShopTheLookResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
@@ -98,7 +98,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
             return;
         }
         mSyteRemoteDataSource.getShopTheLookAsync(
-                shopTheLookRequestData,
+                shopTheLook,
                 mSytePlatformSettings,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
@@ -112,26 +112,26 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
     }
 
     @Override
-    public SyteResult<PersonalizationResult> getPersonalization(
-            PersonalizationRequestData personalizationRequestData
+    public SyteResult<PersonalizationResult> getPersonalizedProducts(
+            Personalization personalization
     ) {
         try {
-            InputValidator.validateInput(personalizationRequestData);
+            InputValidator.validateInput(personalization);
         } catch (SyteWrongInputException e) {
             SyteResult<PersonalizationResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
             return result;
         }
-        return mSyteRemoteDataSource.getPersonalization(personalizationRequestData);
+        return mSyteRemoteDataSource.getPersonalization(personalization);
     }
 
     @Override
-    public void getPersonalizationAsync(
-            PersonalizationRequestData personalizationRequestData,
+    public void getPersonalizedProductsAsync(
+            Personalization personalization,
             SyteCallback<PersonalizationResult> callback
     ) {
         try {
-            InputValidator.validateInput(personalizationRequestData);
+            InputValidator.validateInput(personalization);
         } catch (SyteWrongInputException e) {
             SyteResult<PersonalizationResult> result = new SyteResult<>();
             result.errorMessage = e.getMessage();
@@ -141,7 +141,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
             return;
         }
         mSyteRemoteDataSource.getPersonalizationAsync(
-                personalizationRequestData,
+                personalization,
                 new SyteCallback<PersonalizationResult>() {
                     @Override
                     public void onResult(SyteResult<PersonalizationResult> syteResult) {

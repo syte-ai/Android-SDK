@@ -100,7 +100,7 @@ For image search:
 
     `SyteResult<BoundsResult> result = imageSearchClient.getBounds(context, imageSearch);`
 
-4. Retrieve offers for a bound:
+4. Retrieve Items for a bound:
 
     `SyteResult<ItemsResult> imageSearchClient.getItemsForBound(result.data.getBounds().get(index), null);`
 
@@ -110,8 +110,8 @@ You can pass CropCoordinates instance instead of *null* here to enable the crop 
     SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), coordinates);
 
 **NOTE**
-Offers for the first bound will be retrieved by default.
-Use **urlImageSearch.setRetrieveOffersForTheFirstBound(false)**  or **imageSearch.setRetrieveOffersForTheFirstBound(false)** to disable this behaviour.
+Items for the first bound will be retrieved by default.
+Use **urlImageSearch.setRetrieveItemsForTheFirstBound(false)**  or **imageSearch.setRetrieveItemsForTheFirstBound(false)** to disable this behaviour.
 
 # Product Recommendations
 To use the "Recommendations" functionality, do the following:

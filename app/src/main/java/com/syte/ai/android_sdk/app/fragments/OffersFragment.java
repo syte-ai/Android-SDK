@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.adapter.OffersAdapter;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.result.offers.Offer;
+import com.syte.ai.android_sdk.data.result.offers.Item;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ public class OffersFragment extends BaseFragment {
         RecyclerView recyclerView = view.findViewById(R.id.offers_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Offer> offerList = mSyteManager.getLastRetrievedItemsList();
+        List<Item> itemList = mSyteManager.getLastRetrievedItemsList();
 
-        OffersAdapter adapter = new OffersAdapter(offerList);
+        OffersAdapter adapter = new OffersAdapter(itemList);
         recyclerView.setAdapter(adapter);
     }
 

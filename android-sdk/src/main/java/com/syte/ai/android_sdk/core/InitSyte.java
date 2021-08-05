@@ -76,7 +76,7 @@ public abstract class InitSyte {
     public abstract ImageSearchClient getImageSearchClient();
 
     /**
-     * Force reset session ID.
+     * Uninitialize Syte and force reset session ID.
      * If not called, the session ID will be automatically reset if no requests were sent within 30 minutes.
      */
     public abstract void endSession();
@@ -92,7 +92,7 @@ public abstract class InitSyte {
      * Save product ID into the local storage. All saved viewed products will be used for personalization.
      * @param sku product ID
      */
-    public abstract void addViewedProduct(String sku) throws SyteWrongInputException;
+    public abstract void addViewedItem(String sku) throws SyteWrongInputException;
 
     /**
      * Get all product IDs that were viewed during this session.

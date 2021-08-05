@@ -11,18 +11,18 @@ public class SyteConfigurationTest extends BaseTest {
     @Test
     public void getSessionSkusString() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("test1");
-        mInitSyte.addViewedProduct("test2");
-        mInitSyte.addViewedProduct("test3");
+        mInitSyte.addViewedItem("test1");
+        mInitSyte.addViewedItem("test2");
+        mInitSyte.addViewedItem("test3");
         assertEquals("test1,test2,test3", Utils.viewedProductsString(mConfiguration.getViewedProducts()));
     }
 
     @Test
     public void getSessionSkusJSONArray() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("test1");
-        mInitSyte.addViewedProduct("test2");
-        mInitSyte.addViewedProduct("test3");
+        mInitSyte.addViewedItem("test1");
+        mInitSyte.addViewedItem("test2");
+        mInitSyte.addViewedItem("test3");
         assertEquals("[\"test1\",\"test2\",\"test3\"]", Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()));
     }
 

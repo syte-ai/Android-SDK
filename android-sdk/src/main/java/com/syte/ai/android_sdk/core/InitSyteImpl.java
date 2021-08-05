@@ -153,7 +153,7 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public void addViewedProduct(String sku) throws SyteWrongInputException {
+    public void addViewedItem(String sku) throws SyteWrongInputException {
         verifyInitialized();
         InputValidator.validateInput(sku);
         mConfiguration.addViewedProduct(sku);

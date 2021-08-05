@@ -1,11 +1,9 @@
 package com.syte.ai.android_sdk;
 
-import com.syte.ai.android_sdk.data.CropCoordinates;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
+import com.syte.ai.android_sdk.data.Personalization;
+import com.syte.ai.android_sdk.data.ShopTheLook;
+import com.syte.ai.android_sdk.data.SimilarProducts;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
@@ -18,63 +16,63 @@ public interface ProductRecommendationClient {
     /**
      * Make 'Similars' call
      * Synchronous method. Must NOT be called on the UI thread!
-     * @param similarProductsRequestData {@link SimilarProductsRequestData}
+     * @param similarProducts {@link SimilarProducts}
      * @return {@link SyteResult}
      */
     SyteResult<SimilarProductsResult> getSimilarProducts(
-            SimilarProductsRequestData similarProductsRequestData
+            SimilarProducts similarProducts
     );
 
     /**
      * Make 'Similars' call
-     * Asynchronous equivalent for the {@link #getSimilarProducts(SimilarProductsRequestData)} method.
-     * @param similarProductsRequestData {@link SimilarProductsRequestData}
+     * Asynchronous equivalent for the {@link #getSimilarProducts(SimilarProducts)} method.
+     * @param similarProducts {@link SimilarProducts}
      * @param callback {@link SyteCallback}
      */
     void getSimilarProductsAsync(
-            SimilarProductsRequestData similarProductsRequestData,
+            SimilarProducts similarProducts,
             SyteCallback<SimilarProductsResult> callback
     );
 
     /**
      * Make 'Shop the look' call
      * Synchronous method. Must NOT be called on the UI thread!
-     * @param shopTheLookRequestData {@link ShopTheLookRequestData}
+     * @param shopTheLook {@link ShopTheLook}
      * @return {@link SyteResult}
      */
     SyteResult<ShopTheLookResult> getShopTheLook(
-            ShopTheLookRequestData shopTheLookRequestData
+            ShopTheLook shopTheLook
     );
 
     /**
      * Make 'Shop the look' call
-     * Asynchronous equivalent for the {@link #getShopTheLook(ShopTheLookRequestData)} method.
-     * @param shopTheLookRequestData {@link ShopTheLookRequestData}
+     * Asynchronous equivalent for the {@link #getShopTheLook(ShopTheLook)} method.
+     * @param shopTheLook {@link ShopTheLook}
      * @param callback {@link SyteCallback}
      */
     void getShopTheLookAsync(
-            ShopTheLookRequestData shopTheLookRequestData,
+            ShopTheLook shopTheLook,
             SyteCallback<ShopTheLookResult> callback
     );
 
     /**
      * Make 'Personalization' call
      * Synchronous method. Must NOT be called on the UI thread!
-     * @param personalizationRequestData {@link PersonalizationRequestData}
+     * @param personalization {@link Personalization}
      * @return {@link SyteResult}
      */
-    SyteResult<PersonalizationResult> getPersonalization(
-            PersonalizationRequestData personalizationRequestData
+    SyteResult<PersonalizationResult> getPersonalizedProducts(
+            Personalization personalization
     );
 
     /**
      * Make 'Personalization' call
-     * Asynchronous equivalent for the {@link #getPersonalization(PersonalizationRequestData)} method.
-     * @param personalizationRequestData {@link PersonalizationRequestData}
+     * Asynchronous equivalent for the {@link #getPersonalizedProducts(Personalization)} method.
+     * @param personalization {@link Personalization}
      * @param callback {@link SyteCallback}
      */
-    void getPersonalizationAsync(
-            PersonalizationRequestData personalizationRequestData,
+    void getPersonalizedProductsAsync(
+            Personalization personalization,
             SyteCallback<PersonalizationResult> callback
     );
 

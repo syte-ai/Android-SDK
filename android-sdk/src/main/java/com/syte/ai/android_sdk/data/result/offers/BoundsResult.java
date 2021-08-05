@@ -1,14 +1,13 @@
 package com.syte.ai.android_sdk.data.result.offers;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
-
-import org.jetbrains.annotations.NotNull;
+import com.syte.ai.android_sdk.data.ImageSearch;
+import com.syte.ai.android_sdk.data.UrlImageSearch;
 
 /**
  *	A class that represents the return result for all of the *getBounds()* calls in {@link com.syte.ai.android_sdk.ImageSearchClient}.
@@ -18,7 +17,7 @@ public class BoundsResult {
 	@SerializedName("bounds")
 	private List<Bound> bounds = new ArrayList<>();
 
-	private OffersResult firstBoundOffersResult = null;
+	private ItemsResult firstBoundItemsResult = null;
 
 	/**
 	 * Getter for the returned bounds.
@@ -29,22 +28,22 @@ public class BoundsResult {
 	}
 
 	/**
-	 * Set result for the offers retrieved automatically for the first bound. Used in the internal implementation.
-	 * @param firstBoundOffersResult offers for the first bound
+	 * Set result for the items retrieved automatically for the first bound. Used in the internal implementation.
+	 * @param firstBoundItemsResult items for the first bound
 	 */
-	public void setFirstBoundOffersResult(OffersResult firstBoundOffersResult) {
-		this.firstBoundOffersResult = firstBoundOffersResult;
+	public void setFirstBoundItemsResult(ItemsResult firstBoundItemsResult) {
+		this.firstBoundItemsResult = firstBoundItemsResult;
 	}
 
 	/**
 	 * Get offers result for the first retrieved bound. Will return null if false is passed
 	 * to setRetrieveOffersForTheFirstBound() method in
-	 * {@link com.syte.ai.android_sdk.data.ImageSearchRequestData} or {@link com.syte.ai.android_sdk.data.UrlImageSearchRequestData}
+	 * {@link ImageSearch} or {@link UrlImageSearch}
 	 * @return Offers call result for the first retrieved bound.
 	 */
 	@Nullable
-	public OffersResult getFirstBoundOffersResult() {
-		return firstBoundOffersResult;
+	public ItemsResult getItemsForFirstBound() {
+		return firstBoundItemsResult;
 	}
 
 }

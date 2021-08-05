@@ -14,7 +14,7 @@ import android.widget.EditText;
 
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
+import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 
 import org.jetbrains.annotations.NotNull;
@@ -64,11 +64,11 @@ public class UrlImageSearchFragment extends BaseFragment implements View.OnClick
                     showToast("Wrong input");
                     return;
                 }
-                UrlImageSearchRequestData imageSearchRequestData = new UrlImageSearchRequestData(
+                UrlImageSearch imageSearchRequestData = new UrlImageSearch(
                         mImageUrlEditText.getText().toString(),
                         SyteProductType.DISCOVERY_BUTTON
                 );
-                imageSearchRequestData.setRetrieveOffersForTheFirstBound(
+                imageSearchRequestData.setRetrieveItemsForTheFirstBound(
                         mFetchOffersForTheFirstBoundCheckBox.isChecked()
                 );
                 imageSearchRequestData.setSku(

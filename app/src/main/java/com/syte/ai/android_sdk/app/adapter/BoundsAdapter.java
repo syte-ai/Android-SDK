@@ -72,7 +72,7 @@ public class BoundsAdapter extends RecyclerView.Adapter<BoundsAdapter.ViewHolder
                 }
             }
         });
-        viewHolder.offerUrl.setText(mData.get(position).getOffersUrl());
+        viewHolder.offerUrl.setText(mData.get(position).getItemUrl());
         viewHolder.gender.setText(mData.get(position).getGender());
         viewHolder.catalog.setText(mData.get(position).getCatalog());
         viewHolder.label.setText(mData.get(position).getLabel());

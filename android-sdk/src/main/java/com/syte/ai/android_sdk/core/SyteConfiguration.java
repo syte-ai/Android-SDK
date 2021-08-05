@@ -71,7 +71,7 @@ public class SyteConfiguration {
      * Getter for signature
      * @return signature
      */
-    public String getSignature() {
+    public String getApiSignature() {
         return mSignature;
     }
 

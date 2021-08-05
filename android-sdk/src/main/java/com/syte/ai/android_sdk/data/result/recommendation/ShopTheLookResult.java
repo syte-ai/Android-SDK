@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
-import com.syte.ai.android_sdk.data.result.offers.Offer;
+import com.syte.ai.android_sdk.data.result.offers.Item;
 
 /**
  * A class that represents the result for 'Shop the look' call
@@ -48,11 +48,11 @@ public class ShopTheLookResult {
      * Get list of all retrieved items. If zip in {@link SytePlatformSettings} is true, the items will be shuffled.
      * @return list of all retrieved items
      */
-    public List<Offer> getAllItems() {
+    public List<Item> getItemsForAllLabels() {
         if (sytePlatformSettings == null) {
-            return getAllItems(false);
+            return getItemsForAllLabels(false);
         }
-        return getAllItems(sytePlatformSettings
+        return getItemsForAllLabels(sytePlatformSettings
                 .getData()
                 .getProducts()
                 .getSyteapp()
@@ -66,33 +66,33 @@ public class ShopTheLookResult {
      * @param forceZip - true to shuffle items (disregarding the zip value in {@link SytePlatformSettings})
      * @return list of all retrieved items
      */
-    public List<Offer> getAllItems(boolean forceZip) {
-        List<Offer> offerList = new ArrayList<>();
+    public List<Item> getItemsForAllLabels(boolean forceZip) {
+        List<Item> itemList = new ArrayList<>();
         if (forceZip) {
             int maxIdx = 0;
 
             for (ShopTheLookResponseItem item : items) {
-                if (item.getOffers().size() - 1 > maxIdx) {
-                    maxIdx = item.getOffers().size() - 1;
+                if (item.getItems().size() - 1 > maxIdx) {
+                    maxIdx = item.getItems().size() - 1;
                 }
             }
 
             for (int i = 0; i <= maxIdx; i++) {
                 for (ShopTheLookResponseItem item : items) {
-                    if (item.getOffers().size() > i) {
-                        offerList.add(item.getOffers().get(i));
+                    if (item.getItems().size() > i) {
+                        itemList.add(item.getItems().get(i));
                     }
                 }
             }
 
-            return offerList;
+            return itemList;
         }
 
         for (ShopTheLookResponseItem item : items) {
-            offerList.addAll(item.getOffers());
+            itemList.addAll(item.getItems());
         }
 
-        return offerList;
+        return itemList;
     }
 
 }

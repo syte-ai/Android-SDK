@@ -49,7 +49,7 @@
     void setLocale(java.lang.String);
     java.lang.String getLocale();
     java.lang.String getAccountId();
-    java.lang.String getSignature();
+    java.lang.String getApiSignature();
     java.lang.String getUserId();
     java.lang.Long getSessionId();
 }

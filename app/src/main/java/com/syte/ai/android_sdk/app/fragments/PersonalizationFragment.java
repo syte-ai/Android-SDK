@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
+import com.syte.ai.android_sdk.data.Personalization;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,12 +40,12 @@ public class PersonalizationFragment extends BaseFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        PersonalizationRequestData personalizationRequestData =
-                new PersonalizationRequestData();
+        Personalization personalization =
+                new Personalization();
         switch (v.getId()) {
             case R.id.personalization_btn:
                 mSyteManager.personalization(
-                        personalizationRequestData,
+                        personalization,
                         syteResult -> {
                            if (syteResult.isSuccessful) {
                                mSyteManager.setLastRetrievedItemsList(
