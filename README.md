@@ -102,7 +102,7 @@ For image search:
 
 4. Retrieve offers for a bound:
 
-    `SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), null);`
+    `SyteResult<ItemsResult> imageSearchClient.getItemsForBound(result.data.getBounds().get(index), null);`
 
 You can pass CropCoordinates instance instead of *null* here to enable the crop functionality. Example:
 
