@@ -1,6 +1,6 @@
 ## Syte Android SDK
 
-The Syte SDK allows you to build image detection, visual search and product recommendations into your company's applications, enabling you to personalize your app experience for your users.
+The Syte SDK allows you to build image detection, visual search, product recommendations and augmented search into your company's applications, enabling you to personalize your app experience for your users.
 This guide contains information about how to install and use the SDK for Android Apps.
 
 Note: This SDK requires Android API 21 or higher.
@@ -69,52 +69,51 @@ API used: https://cdn.syteapi.com/accounts/[account_id]
 ## Image Search
 
 Object detection ("bounds") and a similarity search ("Items") per object detected in the image. 
-Search can be performed with a wild image or image URL.
+Search can be performed with an image or image URL.
 
-# URL image search
-To use the Url image Search functionality do the following:
+To use the image Search functionality do the following:
 
 1. Retrieve the Image Search client:
 
     `ImageSearchClient imageSearchClient = initSyte.getImageSearchClient();`
 
-2. Create the UrlImageSearch class instance and pass the required data.
+2. Create dedicated class instance and pass the required data.
+
+For Url image search:
 
     `UrlImageSearch urlImageSearch = new UrlImageSearch(
         <image URL>,
         <Syte product type>
     );`
-
-3. Retrieve bounds:
-
-
-    `SyteResult<BoundsResult> result = imageSearchClient.getBounds(urlImageSearch);`
-
-4. Retrieve offers for a bound:
-
-    `SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), null);`
-
-You can pass CropCoordinates instance instead of *null* here to enable the crop functionality.
-
-# "Wild" image search
-
-To use the "Wild" image Search functionality do the following:
-
-1. Retrieve the Image Search client:
-
-    `ImageSearchClient imageSearchClient = initSyte.getImageSearchClient();`
-
-2. Create the ImageSearch class instance and pass the required data.
-
+    
+For image search:
+    
     `ImageSearch ImageSearch = new ImageSearch(
         <image Uri>
     );`
 
 3. Retrieve bounds:
 
+For Url image search:
+
+    `SyteResult<BoundsResult> result = imageSearchClient.getBounds(urlImageSearch);`
+    
+For image search:
+
     `SyteResult<BoundsResult> result = imageSearchClient.getBounds(context, imageSearch);`
 
-4. Offers retrieval process is the same as for Url image search.
+4. Retrieve offers for a bound:
+
+    `SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), null);`
+
+You can pass CropCoordinates instance instead of *null* here to enable the crop functionality. Example:
+
+    CropCoordinates coordinates = new CropCoordinates(0.2, 0.2, 0.8, 0.8); // The coordinates should be relative ranging from 0.0 to 1.0
+    SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), coordinates);
+
+**NOTE**
+Offers for the first bound will be retrieved by default.
+Use **urlImageSearch.setRetrieveOffersForTheFirstBound(false)**  or **imageSearch.setRetrieveOffersForTheFirstBound(false)** to disable this behaviour.
 
 # Product Recommendations
 To use the "Recommendations" functionality, do the following:
@@ -132,11 +131,21 @@ To use the "Recommendations" functionality, do the following:
         ShopTheLook shopTheLook
     );`
 *   `SyteResult<PersonalizationResult> getPersonalization(
-        PersonalizationRequestData personalizationRequestData
+        Personalization personalization
     );`
     
+**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **InitSyte.addViewedProduct(String)** method.
+
+# Personalized ranking
+
+Enabling the personalized ranking will attach the list of viewed products to the requests. 
+To add a product to the list of viewed ones use the **InitSyte.addViewedProduct(String)** method.
+To enable this functionality use the **setPersonalizedRanking(true)** method. 
+It is supported in the following classes: **UrlImageSearch, ImageSearch, ShopTheLook, SimilarProducts**.
+Personalized ranking is disabled by default.
+
 # Data Collection
 
 The SDK can be used to fire various events to Syte. Example:
 
-    `initSyte.fireEvent(new EventOfferClick());`
+    initSyte.fireEvent(new EventCheckoutStart());
