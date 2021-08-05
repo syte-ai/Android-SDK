@@ -18,6 +18,7 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -36,6 +37,45 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertEquals(result.data.getItems().size(), 7);
         assertNotNull(result.data.getItems().get(0).getOriginalData());
         assertNotNull(result.data.getItems().get(0).getSku());
+    }
+
+    @Test
+    public void getSimilarProductsRequestDataNull() {
+        startSessionInternal();
+        SyteResult<SimilarProductsResult> result = mInitSyte.getProductRecommendationClient().getSimilarProducts(null);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void getSimilarProductsImageUrlNull() {
+        startSessionInternal();
+        SimilarProductsRequestData requestData = new SimilarProductsRequestData("test", null);
+        SyteResult<SimilarProductsResult> result =
+                mInitSyte.getProductRecommendationClient()
+                        .getSimilarProducts(requestData);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void getSimilarProductsSkuNull() {
+        startSessionInternal();
+        SimilarProductsRequestData requestData = new SimilarProductsRequestData(null, "test");
+        SyteResult<SimilarProductsResult> result =
+                mInitSyte.getProductRecommendationClient()
+                        .getSimilarProducts(requestData);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
     }
 
     @Test
@@ -151,6 +191,68 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
+    public void getSimilarProductsAsyncRequestDataNull() throws InterruptedException {
+        startSessionInternal();
+        CountDownLatch latch = new CountDownLatch(1);
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        client.getSimilarProductsAsync(null, new SyteCallback<SimilarProductsResult>() {
+            @Override
+            public void onResult(SyteResult<SimilarProductsResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
+    public void getSimilarProductsAsyncImageUrlNull() throws InterruptedException {
+        startSessionInternal();
+        CountDownLatch latch = new CountDownLatch(1);
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        SimilarProductsRequestData requestData = new SimilarProductsRequestData("test", null);
+        client.getSimilarProductsAsync(requestData, new SyteCallback<SimilarProductsResult>() {
+            @Override
+            public void onResult(SyteResult<SimilarProductsResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
+    public void getSimilarProductsAsyncSkuNull() throws InterruptedException {
+        startSessionInternal();
+        CountDownLatch latch = new CountDownLatch(1);
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        SimilarProductsRequestData requestData = new SimilarProductsRequestData(null, "test");
+        client.getSimilarProductsAsync(requestData, new SyteCallback<SimilarProductsResult>() {
+            @Override
+            public void onResult(SyteResult<SimilarProductsResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
     public void getShopTheLook() {
         startSessionInternal();
         SyteResult<ShopTheLookResult> result = getShopTheLookInternal(null);
@@ -161,6 +263,47 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
         assertEquals(result.data.getItems().get(0).getOffers().size(), 3);
+    }
+
+    @Test
+    public void getShopTheLookRequestDataNull() {
+        startSessionInternal();
+        SyteResult<ShopTheLookResult> result =
+                mInitSyte.getProductRecommendationClient().getShopTheLook(null);
+
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void getShopTheLookImageUrlNull() {
+        startSessionInternal();
+        ShopTheLookRequestData requestData = new ShopTheLookRequestData("test", null);
+        SyteResult<ShopTheLookResult> result =
+                mInitSyte.getProductRecommendationClient().getShopTheLook(requestData);
+
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void getShopTheLookSkuNull() {
+        startSessionInternal();
+        ShopTheLookRequestData requestData = new ShopTheLookRequestData(null, "test");
+        SyteResult<ShopTheLookResult> result =
+                mInitSyte.getProductRecommendationClient().getShopTheLook(requestData);
+
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
     }
 
     @Test
@@ -335,6 +478,68 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
+    public void getShopTheLookAsyncRequestDataNull() throws InterruptedException {
+        startSessionInternal();
+        CountDownLatch latch = new CountDownLatch(1);
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        client.getShopTheLookAsync(null, new SyteCallback<ShopTheLookResult>() {
+            @Override
+            public void onResult(SyteResult<ShopTheLookResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
+    public void getShopTheLookAsyncImageUrlNull() throws InterruptedException {
+        startSessionInternal();
+        CountDownLatch latch = new CountDownLatch(1);
+        ShopTheLookRequestData requestData = new ShopTheLookRequestData("test", null);
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        client.getShopTheLookAsync(requestData, new SyteCallback<ShopTheLookResult>() {
+            @Override
+            public void onResult(SyteResult<ShopTheLookResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
+    public void getShopTheLookAsyncSkuNull() throws InterruptedException {
+        startSessionInternal();
+        CountDownLatch latch = new CountDownLatch(1);
+        ShopTheLookRequestData requestData = new ShopTheLookRequestData(null, "test");
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        client.getShopTheLookAsync(requestData, new SyteCallback<ShopTheLookResult>() {
+            @Override
+            public void onResult(SyteResult<ShopTheLookResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
     public void getPersonalization() throws SyteWrongInputException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
@@ -344,6 +549,17 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         assertTrue(result.isSuccessful);
         assertEquals(result.resultCode, 200);
         assertNotNull(result.data.getItems());
+    }
+
+    @Test
+    public void getPersonalizationNoViewedProducts() throws SyteWrongInputException {
+        startSessionInternal();
+        SyteResult<PersonalizationResult> result = getPersonalizationInternal(null);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertNull(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
     }
 
     @Test
@@ -431,10 +647,10 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     }
 
     @Test
-    public void getPersonalizationAsync() throws SyteWrongInputException {
+    public void getPersonalizationAsync() throws SyteWrongInputException, InterruptedException {
         startSessionInternal();
         mInitSyte.addViewedProduct("PZZ70556-105");
-
+        CountDownLatch latch = new CountDownLatch(1);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         client.getPersonalizationAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
             @Override
@@ -444,6 +660,26 @@ public class ProductRecommendationClientImplTest extends BaseTest {
                 assertTrue(result.isSuccessful);
                 assertEquals(result.resultCode, 200);
                 assertNotNull(result.data.getItems());
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+    }
+
+    @Test
+    public void getPersonalizationAsyncNoViewedProducts() throws SyteWrongInputException {
+        startSessionInternal();
+
+        ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
+        client.getPersonalizationAsync(createPersonalizationRequestData(), new SyteCallback<PersonalizationResult>() {
+            @Override
+            public void onResult(SyteResult<PersonalizationResult> result) {
+                assertNotNull(result);
+                assertNotNull(result.errorMessage);
+                assertNull(result.data);
+                assertFalse(result.isSuccessful);
+                assertEquals(result.resultCode, -1);
             }
         });
 

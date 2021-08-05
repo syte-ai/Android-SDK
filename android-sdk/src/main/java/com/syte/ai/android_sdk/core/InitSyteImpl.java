@@ -32,8 +32,16 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public SyteResult<Boolean> startSession(SyteConfiguration configuration) throws SyteWrongInputException {
-        InputValidator.validateInput(configuration);
+    public SyteResult<Boolean> startSession(SyteConfiguration configuration) {
+        try {
+            InputValidator.validateInput(configuration);
+        } catch (SyteWrongInputException e) {
+            SyteLogger.e(TAG, e.getMessage());
+            SyteResult<Boolean> syteResult = new SyteResult<>();
+            syteResult.data = false;
+            syteResult.errorMessage = e.getMessage();
+            return syteResult;
+        }
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
@@ -69,6 +77,7 @@ class InitSyteImpl extends InitSyte {
             syteResult.data = false;
             syteResult.errorMessage = e.getMessage();
             callback.onResult(syteResult);
+            return;
         }
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);

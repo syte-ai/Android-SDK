@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.core;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
@@ -13,6 +15,7 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,6 +26,46 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void startSession() {
         startSessionInternal();
+    }
+
+    @Test
+    public void startSessionConfigurationNull() {
+        SyteResult<Boolean> result = mInitSyte.startSession(null);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertFalse(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void startSessionAccountIdNull() {
+        SyteConfiguration syteConfiguration = new SyteConfiguration(
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                null,
+                ""
+        );
+        SyteResult<Boolean> result = mInitSyte.startSession(syteConfiguration);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertFalse(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void startSessionSignatureNull() {
+        SyteConfiguration syteConfiguration = new SyteConfiguration(
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                "test",
+                null
+        );
+        SyteResult<Boolean> result = mInitSyte.startSession(syteConfiguration);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertFalse(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
     }
 
     @Test
@@ -38,6 +81,88 @@ public class InitSyteImplTest extends BaseTest {
                     assertTrue(syteResult.isSuccessful);
 
                     assertTrue(syteResult.data);
+                    latch.countDown();
+                }
+            });
+        } catch (SyteInitializationException syteInitializationException) {
+            fail("Unable to start session: " + syteInitializationException.getMessage());
+        }
+
+        latch.await();
+
+    }
+
+    @Test
+    public void startSessionAsyncConfigurationNull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            mInitSyte.startSessionAsync(null, new SyteCallback<Boolean>() {
+                @Override
+                public void onResult(SyteResult<Boolean> result) {
+                    assertNotNull(result);
+                    assertNotNull(result.errorMessage);
+                    assertFalse(result.data);
+                    assertFalse(result.isSuccessful);
+                    assertEquals(result.resultCode, -1);
+                    latch.countDown();
+                }
+            });
+        } catch (SyteInitializationException syteInitializationException) {
+            fail("Unable to start session: " + syteInitializationException.getMessage());
+        }
+
+        latch.await();
+
+    }
+
+    @Test
+    public void startSessionAsyncAccountIdNull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            SyteConfiguration syteConfiguration = new SyteConfiguration(
+                    InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                    null,
+                    "test"
+            );
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<Boolean>() {
+                @Override
+                public void onResult(SyteResult<Boolean> result) {
+                    assertNotNull(result);
+                    assertNotNull(result.errorMessage);
+                    assertFalse(result.data);
+                    assertFalse(result.isSuccessful);
+                    assertEquals(result.resultCode, -1);
+                    latch.countDown();
+                }
+            });
+        } catch (SyteInitializationException syteInitializationException) {
+            fail("Unable to start session: " + syteInitializationException.getMessage());
+        }
+
+        latch.await();
+
+    }
+
+    @Test
+    public void startSessionAsyncSignatureNull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            SyteConfiguration syteConfiguration = new SyteConfiguration(
+                    InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                    null,
+                    "test"
+            );
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<Boolean>() {
+                @Override
+                public void onResult(SyteResult<Boolean> result) {
+                    assertNotNull(result);
+                    assertNotNull(result.errorMessage);
+                    assertFalse(result.data);
+                    assertFalse(result.isSuccessful);
+                    assertEquals(result.resultCode, -1);
                     latch.countDown();
                 }
             });

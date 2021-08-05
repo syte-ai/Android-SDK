@@ -31,9 +31,8 @@ public abstract class InitSyte {
      *          MUST be called before any other methods in this class!
      * @param configuration {@link SyteConfiguration}
      * @return Result indicating whether the session was started successfully.
-     * @throws SyteWrongInputException
      */
-    public abstract SyteResult<Boolean> startSession(SyteConfiguration configuration) throws SyteWrongInputException;
+    public abstract SyteResult<Boolean> startSession(SyteConfiguration configuration);
 
     /**
      * Starts the user session.
