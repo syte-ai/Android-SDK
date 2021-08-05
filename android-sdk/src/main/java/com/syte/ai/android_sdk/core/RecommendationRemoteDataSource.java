@@ -6,11 +6,13 @@ import com.syte.ai.android_sdk.data.PersonalizationRequestData;
 import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
+import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +44,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         }
     }
 
-    private SyteService mSyteService;
+    private final SyteService mSyteService;
 
     RecommendationRemoteDataSource(
             SyteService syteService,
@@ -53,19 +55,14 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarProductsRequestData similarProductsRequestData) {
-
+        Response<ResponseBody> result = null;
         try {
-            Response<ResponseBody> result =
+            result =
                     generateSimilarsCall(similarProductsRequestData).execute();
             return onSimilarsResult(result);
         } catch (IOException | JSONException e) {
-            //TODO handle error
+            return handleException(result, e);
         }
-
-        SyteResult<SimilarProductsResult> syteResult = new SyteResult<>();
-        syteResult.isSuccessful = false;
-        syteResult.data = null;
-        return syteResult;
     }
 
     public void getSimilarProductsAsync(
@@ -73,111 +70,95 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
             SyteCallback<SimilarProductsResult> callback) {
         generateSimilarsCall(similarProductsRequestData).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 try {
                     callback.onResult(onSimilarsResult(response));
                 } catch (IOException | JSONException e) {
-                    //TODO handle error
+                    callback.onResult(handleException(response, e));
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                SyteResult<SimilarProductsResult> syteResult = new SyteResult<>();
-                syteResult.isSuccessful = false;
-                syteResult.data = null;
-                callback.onResult(syteResult);
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                callback.onResult(handleOnFailure(t));
             }
         });
     }
 
     public SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLookRequestData shopTheLookRequestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
-
+        Response<ResponseBody> result = null;
         try {
-            Response<ResponseBody> result =
+            result =
                     generateShopTheLookCall(shopTheLookRequestData).execute();
-            return onShopTheLookResult(result, accountDataService);
+            return onShopTheLookResult(result, sytePlatformSettings);
         } catch (IOException | JSONException e) {
-            //TODO handle error
+            return handleException(result, e);
         }
-
-        SyteResult<ShopTheLookResult> syteResult = new SyteResult<>();
-        syteResult.isSuccessful = false;
-        syteResult.data = null;
-        return syteResult;
     }
 
     public void getShopTheLookAsync(
             ShopTheLookRequestData shopTheLookRequestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<ShopTheLookResult> callback) {
         generateShopTheLookCall(shopTheLookRequestData).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 try {
-                    callback.onResult(onShopTheLookResult(response, accountDataService));
+                    callback.onResult(onShopTheLookResult(response, sytePlatformSettings));
                 } catch (IOException | JSONException e) {
-                    //TODO handle error
+                    callback.onResult(handleException(response, e));
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                SyteResult<ShopTheLookResult> syteResult = new SyteResult<>();
-                syteResult.isSuccessful = false;
-                syteResult.data = null;
-                callback.onResult(syteResult);
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                callback.onResult(handleOnFailure(t));
             }
         });
     }
 
     public SyteResult<PersonalizationResult> getPersonalization(PersonalizationRequestData personalizationRequestData) {
-
+        Response<ResponseBody> result = null;
         try {
-            Response<ResponseBody> result =
-                    generatePersonalizationCall(personalizationRequestData).execute();
+            result = generatePersonalizationCall(personalizationRequestData).execute();
             return onPersonalizationResult(result);
-        } catch (IOException | JSONException e) {
-            //TODO handle error
+        } catch (IOException | JSONException | SyteWrongInputException e) {
+            return handleException(result, e);
         }
-
-        SyteResult<PersonalizationResult> syteResult = new SyteResult<>();
-        syteResult.isSuccessful = false;
-        syteResult.data = null;
-        return syteResult;
     }
 
     public void getPersonalizationAsync(
             PersonalizationRequestData personalizationRequestData,
             SyteCallback<PersonalizationResult> callback) {
-        generatePersonalizationCall(personalizationRequestData).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    callback.onResult(onPersonalizationResult(response));
-                } catch (IOException | JSONException e) {
-                    //TODO handle error
+        try {
+            generatePersonalizationCall(personalizationRequestData).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                    try {
+                        callback.onResult(onPersonalizationResult(response));
+                    } catch (IOException | JSONException e) {
+                        callback.onResult(handleException(response, e));
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                SyteResult<PersonalizationResult> syteResult = new SyteResult<>();
-                syteResult.isSuccessful = false;
-                syteResult.data = null;
-                callback.onResult(syteResult);
-            }
-        });
+                @Override
+                public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                    callback.onResult(handleOnFailure(t));
+                }
+            });
+        } catch (SyteWrongInputException e) {
+            callback.onResult(handleException(null, e));
+        }
     }
 
     private SyteResult<SimilarProductsResult> onSimilarsResult(
             Response<ResponseBody> result
     ) throws IOException, JSONException {
         if (result.body() == null) {
-            // TODO handle error here
+            return handleEmptyBody(result);
         }
 
         String responseString = result.body().string();
@@ -203,15 +184,18 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         syteResult.data = similarsResult;
         syteResult.isSuccessful = result.isSuccessful();
         syteResult.resultCode = result.code();
+        if (result.errorBody() != null) {
+            syteResult.errorMessage = result.errorBody().string();
+        }
         return syteResult;
     }
 
     private SyteResult<ShopTheLookResult> onShopTheLookResult(
             Response<ResponseBody> result,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) throws IOException, JSONException {
         if (result.body() == null) {
-            // TODO handle error here
+            return handleEmptyBody(result);
         }
 
         String responseString = result.body().string();
@@ -219,7 +203,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 responseString,
                 ShopTheLookResult.class
         );
-        ctlResult.setAccountDataService(accountDataService);
+        ctlResult.setSytePlatformSettings(sytePlatformSettings);
 
         // TODO put in a separate method
         JSONObject jsonObject = new JSONObject(responseString);
@@ -244,6 +228,9 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         syteResult.data = ctlResult;
         syteResult.isSuccessful = result.isSuccessful();
         syteResult.resultCode = result.code();
+        if (result.errorBody() != null) {
+            syteResult.errorMessage = result.errorBody().string();
+        }
         return syteResult;
     }
 
@@ -251,7 +238,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
             Response<ResponseBody> result
     ) throws IOException, JSONException {
         if (result.body() == null) {
-            // TODO handle error here
+            return handleEmptyBody(result);
         }
 
         String responseString = result.body().string();
@@ -278,6 +265,9 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         syteResult.data = personalizationResult;
         syteResult.isSuccessful = result.isSuccessful();
         syteResult.resultCode = result.code();
+        if (result.errorBody() != null) {
+            syteResult.errorMessage = result.errorBody().string();
+        }
         return syteResult;
     }
 
@@ -294,7 +284,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 similarProductsRequestData.getPersonalizedRanking() ?
-                        mConfiguration.getSessionSkusString() : null,
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 similarProductsRequestData.getLimit(),
                 similarProductsRequestData.getSyteUrlReferer(),
                 similarProductsRequestData.getImageUrl()
@@ -314,7 +304,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 shopTheLookRequestData.getPersonalizedRanking() ?
-                        mConfiguration.getSessionSkusString() : null,
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 shopTheLookRequestData.getLimit(),
                 shopTheLookRequestData.getSyteUrlReferer(),
                 shopTheLookRequestData.getLimitPerBound() == -1 ? null :
@@ -324,13 +314,16 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    private Call<ResponseBody> generatePersonalizationCall(PersonalizationRequestData personalizationRequestData) {
+    private Call<ResponseBody> generatePersonalizationCall(PersonalizationRequestData personalizationRequestData) throws SyteWrongInputException {
+        if (Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) == null) {
+            throw new SyteWrongInputException("There are no viewed products added. Can not proceed with the personalization call.");
+        }
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body =
                 RequestBody.create(mediaType,
                         "{\n    " +
                                     "\"user_uuid\": \"" + mConfiguration.getUserId() + "\",\n    " +
-                                    "\"session_skus\": " + mConfiguration.getSessionSkusJSONArray() + ",\n    " +
+                                    "\"session_skus\": " + Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) + ",\n    " +
                                     "\"model_version\": \"" + personalizationRequestData.getModelVersion() + "\"" +
                                 "\n}");
         return mSyteService.getPersonalization(

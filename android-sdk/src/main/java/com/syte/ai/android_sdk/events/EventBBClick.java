@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
+/**
+ * Default Syte event
+ */
 public class EventBBClick extends BaseSyteEvent {
 
     @SerializedName("image_url")

@@ -14,7 +14,7 @@ import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
 import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
 import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.AccountDataService;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.OffersResult;
@@ -23,6 +23,7 @@ import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.SyteProductType;
+import com.syte.ai.android_sdk.exceptions.SyteGeneralException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,9 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Set;
 
@@ -57,21 +56,19 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     private interface ExifRemovalResultCallback {
-        void onResult(UrlImageSearchRequestData requestData); //TODO add error description
+        void onResult(UrlImageSearchRequestData requestData, Throwable e);
     }
 
-    private final Retrofit mRetrofit;
-    private final Retrofit mExifRemovalRetrofit;
     private final SyteService mSyteService;
     private final ExifRemovalService mExifRemovalService;
     private final RecommendationRemoteDataSource mRecommendationRemoteDataSource;
 
     SyteRemoteDataSource(SyteConfiguration configuration) {
-        mRetrofit = RetrofitBuilder.build(SYTE_URL);
-        mExifRemovalRetrofit = RetrofitBuilder.build(EXIF_REMOVAL_URL);
+        Retrofit retrofit = RetrofitBuilder.build(SYTE_URL);
+        Retrofit exifRemovalRetrofit = RetrofitBuilder.build(EXIF_REMOVAL_URL);
 
-        mSyteService = mRetrofit.create(SyteService.class);
-        mExifRemovalService = mExifRemovalRetrofit.create(ExifRemovalService.class);
+        mSyteService = retrofit.create(SyteService.class);
+        mExifRemovalService = exifRemovalRetrofit.create(ExifRemovalService.class);
         mRecommendationRemoteDataSource = new RecommendationRemoteDataSource(mSyteService, configuration);
 
         mConfiguration = configuration;
@@ -102,21 +99,21 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLookRequestData shopTheLookRequestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         renewTimestamp();
-        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData, accountDataService);
+        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLookRequestData, sytePlatformSettings);
     }
 
     void getShopTheLookAsync(
             ShopTheLookRequestData shopTheLookRequestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<ShopTheLookResult> callback
     ) {
         renewTimestamp();
         mRecommendationRemoteDataSource.getShopTheLookAsync(
                 shopTheLookRequestData,
-                accountDataService,
+                sytePlatformSettings,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {
@@ -149,40 +146,44 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    SyteResult<AccountDataService> initialize() {
+    SyteResult<SytePlatformSettings> initialize() {
         renewTimestamp();
         Response<ResponseBody> response = null;
-        SyteResult<AccountDataService> syteResult = new SyteResult<>();
+        SyteResult<SytePlatformSettings> syteResult = new SyteResult<>();
         try {
             response = mSyteService.initialize(mConfiguration.getAccountId()).execute();
         } catch (IOException e) {
-            //TODO handle error here
-            syteResult.isSuccessful = false;
-            return syteResult;
+            return handleException(response, e);
         }
         try {
+            if (response.body() == null) {
+                return handleEmptyBody(response);
+            }
             syteResult.data =
-                    new Gson().fromJson(response.body().string(), AccountDataService.class);
+                    new Gson().fromJson(response.body().string(), SytePlatformSettings.class);
         } catch (IOException e) {
-            //TODO handle error here
+            return handleException(response, e);
         }
         syteResult.resultCode = response.code();
         syteResult.isSuccessful = response.isSuccessful();
         return syteResult;
     }
 
-    void initializeAsync(SyteCallback<AccountDataService> callback) {
+    void initializeAsync(SyteCallback<SytePlatformSettings> callback) {
         renewTimestamp();
         mSyteService.initialize(mConfiguration.getAccountId()).enqueue(
                 new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        SyteResult<AccountDataService> syteResult = new SyteResult<>();
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
+                        SyteResult<SytePlatformSettings> syteResult = new SyteResult<>();
                         try {
+                            if (response.body() == null) {
+                                callback.onResult(handleEmptyBody(response));
+                            }
                             syteResult.data =
-                                    new Gson().fromJson(response.body().string(), AccountDataService.class);
+                                    new Gson().fromJson(response.body().string(), SytePlatformSettings.class);
                         } catch (IOException e) {
-                            //TODO handle error here
+                            callback.onResult(handleException(response, e));
                         }
                         syteResult.resultCode = response.code();
                         syteResult.isSuccessful = response.isSuccessful();
@@ -190,11 +191,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        SyteResult<AccountDataService> syteResult = new SyteResult<>();
-                        syteResult.data = null;
-                        syteResult.isSuccessful = false;
-                        callback.onResult(syteResult);
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                        callback.onResult(handleOnFailure(t));
                     }
                 }
         );
@@ -202,8 +200,21 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private Call<ResponseBody> generateBoundsCall(
             UrlImageSearchRequestData requestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
+        String catalog;
+        try {
+            catalog = sytePlatformSettings
+                    .getData()
+                    .getProducts()
+                    .getSyteapp()
+                    .getFeatures()
+                    .getBoundingBox()
+                    .getCropper()
+                    .getCatalog();
+        } catch (Exception e) {
+            catalog = null;
+        }
         return mSyteService.getBounds(
                 mConfiguration.getAccountId(),
                 mConfiguration.getSignature(),
@@ -211,47 +222,36 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 Long.toString(mConfiguration.getSessionId()),
                 requestData.getProductType().name,
                 mConfiguration.getLocale(),
-                accountDataService
-                        .getData()
-                        .getProducts()
-                        .getSyteapp()
-                        .getFeatures()
-                        .getBoundingBox()
-                        .getCropper()
-                        .getCatalog(),
+                catalog,
                 requestData.getSku(),
                 requestData.getImageUrl(),
                 requestData.getPersonalizedRanking() ?
-                        mConfiguration.getSessionSkusString() : null
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null
         );
     }
 
-    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, AccountDataService accountDataService) {
-        if (requestData == null) {
-            return null;
-        }
+    SyteResult<BoundsResult> getBounds(UrlImageSearchRequestData requestData, SytePlatformSettings sytePlatformSettings) {
         renewTimestamp();
+        Response<ResponseBody> response = null;
         try {
+            response = generateBoundsCall(requestData, sytePlatformSettings).execute();
             return onBoundsResult(requestData,
-                    generateBoundsCall(requestData, accountDataService).execute(),
+                    response,
                     requestData.getFirstBoundOffersCoordinates(),
-                    accountDataService,
+                    sytePlatformSettings,
                     true,
                     null
             );
         } catch (IOException e) {
-            //TODO handle error here
-            SyteResult<BoundsResult> result = new SyteResult<>();
-            result.isSuccessful = false;
-            return result;
+            return handleException(response, e);
         }
     }
 
     void getBoundsAsync(UrlImageSearchRequestData requestData,
-                        AccountDataService accountDataService,
+                        SytePlatformSettings sytePlatformSettings,
                         SyteCallback<BoundsResult> callback) {
         renewTimestamp();
-        generateBoundsCall(requestData, accountDataService).enqueue(new Callback<ResponseBody>() {
+        generateBoundsCall(requestData, sytePlatformSettings).enqueue(new Callback<ResponseBody>() {
 
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
@@ -261,22 +261,22 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                             requestData,
                             response,
                             requestData.getFirstBoundOffersCoordinates(),
-                            accountDataService,
+                            sytePlatformSettings,
                             false,
                             new BoundsResultCallback() {
-                        @Override
-                        public void onResult(SyteResult<BoundsResult> result) {
-                            callback.onResult(result);
-                        }
-                    });
+                                @Override
+                                public void onResult(SyteResult<BoundsResult> result) {
+                                    callback.onResult(result);
+                                }
+                            });
                 } catch (IOException e) {
-                    //TODO handle error here
+                    callback.onResult(handleException(response, e));
                 }
             }
 
             @Override
-            public void onFailure(@NotNull Call<ResponseBody> call, Throwable t) {
-                //TODO handle error here
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                callback.onResult(handleOnFailure(t));
             }
 
         });
@@ -285,53 +285,59 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     SyteResult<OffersResult> getOffers(
             Bound bound,
             @Nullable CropCoordinates cropCoordinates,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         renewTimestamp();
         SyteResult<OffersResult> syteResult = new SyteResult<>();
+        Response<ResponseBody> response = null;
         try {
-            Response<ResponseBody> response = generateOffersCall(
+            response = generateOffersCall(
                     bound.getOffersUrl(),
                     cropCoordinates,
-                    accountDataService
+                    sytePlatformSettings
             ).execute();
             syteResult.isSuccessful = response.isSuccessful();
             syteResult.resultCode = response.code();
             syteResult.data = onOffersResult(response);
+            if (response.errorBody() != null) {
+                syteResult.errorMessage = response.errorBody().string();
+            }
             return syteResult;
         } catch (IOException e) {
-            syteResult.isSuccessful = false;
-            return syteResult;
+            return handleException(response, e);
         }
     }
 
     void getOffersAsync(
             Bound bound,
             CropCoordinates cropCoordinates,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<OffersResult> callback) {
         renewTimestamp();
         generateOffersCall(
                 bound.getOffersUrl(),
                 cropCoordinates,
-                accountDataService
+                sytePlatformSettings
         ).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 SyteResult<OffersResult> syteResult = new SyteResult<>();
                 syteResult.isSuccessful = response.isSuccessful();
                 syteResult.resultCode = response.code();
                 try {
                     syteResult.data = onOffersResult(response);
+                    if (response.errorBody() != null) {
+                        syteResult.errorMessage = response.errorBody().string();
+                    }
                     callback.onResult(syteResult);
                 } catch (IOException e) {
-                    //TODO handle error here
+                    callback.onResult(handleException(response, e));
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //TODO handle error here
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                callback.onResult(handleOnFailure(t));
             }
         });
     }
@@ -340,9 +346,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             UrlImageSearchRequestData requestData,
             Response<ResponseBody> response,
             @Nullable CropCoordinates cropCoordinates,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             boolean sync,
-            BoundsResultCallback resultCallback
+            @Nullable BoundsResultCallback resultCallback
     ) throws IOException {
         renewTimestamp();
         SyteResult<BoundsResult> syteResult = new SyteResult<>();
@@ -350,7 +356,10 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         syteResult.resultCode = response.code();
 
         if (response.body() == null) {
-            //TODO: handle error here
+            if (resultCallback != null) {
+                resultCallback.onResult(handleEmptyBody(response));
+            }
+            return handleEmptyBody(response);
         }
 
         String modifiedResponseString = null;
@@ -358,56 +367,78 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             modifiedResponseString =
                     response.body().string().replace(requestData.getImageUrl(), "bounds");
         } catch (IOException e) {
-            //TODO handle error
+            if (resultCallback != null) {
+                resultCallback.onResult(handleException(response, e));
+            }
+            return handleException(response, e);
         }
 
-        if (modifiedResponseString == null) {
-            //TODO: handle error here
+        try {
+            syteResult.data = new Gson().fromJson(modifiedResponseString, BoundsResult.class);
+        } catch (Exception e) {
+            if (resultCallback != null) {
+                resultCallback.onResult(handleException(response, e));
+            }
+            return handleException(response, e);
         }
 
-        syteResult.data = new Gson().fromJson(modifiedResponseString, BoundsResult.class);
+        if (syteResult.data == null) {
+            if (resultCallback != null) {
+                resultCallback.onResult(syteResult);
+            }
+            return syteResult;
+        }
 
         if (syteResult.data.getBounds() == null || syteResult.data.getBounds().size() == 0) {
-            resultCallback.onResult(syteResult);
+            if (resultCallback != null) {
+                resultCallback.onResult(syteResult);
+            }
+            return syteResult;
         }
 
         if (requestData.isRetrieveOffersForTheFirstBound()) {
             if (sync) {
-                Response<ResponseBody> offersResponse =
-                        //TODO check for null here
-                        generateOffersCall(
-                                syteResult.data.getBounds().get(0).getOffersUrl(),
-                                cropCoordinates,
-                                accountDataService
-                        ).execute();
+                Response<ResponseBody> offersResponse = null;
+                try {
+                    offersResponse = generateOffersCall(
+                            syteResult.data.getBounds().get(0).getOffersUrl(),
+                            cropCoordinates,
+                            sytePlatformSettings
+                    ).execute();
+                } catch (IOException e) {
+                    return handleException(response, e);
+                }
                 syteResult.data.setFirstBoundOffersResult(onOffersResult(offersResponse));
                 return syteResult;
             } else {
                 generateOffersCall(
                         syteResult.data.getBounds().get(0).getOffersUrl(),
                         cropCoordinates,
-                        accountDataService
+                        sytePlatformSettings
                 ).enqueue(new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                         try {
                             syteResult.data.setFirstBoundOffersResult(onOffersResult(response));
                             if (resultCallback != null) {
                                 resultCallback.onResult(syteResult);
                             }
                         } catch (IOException e) {
-                            //TODO: handle error here
+                            if (resultCallback != null) {
+                                resultCallback.onResult(handleException(response, e));
+                            }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        //TODO handle error here
+                    public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                        if (resultCallback != null) {
+                            resultCallback.onResult(handleOnFailure(t));
+                        }
                     }
                 });
             }
-        }
-        if (resultCallback != null) {
+        } else if (resultCallback != null) {
             resultCallback.onResult(syteResult);
         }
         return syteResult;
@@ -416,7 +447,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private Call<ResponseBody> generateOffersCall(
             String offersUrl,
             CropCoordinates cropCoordinates,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
         boolean cropEnabled = cropCoordinates != null;
         String actualUrl = null;
@@ -450,7 +481,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 actualUrl,
                 coordinatesBase64,
                 cropEnabled ? Catalog.GENERAL.getName() : null,
-                cropEnabled ? accountDataService
+                cropEnabled ? sytePlatformSettings
                         .getData()
                         .getProducts()
                         .getSyteapp()
@@ -479,8 +510,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                     offersResult.getOffers().get(i).setOriginalData(offersArray.getJSONObject(i)
                             .getJSONObject("original_data"));
                 }
-            } catch (JSONException e) {
-                //TODO handle error here
+            } catch (Exception e) {
+                handleException(offersResponse, e);
             }
 
             return offersResult;
@@ -490,96 +521,103 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     public SyteResult<BoundsResult> getBoundsWild(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService
+            SytePlatformSettings sytePlatformSettings
     ) {
 
         ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
                 this,
-                accountDataService
+                sytePlatformSettings
         );
+        UrlImageSearchRequestData urlImageSearchRequestData;
         try {
-            return imageSearchClient.getBounds(prepareUrlImageSearchRequestData(
+            urlImageSearchRequestData = prepareImageSearchRequestData(
                     context,
                     requestData,
-                    accountDataService
-            ));
-        } catch (IOException e) {
-            //TODO handle error
-            return null;
+                    sytePlatformSettings
+            );
+        } catch (Exception e) {
+            return handleException(null, e);
         }
+        return imageSearchClient.getBounds(urlImageSearchRequestData);
     }
 
     void getBoundsWildAsync(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             SyteCallback<BoundsResult> callback
     ) {
         ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
                 this,
-                accountDataService
+                sytePlatformSettings
         );
-        prepareUrlImageSearchRequestDataAsync(
+        prepareImageSearchRequestDataAsync(
                 context,
                 requestData,
-                accountDataService,
+                sytePlatformSettings,
                 new ExifRemovalResultCallback() {
                     @Override
-                    public void onResult(UrlImageSearchRequestData requestData) {
-                        imageSearchClient.getBoundsAsync(requestData, callback);
+                    public void onResult(UrlImageSearchRequestData requestData, Throwable e) {
+                        if (e != null) {
+                            callback.onResult(handleException(null, e));
+                        } else {
+                            imageSearchClient.getBoundsAsync(requestData, callback);
+                        }
                     }
                 }
         );
     }
 
-    private UrlImageSearchRequestData prepareUrlImageSearchRequestData(
+    private UrlImageSearchRequestData prepareImageSearchRequestData(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService
-    ) throws IOException {
-        byte[] bytes = prepareImage(context, requestData, accountDataService);
+            SytePlatformSettings sytePlatformSettings
+    ) throws IOException, JSONException, SyteGeneralException {
+
+        byte[] bytes = prepareImage(context, requestData, sytePlatformSettings);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), bytes);
 
-        ResponseBody body = mExifRemovalService.removeTags(
+        Response<ResponseBody> response = mExifRemovalService.removeTags(
                 mConfiguration.getAccountId(),
                 mConfiguration.getSignature(),
                 requestBody
-        ).execute().body();
+        ).execute();
+        ResponseBody body = response.body();
 
         if (body != null) {
-            try {
-                JSONObject jsonObject = new JSONObject(body.string());
-                UrlImageSearchRequestData urlImageSearchRequestData = new UrlImageSearchRequestData(
-                        jsonObject.getString("url"),
-                        SyteProductType.DISCOVERY_BUTTON
-                );
-                urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(
-                        requestData.isRetrieveOffersForTheFirstBound()
-                );
-                urlImageSearchRequestData.setFirstBoundOffersCoordinates(
-                        requestData.getFirstBoundOffersCoordinates()
-                );
-                urlImageSearchRequestData.setPersonalizedRanking(
-                        requestData.getPersonalizedRanking()
-                );
-                return urlImageSearchRequestData;
-            } catch (JSONException e) {
-                //TODO
-            }
+            JSONObject jsonObject = new JSONObject(body.string());
+            UrlImageSearchRequestData urlImageSearchRequestData = new UrlImageSearchRequestData(
+                    jsonObject.getString("url"),
+                    SyteProductType.DISCOVERY_BUTTON
+            );
+            urlImageSearchRequestData.setRetrieveOffersForTheFirstBound(
+                    requestData.isRetrieveOffersForTheFirstBound()
+            );
+            urlImageSearchRequestData.setFirstBoundOffersCoordinates(
+                    requestData.getFirstBoundOffersCoordinates()
+            );
+            urlImageSearchRequestData.setPersonalizedRanking(
+                    requestData.getPersonalizedRanking()
+            );
+            return urlImageSearchRequestData;
+        } else {
+            throw new SyteGeneralException("Exif removal service returned empty body.");
         }
-
-        return null;
     }
 
-    private void prepareUrlImageSearchRequestDataAsync(
+    private void prepareImageSearchRequestDataAsync(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService,
+            SytePlatformSettings sytePlatformSettings,
             ExifRemovalResultCallback callback
     ) {
-        byte[] bytes = prepareImage(context, requestData, accountDataService);
-
+        byte[] bytes = new byte[0];
+        try {
+            bytes = prepareImage(context, requestData, sytePlatformSettings);
+        } catch (Exception e) {
+            callback.onResult(null, e);
+        }
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), bytes);
 
         mExifRemovalService.removeTags(
@@ -588,7 +626,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 requestBody
         ).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 ResponseBody body = response.body();
                 if (body != null) {
                     try {
@@ -603,18 +641,27 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                         urlImageSearchRequestData.setFirstBoundOffersCoordinates(
                                 requestData.getFirstBoundOffersCoordinates()
                         );
-                        callback.onResult(urlImageSearchRequestData);
+                        urlImageSearchRequestData.setPersonalizedRanking(
+                                requestData.getPersonalizedRanking()
+                        );
+                        callback.onResult(urlImageSearchRequestData, null);
                     } catch (IOException | JSONException e) {
-                        // TODO handle error
-                        callback.onResult(null);
+                        callback.onResult(null, e);
                     }
+                } else if (response.errorBody() != null) {
+                    try {
+                        callback.onResult(null, new SyteGeneralException(response.errorBody().string()));
+                    } catch (IOException e) {
+                        callback.onResult(null, e);
+                    }
+                } else {
+                    callback.onResult(null, new SyteGeneralException("Error while making request to the EXIF tag removal service."));
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // TODO handle error
-                callback.onResult(null);
+            public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
+                callback.onResult(null, t);
             }
         });
     }
@@ -628,7 +675,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private byte[] prepareImage(
             Context context,
             ImageSearchRequestData requestData,
-            AccountDataService accountDataService) {
+            SytePlatformSettings sytePlatformSettings) throws IOException, SyteGeneralException {
 
         ImageProcessor imageProcessor = new ImageProcessor();
         Bitmap bitmap = imageProcessor.rotateImageIfNeeded(
@@ -646,7 +693,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 context,
                 size,
                 bitmap,
-                Utils.getImageScale(accountDataService)
+                Utils.getImageScale(sytePlatformSettings)
         );
 
         SyteLogger.i(TAG, "Compressed image size: " + file.length() + " bytes");

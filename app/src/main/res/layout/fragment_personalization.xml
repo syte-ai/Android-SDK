@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UrlImageSearchFragment"
+    tools:context=".fragments.UrlImageSearchFragment"
     android:background="@android:color/white">
 
     <LinearLayout
@@ -13,22 +13,12 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/personalization_sync_btn"
+            android:id="@+id/personalization_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:text="Get Personalization Sync"
-            android:textColor="@color/black"
-            app:backgroundTint="@android:color/background_light" />
-
-        <Button
-            android:id="@+id/personalization_async_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
-            android:text="Get Personalization Async"
+            android:text="@string/get_personalization"
             android:textColor="@color/black"
             app:backgroundTint="@android:color/background_light" />
 

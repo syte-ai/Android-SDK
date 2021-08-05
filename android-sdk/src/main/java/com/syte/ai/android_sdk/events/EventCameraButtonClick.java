@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.enums.Placement;
 
+/**
+ * Default Syte event
+ */
 public class EventCameraButtonClick extends BaseSyteEvent{
 
     @SerializedName("placement")

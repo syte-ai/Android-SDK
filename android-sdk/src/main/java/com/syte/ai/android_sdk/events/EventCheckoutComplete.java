@@ -6,6 +6,9 @@ import com.syte.ai.android_sdk.enums.EventsTag;
 
 import java.util.List;
 
+/**
+ * Default Syte event
+ */
 public class EventCheckoutComplete extends BaseSyteEvent{
 
     @SerializedName("id")

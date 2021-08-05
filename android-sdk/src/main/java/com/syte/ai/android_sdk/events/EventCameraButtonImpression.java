@@ -2,6 +2,9 @@ package com.syte.ai.android_sdk.events;
 
 import com.syte.ai.android_sdk.enums.EventsTag;
 
+/**
+ * Default Syte event
+ */
 public class EventCameraButtonImpression extends BaseSyteEvent {
 
     public EventCameraButtonImpression(String syteUrlReferer) {

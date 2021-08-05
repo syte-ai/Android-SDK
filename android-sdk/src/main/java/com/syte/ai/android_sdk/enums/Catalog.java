@@ -1,5 +1,8 @@
 package com.syte.ai.android_sdk.enums;
 
+/**
+ * Default Syte product catalogs.
+ */
 public enum Catalog {
     GENERAL("general"),
     HOME("home"),

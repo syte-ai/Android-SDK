@@ -1,5 +1,8 @@
 package com.syte.ai.android_sdk.enums;
 
+/**
+ * Default tags for Syte events.
+ */
 public enum EventsTag {
     CAMERA("camera"),
     ECOMMERCE("ecommerce"),
