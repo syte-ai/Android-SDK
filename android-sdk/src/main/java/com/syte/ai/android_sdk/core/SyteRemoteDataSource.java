@@ -218,8 +218,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         return mSyteService.getBounds(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
-                mConfiguration.getUserId(),
-                Long.toString(mConfiguration.getSessionId()),
+                requestData.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
+                requestData.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
                 requestData.getProductType().name,
                 mConfiguration.getLocale(),
                 catalog,

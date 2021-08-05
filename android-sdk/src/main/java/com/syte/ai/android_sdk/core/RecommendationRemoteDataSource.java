@@ -275,8 +275,8 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         return mSyteService.getSimilars(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
-                mConfiguration.getUserId(),
-                Long.toString(mConfiguration.getSessionId()),
+                similarProducts.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
+                similarProducts.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 mConfiguration.getLocale(),
                 similarProducts.getFieldsToReturn().getName(),
@@ -295,8 +295,8 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         return mSyteService.getShopTheLook(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
-                mConfiguration.getUserId(),
-                Long.toString(mConfiguration.getSessionId()),
+                shopTheLook.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
+                shopTheLook.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 mConfiguration.getLocale(),
                 shopTheLook.getFieldsToReturn().getName(),
