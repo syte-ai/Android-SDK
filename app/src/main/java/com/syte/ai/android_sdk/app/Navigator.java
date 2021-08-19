@@ -2,13 +2,16 @@ package com.syte.ai.android_sdk.app;
 
 import androidx.fragment.app.FragmentManager;
 
+import com.syte.ai.android_sdk.app.fragments.AutoCompleteFragment;
 import com.syte.ai.android_sdk.app.fragments.BoundsFragment;
 import com.syte.ai.android_sdk.app.fragments.ConfigurationFragment;
 import com.syte.ai.android_sdk.app.fragments.MainFragment;
 import com.syte.ai.android_sdk.app.fragments.OffersFragment;
 import com.syte.ai.android_sdk.app.fragments.PersonalizationFragment;
+import com.syte.ai.android_sdk.app.fragments.PopularSearchFragment;
 import com.syte.ai.android_sdk.app.fragments.ShopTheLookFragment;
 import com.syte.ai.android_sdk.app.fragments.SimilarsFragment;
+import com.syte.ai.android_sdk.app.fragments.TextSearchFragment;
 import com.syte.ai.android_sdk.app.fragments.UrlImageSearchFragment;
 import com.syte.ai.android_sdk.app.fragments.WildImageSearchFragment;
 
@@ -82,6 +85,27 @@ public class Navigator {
                 .addToBackStack(null)
                 .commit();
 
+    }
+
+    public void autoCompleteFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new AutoCompleteFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void popularSearchFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new PopularSearchFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void textSearchFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_holder, new TextSearchFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
 }

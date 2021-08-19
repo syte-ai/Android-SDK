@@ -2,6 +2,7 @@ package com.syte.ai.android_sdk.core;
 
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.ProductRecommendationClient;
+import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -11,7 +12,10 @@ import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 class InitSyteImpl extends InitSyte {
@@ -27,6 +31,7 @@ class InitSyteImpl extends InitSyte {
     private SytePlatformSettings mSytePlatformSettings;
     private EventsRemoteDataSource mEventsRemoteDataSource;
     private SyteState mState = SyteState.IDLE;
+    private TextSearchClientImpl mTextSearchClient = null;
 
     InitSyteImpl() {
     }
@@ -63,6 +68,11 @@ class InitSyteImpl extends InitSyte {
         result.resultCode = responseResult.resultCode;
         if (mState == SyteState.INITIALIZED) {
             fireEvent(new EventInitialization());
+            getTextSearchClient().getPopularSearchAsync(mConfiguration.getLocale(), syteResult -> {
+                if (syteResult.isSuccessful && syteResult.data != null) {
+                    mConfiguration.getStorage().addPopularSearch(syteResult.data);
+                }
+            });
         }
         return result;
     }
@@ -82,18 +92,22 @@ class InitSyteImpl extends InitSyte {
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
-        mRemoteDataSource.initializeAsync(new SyteCallback<SytePlatformSettings>() {
-            @Override
-            public void onResult(SyteResult<SytePlatformSettings> syteResult) {
-                if (syteResult.isSuccessful) {
-                    mSytePlatformSettings = syteResult.data;
-                    mState = SyteState.INITIALIZED;
-                } else {
-                    mState = SyteState.IDLE;
-                }
-                if (mState == SyteState.INITIALIZED) {
-                    fireEvent(new EventInitialization());
-                }
+        mRemoteDataSource.initializeAsync(syteResult -> {
+            if (syteResult.isSuccessful) {
+                mSytePlatformSettings = syteResult.data;
+                mState = SyteState.INITIALIZED;
+            } else {
+                mState = SyteState.IDLE;
+            }
+            if (mState == SyteState.INITIALIZED) {
+                fireEvent(new EventInitialization());
+                getTextSearchClient().getPopularSearchAsync(mConfiguration.getLocale(), result -> {
+                    if (result.isSuccessful && result.data != null) {
+                        mConfiguration.getStorage().addPopularSearch(result.data);
+                    }
+                });
+            }
+            if (callback != null) {
                 SyteResult<Boolean> result = new SyteResult<>();
                 result.data = syteResult.isSuccessful;
                 result.resultCode = syteResult.resultCode;
@@ -116,6 +130,7 @@ class InitSyteImpl extends InitSyte {
         mConfiguration = configuration;
         mRemoteDataSource.setConfiguration(configuration);
         mEventsRemoteDataSource.setConfiguration(configuration);
+        mTextSearchClient.setAllowAutoCompletionQueue(configuration.getAllowAutoCompletionQueue());
     }
 
     @Override
@@ -139,10 +154,24 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
+    public TextSearchClient getTextSearchClient() {
+        verifyInitialized();
+        if (mTextSearchClient == null) {
+            mTextSearchClient = new TextSearchClientImpl(
+                    mRemoteDataSource,
+                    mConfiguration.getAllowAutoCompletionQueue()
+            );
+        }
+
+        return mTextSearchClient;
+    }
+
+    @Override
     public void endSession() {
         verifyInitialized();
         mConfiguration.getStorage().clearSessionId();
         mConfiguration.getStorage().clearViewedProducts();
+        mConfiguration.getStorage().clearPopularSearch();
         mConfiguration = null;
     }
 
@@ -166,6 +195,18 @@ class InitSyteImpl extends InitSyte {
         } else {
             return new HashSet<>();
         }
+    }
+
+    @Override
+    public List<String> getResentTextSearches() {
+        if (mConfiguration != null) {
+            String searchTerms = mConfiguration.getStorage().getTextSearchTerms();
+            if (!searchTerms.isEmpty()) {
+                return Arrays.asList(searchTerms.split(","));
+            }
+        }
+
+        return new ArrayList<>();
     }
 
     @Override

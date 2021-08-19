@@ -28,6 +28,7 @@ public class SyteConfiguration {
     private String mSessionId;
 
     private SyteStorage mStorage;
+    private boolean mAllowAutoCompletionQueue = true;
 
     /**
      *
@@ -105,6 +106,14 @@ public class SyteConfiguration {
 
     SyteStorage getStorage() {
         return mStorage;
+    }
+
+    public void setAllowAutoCompletionQueue(boolean allowAutoCompletionQueue) {
+        mAllowAutoCompletionQueue = allowAutoCompletionQueue;
+    }
+
+    public boolean getAllowAutoCompletionQueue() {
+        return mAllowAutoCompletionQueue;
     }
 
 }

@@ -6,6 +6,7 @@ import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
@@ -92,4 +93,14 @@ class InputValidator {
             throw new SyteWrongInputException("Viewed product can not be empty.");
         }
     }
+
+    public static void validateInput(TextSearch textSearch) throws SyteWrongInputException {
+        if (textSearch == null) {
+            throw new SyteWrongInputException("Request data can not be null.");
+        }
+        if (textSearch.getQuery() == null) {
+            throw new SyteWrongInputException("Query can not be null.");
+        }
+    }
+
 }

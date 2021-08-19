@@ -52,4 +52,6 @@
     java.lang.String getApiSignature();
     java.lang.String getUserId();
     java.lang.Long getSessionId();
+    boolean getAllowAutoCompletionQueue();
+    void setAllowAutoCompletionQueue(boolean);
 }

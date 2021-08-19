@@ -12,15 +12,18 @@ import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
+import com.syte.ai.android_sdk.data.result.auto_complete.AutoCompleteResult;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.ItemsResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
+import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 import com.syte.ai.android_sdk.exceptions.SyteGeneralException;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import okhttp3.MediaType;
@@ -62,6 +66,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private final SyteService mSyteService;
     private final ExifRemovalService mExifRemovalService;
     private final RecommendationRemoteDataSource mRecommendationRemoteDataSource;
+    private final TextSearchRemoteDataSource mTextSearchRemoteDataSource;
 
     SyteRemoteDataSource(SyteConfiguration configuration) {
         Retrofit retrofit = RetrofitBuilder.build(SYTE_URL);
@@ -70,8 +75,37 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         mSyteService = retrofit.create(SyteService.class);
         mExifRemovalService = exifRemovalRetrofit.create(ExifRemovalService.class);
         mRecommendationRemoteDataSource = new RecommendationRemoteDataSource(mSyteService, configuration);
+        mTextSearchRemoteDataSource = new TextSearchRemoteDataSource(mSyteService, configuration);
 
         mConfiguration = configuration;
+    }
+
+    public void getAutoCompleteAsync(String query, String lang, SyteCallback<AutoCompleteResult> callback) {
+        renewTimestamp();
+        mTextSearchRemoteDataSource.getAutoCompleteAsync(query, lang, callback);
+    }
+
+    SyteResult<TextSearchResult> getTextSearch(TextSearch textSearch) {
+        renewTimestamp();
+        return mTextSearchRemoteDataSource.getTextSearch(textSearch);
+    }
+
+    public void getTextSearchAsync(TextSearch textSearch, SyteCallback<TextSearchResult> callback) {
+        renewTimestamp();
+        mTextSearchRemoteDataSource.getTextSearchAsync(textSearch, callback);
+    }
+
+    SyteResult<List<String>> getPopularSearch(String lang) {
+        renewTimestamp();
+        return mTextSearchRemoteDataSource.getPopularSearch(lang);
+    }
+
+    void getPopularSearchAsync(
+            String lang,
+            SyteCallback<List<String>> callback
+    ) {
+        renewTimestamp();
+        mTextSearchRemoteDataSource.getPopularSearchAsync(lang, callback);
     }
 
     SyteResult<SimilarProductsResult> getSimilarProducts(
@@ -88,12 +122,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         renewTimestamp();
         mRecommendationRemoteDataSource.getSimilarProductsAsync(
                 similarProducts,
-                new SyteCallback<SimilarProductsResult>() {
-                    @Override
-                    public void onResult(SyteResult<SimilarProductsResult> syteResult) {
-                        callback.onResult(syteResult);
-                    }
-                }
+                callback
         );
     }
 
@@ -114,12 +143,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         mRecommendationRemoteDataSource.getShopTheLookAsync(
                 shopTheLook,
                 sytePlatformSettings,
-                new SyteCallback<ShopTheLookResult>() {
-                    @Override
-                    public void onResult(SyteResult<ShopTheLookResult> syteResult) {
-                        callback.onResult(syteResult);
-                    }
-                }
+                callback
         );
     }
 
@@ -137,12 +161,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         renewTimestamp();
         mRecommendationRemoteDataSource.getPersonalizationAsync(
                 personalization,
-                new SyteCallback<PersonalizationResult>() {
-                    @Override
-                    public void onResult(SyteResult<PersonalizationResult> syteResult) {
-                        callback.onResult(syteResult);
-                    }
-                }
+                callback
         );
     }
 
@@ -670,6 +689,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     public void setConfiguration(SyteConfiguration configuration) {
         super.setConfiguration(configuration);
         mRecommendationRemoteDataSource.setConfiguration(configuration);
+        mTextSearchRemoteDataSource.setConfiguration(configuration);
     }
 
     private byte[] prepareImage(

@@ -1,17 +1,21 @@
 package com.syte.ai.android_sdk.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
+import com.syte.ai.android_sdk.data.result.auto_complete.AutoCompleteResult;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.Item;
@@ -19,9 +23,11 @@ import com.syte.ai.android_sdk.data.result.offers.ItemsResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
+import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -119,6 +125,41 @@ public class SyteManager {
         );
     }
 
+    public void getAutoComplete(String query, SyteCallback<AutoCompleteResult> callback) {
+        mInitSyte.getTextSearchClient().getAutoCompleteAsync(
+                query,
+                mInitSyte.getConfiguration().getLocale(),
+                syteResult -> {
+                    if (!syteResult.isSuccessful) {
+                        showToastError(syteResult.errorMessage);
+                    }
+                    callback.onResult(syteResult);
+                }
+        );
+    }
+
+    public void getPopularSearch(SyteCallback<List<String>> callback) {
+        mInitSyte.getTextSearchClient().getPopularSearchAsync(
+                mInitSyte.getConfiguration().getLocale(),
+                syteResult -> {
+                    if (!syteResult.isSuccessful) {
+                        showToastError(syteResult.errorMessage);
+                    }
+                    callback.onResult(syteResult);
+                });
+    }
+
+    public void getTextSearch(String query, SyteCallback<TextSearchResult> callback) {
+        TextSearch textSearch = new TextSearch(query, mInitSyte.getConfiguration().getLocale());
+
+        mInitSyte.getTextSearchClient().getTextSearchAsync(textSearch, syteResult -> {
+            if (!syteResult.isSuccessful) {
+                showToastError(syteResult.errorMessage);
+            }
+            callback.onResult(syteResult);
+        });
+    }
+
     public void shopTheLook(
             ShopTheLook shopTheLook,
             SyteCallback<ShopTheLookResult> callback
@@ -204,4 +245,7 @@ public class SyteManager {
         mLastRetrievedBoundsList = null;
     }
 
+    public List<String> getSearchHistory() {
+        return mInitSyte.getResentTextSearches();
+    }
 }

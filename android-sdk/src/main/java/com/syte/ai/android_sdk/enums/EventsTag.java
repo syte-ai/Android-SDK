@@ -9,6 +9,7 @@ public enum EventsTag {
     DISCOVERY_BUTTON("discovery_button"),
     SIMILAR_ITEMS("similar_items"),
     SYTE_ANDROID_SDK("syte_android_sdk"),
+    TEXT_SEARCH("text_search"),
     SHOP_THE_LOOK("shop_the_look");
 
     private String mName;

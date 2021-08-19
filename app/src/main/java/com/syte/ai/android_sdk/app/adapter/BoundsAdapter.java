@@ -55,7 +55,6 @@ public class BoundsAdapter extends RecyclerView.Adapter<BoundsAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.bounds_list_item, viewGroup, false);
 

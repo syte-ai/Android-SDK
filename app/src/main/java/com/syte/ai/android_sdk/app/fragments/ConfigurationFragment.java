@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.Utils;
+import com.syte.ai.android_sdk.app.adapter.PopularSearchAdapter;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +56,10 @@ public class ConfigurationFragment extends BaseFragment {
             }
             requireActivity().onBackPressed();
         });
+
+        RecyclerView recyclerView = view.findViewById(R.id.search_history_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(new PopularSearchAdapter(mSyteManager.getSearchHistory()));
     }
 
 }

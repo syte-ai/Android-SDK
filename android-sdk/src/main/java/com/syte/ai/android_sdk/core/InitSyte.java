@@ -3,6 +3,7 @@ package com.syte.ai.android_sdk.core;
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
@@ -11,6 +12,7 @@ import com.syte.ai.android_sdk.util.SyteLogger;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -75,6 +77,8 @@ public abstract class InitSyte {
      */
     public abstract ImageSearchClient getImageSearchClient();
 
+    public abstract TextSearchClient getTextSearchClient();
+
     /**
      * Uninitialize Syte and force reset session ID.
      * If not called, the session ID will be automatically reset if no requests were sent within 30 minutes.
@@ -99,6 +103,8 @@ public abstract class InitSyte {
      * @return list of product IDs.
      */
     public abstract Set<String> getViewedProducts();
+
+    public abstract List<String> getResentTextSearches();
 
     /**
      * Set log level.

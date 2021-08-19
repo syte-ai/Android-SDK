@@ -25,4 +25,13 @@
     <string name="load_image">Load Image</string>
     <string name="get_bounds">Get Bounds</string>
     <string name="fetch_offers_for_the_first_bound">Fetch Offers For The First Bound</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text">Text...</string>
+    <string name="autocomplete">AUTOCOMPLETE</string>
+    <string name="popular_searches">POPULAR SEARCHES</string>
+    <string name="search">SEARCH</string>
+    <string name="comma_separated_filters">Comma separated filters</string>
+    <string name="query">query</string>
+    <string name="text_search">TEXT SEARCH</string>
 </resources>

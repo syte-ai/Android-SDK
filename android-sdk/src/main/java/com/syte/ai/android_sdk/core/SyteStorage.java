@@ -12,6 +12,8 @@ import com.syte.ai.android_sdk.util.SyteLogger;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 class SyteStorage {
@@ -22,6 +24,10 @@ class SyteStorage {
     private static final String USER_ID_PREF_KEY = "syte_user_id_pref";
     private static final String SESSION_ID_TIMESTAMP_KEY = "syte_session_id_time_pref";
     private static final String VIEWED_PRODUCTS_KEY = "syte_viewed_products_pref";
+    private static final String POPULAR_SEARCH_KEY = "syte_popular_search_pref";
+    private static final String TEXT_SEARCH_TERM_KEY = "syte_text_search_term_pref";
+
+    private static final int TEXT_SEARCH_TERM_COUNT = 50;
 
     @Nullable private SharedPreferences mSharedPreferences = null;
 
@@ -68,6 +74,7 @@ class SyteStorage {
             }
             renewSessionIdTimestamp();
             clearViewedProducts();
+            clearPopularSearch();
         }
         return sessionId;
     }
@@ -143,6 +150,63 @@ class SyteStorage {
     public String getViewedProducts() {
         if (mSharedPreferences != null) {
             return mSharedPreferences.getString(VIEWED_PRODUCTS_KEY, "");
+        }
+        return "";
+    }
+
+    public void addPopularSearch(List<String> data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String item : data) {
+            stringBuilder.append(item);
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        if (mSharedPreferences != null) {
+            mSharedPreferences.edit()
+                    .putString(POPULAR_SEARCH_KEY, stringBuilder.toString())
+                    .apply();
+        }
+    }
+
+    public String getPopularSearch() {
+        if (mSharedPreferences != null) {
+            return mSharedPreferences.getString(POPULAR_SEARCH_KEY, "");
+        }
+        return "";
+    }
+
+    public void clearPopularSearch() {
+        if (mSharedPreferences != null) {
+            mSharedPreferences
+                    .edit()
+                    .putString(POPULAR_SEARCH_KEY, "")
+                    .apply();
+        }
+    }
+
+    public void addTextSearchTerm(String term) {
+        if (mSharedPreferences != null) {
+            String textSearchTerms = mSharedPreferences.getString(TEXT_SEARCH_TERM_KEY, "");
+            if (!textSearchTerms.isEmpty()) {
+                if (textSearchTerms.split(",").length >= TEXT_SEARCH_TERM_COUNT) {
+                    List<String> termsList = Arrays.asList(textSearchTerms.split(","));
+                    termsList.remove(termsList.size() - 1);
+                    String resultString = Utils.textSearchTermsString(termsList);
+                    textSearchTerms = resultString == null ? "" : resultString;
+                }
+            }
+            mSharedPreferences
+                    .edit()
+                    .putString(TEXT_SEARCH_TERM_KEY, textSearchTerms.isEmpty() ?
+                            term : term + "," + textSearchTerms)
+                    .apply();
+
+        }
+    }
+
+    public String getTextSearchTerms() {
+        if (mSharedPreferences != null) {
+            return mSharedPreferences.getString(TEXT_SEARCH_TERM_KEY, "");
         }
         return "";
     }

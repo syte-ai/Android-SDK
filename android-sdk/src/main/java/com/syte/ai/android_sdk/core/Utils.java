@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 class Utils {
@@ -64,7 +65,21 @@ class Utils {
         return sb.toString();
     }
 
-    public static String viewedProductsJSONArray(Set<String> viewedProducts) {
+    static String textSearchTermsString(List<String> terms) {
+        if (terms.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String term : terms) {
+            sb.append(term);
+            sb.append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    static String viewedProductsJSONArray(Set<String> viewedProducts) {
         if (viewedProducts.isEmpty()) {
             return null;
         }
@@ -81,6 +96,24 @@ class Utils {
         stringBuilder.append("]");
 
         return stringBuilder.toString();
+    }
+
+    static String generateFiltersString(List<String> filters) {
+        if (filters.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        if (!filters.isEmpty()) {
+            for (String filter : filters) {
+                builder.append(filter);
+                builder.append(",");
+            }
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        builder.append("}");
+        return builder.toString();
     }
 
 }
