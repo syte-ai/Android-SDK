@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.core;
 
+import android.text.TextUtils;
+
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 
 import java.io.BufferedInputStream;
@@ -55,14 +57,7 @@ class Utils {
         if (viewedProducts.isEmpty()) {
             return null;
         }
-
-        StringBuilder sb = new StringBuilder();
-        for (String sku : viewedProducts) {
-            sb.append(sku);
-            sb.append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        return TextUtils.join(",", viewedProducts);
     }
 
     static String textSearchTermsString(List<String> terms) {
@@ -70,13 +65,7 @@ class Utils {
             return null;
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (String term : terms) {
-            sb.append(term);
-            sb.append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        return TextUtils.join(",", terms);
     }
 
     static String viewedProductsJSONArray(Set<String> viewedProducts) {
@@ -103,17 +92,7 @@ class Utils {
             return null;
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("{");
-        if (!filters.isEmpty()) {
-            for (String filter : filters) {
-                builder.append(filter);
-                builder.append(",");
-            }
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        builder.append("}");
-        return builder.toString();
+        return "{" + TextUtils.join(",", filters) + "}";
     }
 
 }
