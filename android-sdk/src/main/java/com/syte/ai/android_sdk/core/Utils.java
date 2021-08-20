@@ -92,7 +92,7 @@ class Utils {
             return null;
         }
 
-        return "{" + TextUtils.join(",", filters) + "}";
+        return String.format("{%s}", TextUtils.join(",", filters));
     }
 
 }
