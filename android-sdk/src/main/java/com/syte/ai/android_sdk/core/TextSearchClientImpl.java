@@ -1,13 +1,13 @@
 package com.syte.ai.android_sdk.core;
 
-import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.auto_complete.AutoCompleteResult;
-import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
@@ -50,12 +50,9 @@ class TextSearchClientImpl implements TextSearchClient {
     private final AutoCompleteRequest mNextQuery = new AutoCompleteRequest();
     private boolean mIsAutoCompleteAvailable = true;
     private boolean mAllowAutoCompletionQueue;
-    private final CountDownTimer mTimer = new CountDownTimer(AUTO_COMPLETE_INTERVAL_MS, 100) {
+    private final Runnable mRunnable = new Runnable() {
         @Override
-        public void onTick(long millisUntilFinished) {}
-
-        @Override
-        public void onFinish() {
+        public void run() {
             mIsAutoCompleteAvailable = true;
             if (mNextQuery.isSet()) {
                 getAutoCompleteAsync(mNextQuery.mQuery, mNextQuery.mLang, mNextQuery.mCallback);
@@ -150,6 +147,7 @@ class TextSearchClientImpl implements TextSearchClient {
             return;
         }
         if (mIsAutoCompleteAvailable) {
+            mIsAutoCompleteAvailable = false;
             mSyteRemoteDataSource.getAutoCompleteAsync(
                     query,
                     lang,
@@ -157,10 +155,10 @@ class TextSearchClientImpl implements TextSearchClient {
                         if (callback != null) {
                             callback.onResult(syteResult);
                         }
-                        mTimer.start();
-                        mIsAutoCompleteAvailable = false;
+                        new Handler(Looper.getMainLooper())
+                                .postDelayed(mRunnable, AUTO_COMPLETE_INTERVAL_MS);
                     });
-        } else if (mAllowAutoCompletionQueue){
+        } else if (mAllowAutoCompletionQueue) {
             mNextQuery.setData(query, lang, callback);
         }
     }

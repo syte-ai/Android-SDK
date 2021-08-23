@@ -25,6 +25,7 @@ class SyteStorage {
     private static final String SESSION_ID_TIMESTAMP_KEY = "syte_session_id_time_pref";
     private static final String VIEWED_PRODUCTS_KEY = "syte_viewed_products_pref";
     private static final String POPULAR_SEARCH_KEY = "syte_popular_search_pref";
+    private static final String POPULAR_SEARCH_LANG_KEY = "syte_popular_search_lang_pref";
     private static final String TEXT_SEARCH_TERM_KEY = "syte_text_search_term_pref";
 
     private static final int TEXT_SEARCH_TERM_COUNT = 50;
@@ -154,7 +155,10 @@ class SyteStorage {
         return "";
     }
 
-    public void addPopularSearch(List<String> data) {
+    public void addPopularSearch(List<String> data, String lang) {
+        if (data == null || data.isEmpty()) {
+            return;
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (String item : data) {
             stringBuilder.append(item);
@@ -163,24 +167,38 @@ class SyteStorage {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         if (mSharedPreferences != null) {
             mSharedPreferences.edit()
-                    .putString(POPULAR_SEARCH_KEY, stringBuilder.toString())
+                    .putString(POPULAR_SEARCH_KEY + lang, stringBuilder.toString())
+                    .apply();
+            String popularSearchLang = mSharedPreferences.getString(POPULAR_SEARCH_LANG_KEY, "");
+            mSharedPreferences
+                    .edit()
+                    .putString(POPULAR_SEARCH_LANG_KEY, popularSearchLang.isEmpty() ?
+                            lang : popularSearchLang + "," + lang)
                     .apply();
         }
     }
 
-    public String getPopularSearch() {
+    public String getPopularSearch(String lang) {
         if (mSharedPreferences != null) {
-            return mSharedPreferences.getString(POPULAR_SEARCH_KEY, "");
+            return mSharedPreferences.getString(POPULAR_SEARCH_KEY + lang, "");
         }
         return "";
     }
 
     public void clearPopularSearch() {
         if (mSharedPreferences != null) {
-            mSharedPreferences
-                    .edit()
-                    .putString(POPULAR_SEARCH_KEY, "")
-                    .apply();
+            String langs = mSharedPreferences.getString(POPULAR_SEARCH_LANG_KEY, "");
+            if (!langs.isEmpty()) {
+                for (String lang : langs.split(",")){
+                    mSharedPreferences
+                            .edit()
+                            .putString(POPULAR_SEARCH_KEY + lang, "")
+                            .apply();
+                }
+                mSharedPreferences.edit()
+                        .putString(POPULAR_SEARCH_LANG_KEY, "")
+                        .apply();
+            }
         }
     }
 

@@ -69,8 +69,8 @@ class InitSyteImpl extends InitSyte {
         if (mState == SyteState.INITIALIZED) {
             fireEvent(new EventInitialization());
             getTextSearchClient().getPopularSearchAsync(mConfiguration.getLocale(), syteResult -> {
-                if (syteResult.isSuccessful && syteResult.data != null) {
-                    mConfiguration.getStorage().addPopularSearch(syteResult.data);
+                if (syteResult.isSuccessful && syteResult.data != null && mConfiguration != null) {
+                    mConfiguration.getStorage().addPopularSearch(syteResult.data, mConfiguration.getLocale());
                 }
             });
         }
@@ -102,8 +102,8 @@ class InitSyteImpl extends InitSyte {
             if (mState == SyteState.INITIALIZED) {
                 fireEvent(new EventInitialization());
                 getTextSearchClient().getPopularSearchAsync(mConfiguration.getLocale(), result -> {
-                    if (result.isSuccessful && result.data != null) {
-                        mConfiguration.getStorage().addPopularSearch(result.data);
+                    if (result.isSuccessful && result.data != null && mConfiguration != null) {
+                        mConfiguration.getStorage().addPopularSearch(result.data, mConfiguration.getLocale());
                     }
                 });
             }

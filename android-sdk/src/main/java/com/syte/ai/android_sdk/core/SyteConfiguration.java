@@ -23,7 +23,7 @@ public class SyteConfiguration {
     private final String mAccountId;
     private final String mSignature;
 
-    private String mLocale = "en_Us";
+    private String mLocale = "en_US";
     private String mUserId;
     private String mSessionId;
 

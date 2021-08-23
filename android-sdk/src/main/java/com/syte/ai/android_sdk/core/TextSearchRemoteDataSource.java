@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,14 +56,17 @@ class TextSearchRemoteDataSource extends BaseRemoteDataSource {
     }
 
     SyteResult<List<String>> getPopularSearch(String lang) {
-        if (!mConfiguration.getStorage().getPopularSearch().isEmpty()) {
-            return onPopularSearchResult(mConfiguration.getStorage().getPopularSearch());
+        if (!mConfiguration.getStorage().getPopularSearch(lang).isEmpty()) {
+            return onPopularSearchResult(mConfiguration.getStorage().getPopularSearch(lang));
         }
 
         Response<ResponseBody> response = null;
         try {
             response = generatePopularSearchCall(lang).execute();
-            return onPopularSearchResult(response);
+            SyteResult<List<String>> result = onPopularSearchResult(response);
+            mConfiguration.getStorage().addPopularSearch(result.data == null ?
+                    new ArrayList<>() : result.data, lang);
+            return result;
         } catch (IOException | JSONException e) {
             return handleException(response, e);
         }
@@ -72,8 +76,8 @@ class TextSearchRemoteDataSource extends BaseRemoteDataSource {
             String lang,
             SyteCallback<List<String>> callback
     ) {
-        if (!mConfiguration.getStorage().getPopularSearch().isEmpty()) {
-            callback.onResult(onPopularSearchResult(mConfiguration.getStorage().getPopularSearch()));
+        if (!mConfiguration.getStorage().getPopularSearch(lang).isEmpty()) {
+            callback.onResult(onPopularSearchResult(mConfiguration.getStorage().getPopularSearch(lang)));
             return;
         }
 
@@ -81,7 +85,10 @@ class TextSearchRemoteDataSource extends BaseRemoteDataSource {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
-                    callback.onResult(onPopularSearchResult(response));
+                    SyteResult<List<String>> result = onPopularSearchResult(response);
+                    mConfiguration.getStorage().addPopularSearch(result.data == null ?
+                            new ArrayList<>() : result.data, lang);
+                    callback.onResult(result);
                 } catch (IOException | JSONException e) {
                     callback.onResult(handleException(response, e));
                 }

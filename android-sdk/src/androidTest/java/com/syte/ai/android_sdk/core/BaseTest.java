@@ -40,7 +40,7 @@ public class BaseTest {
             mInitSyte.endSession();
         } catch (SyteInitializationException e) {
             // Do nothing, it is fine to catch this exception here since some TC test the 'Not initialized' behavior.
-        }
+        } catch (NullPointerException e) {}
         mConfiguration = null;
     }
 
