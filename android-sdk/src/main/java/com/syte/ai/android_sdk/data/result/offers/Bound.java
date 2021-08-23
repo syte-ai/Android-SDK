@@ -30,10 +30,10 @@ public class Bound {
 	private List<Double> b1;
 
 	/**
-	 * Getter for Offers Url
-	 * @return Offers Url
+	 * Getter for Item Url
+	 * @return Item Url
 	 */
-	public String getOffersUrl(){
+	public String getItemUrl(){
 		return offersUrl;
 	}
 

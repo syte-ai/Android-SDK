@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONObject;
 
 /**
- * Represents Offer entity
+ * Represents Item entity
  */
-public class Offer {
+public class Item {
 
 	@SerializedName("floatPrice")
 	private double floatPrice;
@@ -97,10 +97,10 @@ public class Offer {
 	}
 
 	/**
-	 * Getter for offer
-	 * @return offer
+	 * Getter for item Url
+	 * @return item Url
 	 */
-	public String getOffer(){
+	public String getItemUrl(){
 		return offer;
 	}
 

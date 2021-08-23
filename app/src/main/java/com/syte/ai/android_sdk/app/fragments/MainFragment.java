@@ -21,6 +21,7 @@ import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.enums.Placement;
+import com.syte.ai.android_sdk.enums.TextSearchEventType;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.events.EventBBClick;
 import com.syte.ai.android_sdk.events.EventBBShowLayout;
@@ -38,6 +39,7 @@ import com.syte.ai.android_sdk.events.EventShopTheLookOfferClick;
 import com.syte.ai.android_sdk.events.EventShopTheLookShowLayout;
 import com.syte.ai.android_sdk.events.EventSimilarItemsOfferClick;
 import com.syte.ai.android_sdk.events.EventSimilarItemsShowLayout;
+import com.syte.ai.android_sdk.events.EventTextShowResults;
 import com.syte.ai.android_sdk.events.Product;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -54,6 +56,9 @@ public class MainFragment extends BaseFragment {
     private Button mPersonalizationButton;
     private Button mConfigButton;
     private Button mFireEventsButton;
+    private Button mAutoCompleteButton;
+    private Button mPopularSearchButton;
+    private Button mTextSearchButton;
     private Navigator mNavigator;
 
     @Override
@@ -107,6 +112,30 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 mNavigator.configFragment();
+            }
+        });
+
+        mAutoCompleteButton = view.findViewById(R.id.auto_complete_btn);
+        mAutoCompleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.autoCompleteFragment();
+            }
+        });
+
+        mPopularSearchButton = view.findViewById(R.id.popular_search_btn);
+        mPopularSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.popularSearchFragment();
+            }
+        });
+
+        mTextSearchButton = view.findViewById(R.id.text_search_btn);
+        mTextSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavigator.textSearchFragment();
             }
         });
 
@@ -233,6 +262,14 @@ public class MainFragment extends BaseFragment {
                                     return null;
                                 }
                             });
+                            initSyte.fireEvent(
+                                    new EventTextShowResults(
+                                            "text",
+                                            TextSearchEventType.POPULAR_SEARCH,
+                                            10,
+                                            "sdk-test")
+                            );
+
                         }
                     });
                 } catch (SyteInitializationException syteInitializationException) {

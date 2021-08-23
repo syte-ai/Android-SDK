@@ -10,12 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
+import com.syte.ai.android_sdk.data.ShopTheLook;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -67,28 +65,28 @@ public class ShopTheLookFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        ShopTheLookRequestData shopTheLookRequestData =
-                new ShopTheLookRequestData(
+        ShopTheLook shopTheLook =
+                new ShopTheLook(
                         mSKUEditText.getText().toString(),
                         mImageUrlEditText.getText().toString()
                 );
         if (!mSyteManager.getViewedProducts().isEmpty()) {
-            shopTheLookRequestData.setPersonalizedRanking(true);
+            shopTheLook.setPersonalizedRanking(true);
         }
         if (!validateInputs()) {
             showToast("Wrong input");
             return;
         }
-        shopTheLookRequestData.setLimitPerBound(Integer.parseInt(mLimitET.getText().toString()));
-        shopTheLookRequestData.setSyteUrlReferer(mUrlRefererET.getText().toString());
+        shopTheLook.setLimitPerBound(Integer.parseInt(mLimitET.getText().toString()));
+        shopTheLook.setSyteUrlReferer(mUrlRefererET.getText().toString());
         switch (v.getId()) {
             case R.id.ctl:
                 mSyteManager.shopTheLook(
-                        shopTheLookRequestData,
+                        shopTheLook,
                         syteResult -> {
                             if (syteResult.isSuccessful) {
                                 mSyteManager.setLastRetrievedItemsList(
-                                        syteResult.data.getAllItems(true)
+                                        syteResult.data.getItemsForAllLabels(true)
                                 );
                                 mNavigator.offersFragment();
                             }

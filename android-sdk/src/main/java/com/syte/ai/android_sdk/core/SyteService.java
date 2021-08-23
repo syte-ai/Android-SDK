@@ -81,4 +81,25 @@ public interface SyteService {
                                           @Query("syte_url_referer") String syteUrlReferer,
                                           @Body RequestBody body);
 
+    @GET("search/{accountId}/popularSearches")
+    Call<ResponseBody> getPopularSearch(@Path("accountId") String accountId,
+                                        @Query("lang") String lang,
+                                        @Query("sig") String signature);
+
+    @GET("search/{accountId}/items")
+    Call<ResponseBody> getTextSearch(@Path("accountId") String accountId,
+                                     @Query("lang") String lang,
+                                     @Query("sig") String signature,
+                                     @Query("query") String query,
+                                     @Query("filters") String filters,
+                                     @Query("from") int from,
+                                     @Query("size") int size,
+                                     @Query("sorting") String sorting);
+
+    @GET("search/{accountId}/autocomplete")
+    Call<ResponseBody> getAutoComplete(@Path("accountId") String accountId,
+                                        @Query("lang") String lang,
+                                        @Query("query") String query,
+                                        @Query("sig") String signature);
+
 }

@@ -34,7 +34,7 @@ class EventsRemoteDataSource extends BaseRemoteDataSource {
                 event.getTagsString(),
                 event.getName(),
                 mConfiguration.getAccountId(),
-                mConfiguration.getSignature(),
+                mConfiguration.getApiSignature(),
                 Long.toString(mConfiguration.getSessionId()),
                 mConfiguration.getUserId(),
                 event.getSyteUrlReferer(),

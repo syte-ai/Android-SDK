@@ -15,7 +15,7 @@ import android.widget.CheckBox;
 
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.ImageSearchRequestData;
+import com.syte.ai.android_sdk.data.ImageSearch;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -62,8 +62,8 @@ public class WildImageSearchFragment extends BaseFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        ImageSearchRequestData requestData = new ImageSearchRequestData(mSelectedImageUri);
-        requestData.setRetrieveOffersForTheFirstBound(mFetchOffersForTheFirstBoundCheckBox.isChecked());
+        ImageSearch requestData = new ImageSearch(mSelectedImageUri);
+        requestData.setRetrieveItemsForTheFirstBound(mFetchOffersForTheFirstBoundCheckBox.isChecked());
         if (!mSyteManager.getViewedProducts().isEmpty()) {
             requestData.setPersonalizedRanking(true);
         }

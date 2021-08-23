@@ -28,6 +28,7 @@ public class SyteConfiguration {
     private String mSessionId;
 
     private SyteStorage mStorage;
+    private boolean mAllowAutoCompletionQueue = true;
 
     /**
      *
@@ -71,7 +72,7 @@ public class SyteConfiguration {
      * Getter for signature
      * @return signature
      */
-    public String getSignature() {
+    public String getApiSignature() {
         return mSignature;
     }
 
@@ -105,6 +106,14 @@ public class SyteConfiguration {
 
     SyteStorage getStorage() {
         return mStorage;
+    }
+
+    public void setAllowAutoCompletionQueue(boolean allowAutoCompletionQueue) {
+        mAllowAutoCompletionQueue = allowAutoCompletionQueue;
+    }
+
+    public boolean getAllowAutoCompletionQueue() {
+        return mAllowAutoCompletionQueue;
     }
 
 }

@@ -1,11 +1,14 @@
 package com.syte.ai.android_sdk.core;
 
+import android.text.TextUtils;
+
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 class Utils {
@@ -54,17 +57,18 @@ class Utils {
         if (viewedProducts.isEmpty()) {
             return null;
         }
-
-        StringBuilder sb = new StringBuilder();
-        for (String sku : viewedProducts) {
-            sb.append(sku);
-            sb.append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        return TextUtils.join(",", viewedProducts);
     }
 
-    public static String viewedProductsJSONArray(Set<String> viewedProducts) {
+    static String textSearchTermsString(List<String> terms) {
+        if (terms.isEmpty()) {
+            return null;
+        }
+
+        return TextUtils.join(",", terms);
+    }
+
+    static String viewedProductsJSONArray(Set<String> viewedProducts) {
         if (viewedProducts.isEmpty()) {
             return null;
         }
@@ -81,6 +85,14 @@ class Utils {
         stringBuilder.append("]");
 
         return stringBuilder.toString();
+    }
+
+    static String generateFiltersString(List<String> filters) {
+        if (filters.isEmpty()) {
+            return null;
+        }
+
+        return String.format("{%s}", TextUtils.join(",", filters));
     }
 
 }

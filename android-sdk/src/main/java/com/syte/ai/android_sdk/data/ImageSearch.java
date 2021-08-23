@@ -4,12 +4,10 @@ import android.net.Uri;
 
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 
-import java.util.Objects;
-
 /**
  * Class that is used to configure the 'wild' image search.
  */
-public class ImageSearchRequestData {
+public class ImageSearch {
 
     private final Uri mImageUri;
     private CropCoordinates mCoordinates;
@@ -19,7 +17,7 @@ public class ImageSearchRequestData {
     /**
      * @param imageUri - a path to the image on device.
      */
-    public ImageSearchRequestData(Uri imageUri) {
+    public ImageSearch(Uri imageUri) {
         this.mImageUri = imageUri;
     }
 
@@ -32,34 +30,34 @@ public class ImageSearchRequestData {
 
     /**
      * Set coordinates for the offers for the first bound. Will be disregarded if
-     * {@link #setRetrieveOffersForTheFirstBound(boolean)} method was called with the false value passed.
+     * {@link #setRetrieveItemsForTheFirstBound(boolean)} method was called with the false value passed.
      * @param coordinates - coordinates to use for crop. See {@link CropCoordinates}
      */
-    public void setFirstBoundOffersCoordinates(CropCoordinates coordinates) {
+    public void setFirstBoundItemsCoordinates(CropCoordinates coordinates) {
         this.mCoordinates = coordinates;
     }
 
     /**
      * @return {@link CropCoordinates}
      */
-    public CropCoordinates getFirstBoundOffersCoordinates() {
+    public CropCoordinates getFirstBoundItemsCoordinates() {
         return mCoordinates;
     }
 
     /**
      * Indicates whether to retrive the offers list for the first retrieved bound automatically.
-     * The list can be retrieved by calling {@link BoundsResult#getFirstBoundOffersResult()}
+     * The list can be retrieved by calling {@link BoundsResult#getItemsForFirstBound()}
      * The functionality is enabled by default.
-     * @param retrieveOffersForTheFirstBound
+     * @param retrieveItemsForTheFirstBound indicates whether to retrieve items for the first bound automatically
      */
-    public void setRetrieveOffersForTheFirstBound(boolean retrieveOffersForTheFirstBound) {
-        mRetrieveOffersForTheFirstBound = retrieveOffersForTheFirstBound;
+    public void setRetrieveItemsForTheFirstBound(boolean retrieveItemsForTheFirstBound) {
+        mRetrieveOffersForTheFirstBound = retrieveItemsForTheFirstBound;
     }
 
     /**
      * @return true if the automatic offers retrieval for the first bound is enabled. False otherwise.
      */
-    public boolean isRetrieveOffersForTheFirstBound() {
+    public boolean isRetrieveItemsForTheFirstBound() {
         return mRetrieveOffersForTheFirstBound;
     }
 

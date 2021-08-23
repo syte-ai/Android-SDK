@@ -3,6 +3,7 @@ package com.syte.ai.android_sdk.core;
 import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
+import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
@@ -11,6 +12,7 @@ import com.syte.ai.android_sdk.util.SyteLogger;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -31,9 +33,8 @@ public abstract class InitSyte {
      *          MUST be called before any other methods in this class!
      * @param configuration {@link SyteConfiguration}
      * @return Result indicating whether the session was started successfully.
-     * @throws SyteWrongInputException
      */
-    public abstract SyteResult<Boolean> startSession(SyteConfiguration configuration) throws SyteWrongInputException;
+    public abstract SyteResult<Boolean> startSession(SyteConfiguration configuration);
 
     /**
      * Starts the user session.
@@ -76,8 +77,10 @@ public abstract class InitSyte {
      */
     public abstract ImageSearchClient getImageSearchClient();
 
+    public abstract TextSearchClient getTextSearchClient();
+
     /**
-     * Force reset session ID.
+     * Uninitialize Syte and force reset session ID.
      * If not called, the session ID will be automatically reset if no requests were sent within 30 minutes.
      */
     public abstract void endSession();
@@ -93,13 +96,15 @@ public abstract class InitSyte {
      * Save product ID into the local storage. All saved viewed products will be used for personalization.
      * @param sku product ID
      */
-    public abstract void addViewedProduct(String sku) throws SyteWrongInputException;
+    public abstract void addViewedItem(String sku) throws SyteWrongInputException;
 
     /**
      * Get all product IDs that were viewed during this session.
      * @return list of product IDs.
      */
     public abstract Set<String> getViewedProducts();
+
+    public abstract List<String> getResentTextSearches();
 
     /**
      * Set log level.

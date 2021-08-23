@@ -45,15 +45,10 @@ public class BaseTest {
     }
 
     protected void startSessionInternal() {
-        try {
-            SyteResult<Boolean> accountDataService = mInitSyte.startSession(mConfiguration);
-            assertTrue(accountDataService.data);
-            assertEquals(accountDataService.resultCode, 200);
-            assertTrue(accountDataService.isSuccessful);
-
-        } catch (SyteInitializationException | SyteWrongInputException syteInitializationException) {
-            fail("Unable to start session: " + syteInitializationException.getMessage());
-        }
+        SyteResult<Boolean> accountDataService = mInitSyte.startSession(mConfiguration);
+        assertTrue(accountDataService.data);
+        assertEquals(accountDataService.resultCode, 200);
+        assertTrue(accountDataService.isSuccessful);
     }
 
 }

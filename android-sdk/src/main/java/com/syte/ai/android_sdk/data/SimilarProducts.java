@@ -2,17 +2,39 @@ package com.syte.ai.android_sdk.data;
 
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
 
-/**
- * Class that is used to configure the Personalization requests.
- * NOTE: you MUST add at least one viewed product in {@link com.syte.ai.android_sdk.core.InitSyte#addViewedProduct(String)}
- * for the Personalization functionality to work.
- */
-public class PersonalizationRequestData {
+import java.util.Objects;
 
+public class SimilarProducts {
+
+    private String mSku;
+    private String mImageUrl;
+    private boolean mPersonalizedRanking = false;
     private String mSyteUrlReferer = "mobile_sdk";
     private int mLimit = 7;
-    private String mModelVersion = "A";
     private RecommendationReturnField mFieldsToReturn = RecommendationReturnField.ALL;
+
+    /**
+     * @param sku - product ID
+     * @param imageUrl - image URL
+     */
+    public SimilarProducts(String sku, String imageUrl) {
+        this.mSku = sku;
+        this.mImageUrl = imageUrl;
+    }
+
+    /**
+     * @return product ID
+     */
+    public String getSku() {
+        return mSku;
+    }
+
+    /**
+     * @return image URL
+     */
+    public String getImageUrl() {
+        return mImageUrl;
+    }
 
     /**
      * Configure what fields must be returned in response. All fields will be returned by default.
@@ -28,6 +50,20 @@ public class PersonalizationRequestData {
      */
     public RecommendationReturnField getFieldsToReturn() {
         return mFieldsToReturn;
+    }
+
+    /**
+     * @param personalizedRanking true to include the list of viewed during the session products. False otherwise.
+     */
+    public void setPersonalizedRanking(boolean personalizedRanking) {
+        mPersonalizedRanking = personalizedRanking;
+    }
+
+    /**
+     * @return true if the list of viewed products is configured to be included into the requests. False otherwise.
+     */
+    public boolean getPersonalizedRanking() {
+        return mPersonalizedRanking;
     }
 
     /**
@@ -58,21 +94,6 @@ public class PersonalizationRequestData {
      */
     public int getLimit() {
         return mLimit;
-    }
-
-    /**
-     * Default value - A
-     * @param modelVersion
-     */
-    public void setModelVersion(String modelVersion) {
-        mModelVersion = modelVersion;
-    }
-
-    /**
-     * @return model version.
-     */
-    public String getModelVersion() {
-        return mModelVersion;
     }
 
 }

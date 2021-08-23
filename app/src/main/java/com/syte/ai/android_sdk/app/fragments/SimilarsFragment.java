@@ -11,10 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
+import com.syte.ai.android_sdk.data.SimilarProducts;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,24 +65,24 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        SimilarProductsRequestData similarProductsRequestData =
-                new SimilarProductsRequestData(
+        SimilarProducts similarProducts =
+                new SimilarProducts(
                         mSKUEditText.getText().toString(),
                         mImageUrlEditText.getText().toString()
                 );
         if (!mSyteManager.getViewedProducts().isEmpty()) {
-            similarProductsRequestData.setPersonalizedRanking(true);
+            similarProducts.setPersonalizedRanking(true);
         }
         if (!validateInputs()) {
             showToast("Wrong input");
             return;
         }
-        similarProductsRequestData.setLimit(Integer.parseInt(mLimitET.getText().toString()));
-        similarProductsRequestData.setSyteUrlReferer(mUrlRefererET.getText().toString());
+        similarProducts.setLimit(Integer.parseInt(mLimitET.getText().toString()));
+        similarProducts.setSyteUrlReferer(mUrlRefererET.getText().toString());
         switch (v.getId()) {
             case R.id.similars_btn:
                 mSyteManager.getSimilars(
-                        similarProductsRequestData,
+                        similarProducts,
                         syteResult -> {
                             if (syteResult.isSuccessful) {
                                 mSyteManager.setLastRetrievedItemsList(

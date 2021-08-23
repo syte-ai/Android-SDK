@@ -1,0 +1,23 @@
+Set up guide
+
+1. Paste the SDK .aar file (either debug or release version) into your project's /lib folder.
+
+2. Add in your build.gradle (module level) file the following line (if not exists):
+
+   implementation fileTree(dir: 'libs', include: ['*.aar'])
+
+3. Add the following dependencies to your module level build.gradle file:
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
+    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.github.Shouheng88:compressor:1.3.9'
+    implementation 'androidx.exifinterface:exifinterface:1.3.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
+3. Sync your project
+4. In case the **minifyEnabled** is set to true in your build.gradle,
+add the following rule to your proguard-rules.pro file:
+
+`-keep class com.syte.ai.android_sdk.data.** { *; }`

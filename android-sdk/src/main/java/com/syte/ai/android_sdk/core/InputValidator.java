@@ -2,17 +2,18 @@ package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 
-import com.syte.ai.android_sdk.data.ImageSearchRequestData;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
-import com.syte.ai.android_sdk.data.UrlImageSearchRequestData;
+import com.syte.ai.android_sdk.data.ImageSearch;
+import com.syte.ai.android_sdk.data.Personalization;
+import com.syte.ai.android_sdk.data.ShopTheLook;
+import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.TextSearch;
+import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 class InputValidator {
 
-    public static void validateInput(ImageSearchRequestData requestData) throws SyteWrongInputException {
+    public static void validateInput(ImageSearch requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -21,7 +22,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(UrlImageSearchRequestData requestData) throws SyteWrongInputException {
+    public static void validateInput(UrlImageSearch requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -52,12 +53,12 @@ class InputValidator {
         if (configuration.getAccountId() == null) {
             throw new SyteWrongInputException("Account ID can not be null.");
         }
-        if(configuration.getSignature() == null) {
+        if(configuration.getApiSignature() == null) {
             throw new SyteWrongInputException("Signature can not be null.");
         }
     }
 
-    public static void validateInput(SimilarProductsRequestData requestData) throws SyteWrongInputException {
+    public static void validateInput(SimilarProducts requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -69,7 +70,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(ShopTheLookRequestData requestData) throws SyteWrongInputException {
+    public static void validateInput(ShopTheLook requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -81,7 +82,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(PersonalizationRequestData requestData) throws SyteWrongInputException {
+    public static void validateInput(Personalization requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }
@@ -92,4 +93,14 @@ class InputValidator {
             throw new SyteWrongInputException("Viewed product can not be empty.");
         }
     }
+
+    public static void validateInput(TextSearch textSearch) throws SyteWrongInputException {
+        if (textSearch == null) {
+            throw new SyteWrongInputException("Request data can not be null.");
+        }
+        if (textSearch.getQuery() == null) {
+            throw new SyteWrongInputException("Query can not be null.");
+        }
+    }
+
 }

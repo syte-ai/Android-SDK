@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.syte.ai.android_sdk.app.R;
-import com.syte.ai.android_sdk.data.result.offers.Offer;
+import com.syte.ai.android_sdk.data.result.offers.Item;
 
 import org.json.JSONException;
 
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder> {
 
-    private List<Offer> mData;
+    private List<Item> mData;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView floatPrice;
@@ -58,7 +58,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
 
     }
 
-    public OffersAdapter(List<Offer> dataSet) {
+    public OffersAdapter(List<Item> dataSet) {
         mData = dataSet;
     }
 
@@ -77,7 +77,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
         viewHolder.parentSku.setText(mData.get(position).getParentSku());
         viewHolder.merchant.setText(mData.get(position).getMerchant());
         viewHolder.description.setText(mData.get(position).getDescription());
-        viewHolder.offer.setText(mData.get(position).getOffer());
+        viewHolder.offer.setText(mData.get(position).getItemUrl());
         viewHolder.price.setText(mData.get(position).getPrice());
         if (mData.get(position).getBbCategories() != null)
         viewHolder.bbCategories.setText(mData.get(position).getBbCategories().toString());

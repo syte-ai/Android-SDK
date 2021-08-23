@@ -36,4 +36,9 @@
         android:text="@string/apply"
         android:textColor="@color/black"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_history_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

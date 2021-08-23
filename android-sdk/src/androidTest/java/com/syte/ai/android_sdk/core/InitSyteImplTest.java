@@ -1,8 +1,9 @@
 package com.syte.ai.android_sdk.core;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,6 +25,46 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void startSession() {
         startSessionInternal();
+    }
+
+    @Test
+    public void startSessionConfigurationNull() {
+        SyteResult<Boolean> result = mInitSyte.startSession(null);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertFalse(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void startSessionAccountIdNull() {
+        SyteConfiguration syteConfiguration = new SyteConfiguration(
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                null,
+                ""
+        );
+        SyteResult<Boolean> result = mInitSyte.startSession(syteConfiguration);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertFalse(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
+    }
+
+    @Test
+    public void startSessionSignatureNull() {
+        SyteConfiguration syteConfiguration = new SyteConfiguration(
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                "test",
+                null
+        );
+        SyteResult<Boolean> result = mInitSyte.startSession(syteConfiguration);
+        assertNotNull(result);
+        assertNotNull(result.errorMessage);
+        assertFalse(result.data);
+        assertFalse(result.isSuccessful);
+        assertEquals(result.resultCode, -1);
     }
 
     @Test
@@ -50,11 +92,93 @@ public class InitSyteImplTest extends BaseTest {
     }
 
     @Test
+    public void startSessionAsyncConfigurationNull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            mInitSyte.startSessionAsync(null, new SyteCallback<Boolean>() {
+                @Override
+                public void onResult(SyteResult<Boolean> result) {
+                    assertNotNull(result);
+                    assertNotNull(result.errorMessage);
+                    assertFalse(result.data);
+                    assertFalse(result.isSuccessful);
+                    assertEquals(result.resultCode, -1);
+                    latch.countDown();
+                }
+            });
+        } catch (SyteInitializationException syteInitializationException) {
+            fail("Unable to start session: " + syteInitializationException.getMessage());
+        }
+
+        latch.await();
+
+    }
+
+    @Test
+    public void startSessionAsyncAccountIdNull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            SyteConfiguration syteConfiguration = new SyteConfiguration(
+                    InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                    null,
+                    "test"
+            );
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<Boolean>() {
+                @Override
+                public void onResult(SyteResult<Boolean> result) {
+                    assertNotNull(result);
+                    assertNotNull(result.errorMessage);
+                    assertFalse(result.data);
+                    assertFalse(result.isSuccessful);
+                    assertEquals(result.resultCode, -1);
+                    latch.countDown();
+                }
+            });
+        } catch (SyteInitializationException syteInitializationException) {
+            fail("Unable to start session: " + syteInitializationException.getMessage());
+        }
+
+        latch.await();
+
+    }
+
+    @Test
+    public void startSessionAsyncSignatureNull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            SyteConfiguration syteConfiguration = new SyteConfiguration(
+                    InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                    null,
+                    "test"
+            );
+            mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<Boolean>() {
+                @Override
+                public void onResult(SyteResult<Boolean> result) {
+                    assertNotNull(result);
+                    assertNotNull(result.errorMessage);
+                    assertFalse(result.data);
+                    assertFalse(result.isSuccessful);
+                    assertEquals(result.resultCode, -1);
+                    latch.countDown();
+                }
+            });
+        } catch (SyteInitializationException syteInitializationException) {
+            fail("Unable to start session: " + syteInitializationException.getMessage());
+        }
+
+        latch.await();
+
+    }
+
+    @Test
     public void getConfiguration() {
         startSessionInternal();
         SyteConfiguration configuration = mInitSyte.getConfiguration();
         assertEquals(configuration.getAccountId(), "9165");
-        assertEquals(configuration.getSignature(), "601c206d0a7f780efb9360f3");
+        assertEquals(configuration.getApiSignature(), "601c206d0a7f780efb9360f3");
         assertNotEquals((long) configuration.getSessionId(), -1L);
         assertNotNull(configuration.getUserId());
     }
@@ -146,7 +270,7 @@ public class InitSyteImplTest extends BaseTest {
     @Test
     public void addViewedProduct() throws SyteWrongInputException {
         startSessionInternal();
-        mInitSyte.addViewedProduct("test");
+        mInitSyte.addViewedItem("test");
         assertTrue(mInitSyte.getConfiguration().getViewedProducts().contains("test"));
     }
 

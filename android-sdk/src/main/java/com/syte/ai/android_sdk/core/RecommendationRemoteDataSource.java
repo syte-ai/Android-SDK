@@ -2,9 +2,9 @@ package com.syte.ai.android_sdk.core;
 
 import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.data.PersonalizationRequestData;
-import com.syte.ai.android_sdk.data.ShopTheLookRequestData;
-import com.syte.ai.android_sdk.data.SimilarProductsRequestData;
+import com.syte.ai.android_sdk.data.Personalization;
+import com.syte.ai.android_sdk.data.ShopTheLook;
+import com.syte.ai.android_sdk.data.SimilarProducts;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
@@ -54,11 +54,11 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         mSyteService = syteService;
     }
 
-    public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarProductsRequestData similarProductsRequestData) {
+    public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarProducts similarProducts) {
         Response<ResponseBody> result = null;
         try {
             result =
-                    generateSimilarsCall(similarProductsRequestData).execute();
+                    generateSimilarsCall(similarProducts).execute();
             return onSimilarsResult(result);
         } catch (IOException | JSONException e) {
             return handleException(result, e);
@@ -66,9 +66,9 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public void getSimilarProductsAsync(
-            SimilarProductsRequestData similarProductsRequestData,
+            SimilarProducts similarProducts,
             SyteCallback<SimilarProductsResult> callback) {
-        generateSimilarsCall(similarProductsRequestData).enqueue(new Callback<ResponseBody>() {
+        generateSimilarsCall(similarProducts).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 try {
@@ -86,13 +86,13 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public SyteResult<ShopTheLookResult> getShopTheLook(
-            ShopTheLookRequestData shopTheLookRequestData,
+            ShopTheLook shopTheLook,
             SytePlatformSettings sytePlatformSettings
     ) {
         Response<ResponseBody> result = null;
         try {
             result =
-                    generateShopTheLookCall(shopTheLookRequestData).execute();
+                    generateShopTheLookCall(shopTheLook).execute();
             return onShopTheLookResult(result, sytePlatformSettings);
         } catch (IOException | JSONException e) {
             return handleException(result, e);
@@ -100,10 +100,10 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public void getShopTheLookAsync(
-            ShopTheLookRequestData shopTheLookRequestData,
+            ShopTheLook shopTheLook,
             SytePlatformSettings sytePlatformSettings,
             SyteCallback<ShopTheLookResult> callback) {
-        generateShopTheLookCall(shopTheLookRequestData).enqueue(new Callback<ResponseBody>() {
+        generateShopTheLookCall(shopTheLook).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 try {
@@ -120,10 +120,10 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         });
     }
 
-    public SyteResult<PersonalizationResult> getPersonalization(PersonalizationRequestData personalizationRequestData) {
+    public SyteResult<PersonalizationResult> getPersonalization(Personalization personalization) {
         Response<ResponseBody> result = null;
         try {
-            result = generatePersonalizationCall(personalizationRequestData).execute();
+            result = generatePersonalizationCall(personalization).execute();
             return onPersonalizationResult(result);
         } catch (IOException | JSONException | SyteWrongInputException e) {
             return handleException(result, e);
@@ -131,10 +131,10 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public void getPersonalizationAsync(
-            PersonalizationRequestData personalizationRequestData,
+            Personalization personalization,
             SyteCallback<PersonalizationResult> callback) {
         try {
-            generatePersonalizationCall(personalizationRequestData).enqueue(new Callback<ResponseBody>() {
+            generatePersonalizationCall(personalization).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                     try {
@@ -209,7 +209,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         JSONObject jsonObject = new JSONObject(responseString);
         JSONArray itemsArray = jsonObject.getJSONArray("response");
         for (int i = 0; i < ctlResult.getItems().size(); i++) {
-            for (int j = 0; j < ctlResult.getItems().get(i).getOffers().size(); j++) {
+            for (int j = 0; j < ctlResult.getItems().get(i).getItems().size(); j++) {
                 JSONObject offer = itemsArray.getJSONObject(i)
                         .getJSONArray("ads")
                         .getJSONObject(j);
@@ -217,7 +217,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                     ctlResult
                             .getItems()
                             .get(i)
-                            .getOffers()
+                            .getItems()
                             .get(j)
                             .setOriginalData(offer.getJSONObject("original_data"));
                 }
@@ -271,50 +271,50 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         return syteResult;
     }
 
-    private Call<ResponseBody> generateSimilarsCall(SimilarProductsRequestData similarProductsRequestData) {
+    private Call<ResponseBody> generateSimilarsCall(SimilarProducts similarProducts) {
         return mSyteService.getSimilars(
                 mConfiguration.getAccountId(),
-                mConfiguration.getSignature(),
-                mConfiguration.getUserId(),
-                Long.toString(mConfiguration.getSessionId()),
+                mConfiguration.getApiSignature(),
+                similarProducts.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
+                similarProducts.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 mConfiguration.getLocale(),
-                similarProductsRequestData.getFieldsToReturn().getName(),
-                "sku:" + similarProductsRequestData.getSku(),
+                similarProducts.getFieldsToReturn().getName(),
+                "sku:" + similarProducts.getSku(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
-                similarProductsRequestData.getPersonalizedRanking() ?
+                similarProducts.getPersonalizedRanking() ?
                         Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
-                similarProductsRequestData.getLimit(),
-                similarProductsRequestData.getSyteUrlReferer(),
-                similarProductsRequestData.getImageUrl()
+                similarProducts.getLimit(),
+                similarProducts.getSyteUrlReferer(),
+                similarProducts.getImageUrl()
         );
     }
 
-    private Call<ResponseBody> generateShopTheLookCall(ShopTheLookRequestData shopTheLookRequestData) {
+    private Call<ResponseBody> generateShopTheLookCall(ShopTheLook shopTheLook) {
         return mSyteService.getShopTheLook(
                 mConfiguration.getAccountId(),
-                mConfiguration.getSignature(),
-                mConfiguration.getUserId(),
-                Long.toString(mConfiguration.getSessionId()),
+                mConfiguration.getApiSignature(),
+                shopTheLook.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
+                shopTheLook.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 mConfiguration.getLocale(),
-                shopTheLookRequestData.getFieldsToReturn().getName(),
-                "sku:" + shopTheLookRequestData.getSku(),
+                shopTheLook.getFieldsToReturn().getName(),
+                "sku:" + shopTheLook.getSku(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
-                shopTheLookRequestData.getPersonalizedRanking() ?
+                shopTheLook.getPersonalizedRanking() ?
                         Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
-                shopTheLookRequestData.getLimit(),
-                shopTheLookRequestData.getSyteUrlReferer(),
-                shopTheLookRequestData.getLimitPerBound() == -1 ? null :
-                        Integer.toString(shopTheLookRequestData.getLimitPerBound()),
-                shopTheLookRequestData.getSyteOriginalItem(),
-                shopTheLookRequestData.getImageUrl()
+                shopTheLook.getLimit(),
+                shopTheLook.getSyteUrlReferer(),
+                shopTheLook.getLimitPerBound() == -1 ? null :
+                        Integer.toString(shopTheLook.getLimitPerBound()),
+                shopTheLook.getSyteOriginalItem(),
+                shopTheLook.getImageUrl()
         );
     }
 
-    private Call<ResponseBody> generatePersonalizationCall(PersonalizationRequestData personalizationRequestData) throws SyteWrongInputException {
+    private Call<ResponseBody> generatePersonalizationCall(Personalization personalization) throws SyteWrongInputException {
         if (Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) == null) {
             throw new SyteWrongInputException("There are no viewed products added. Can not proceed with the personalization call.");
         }
@@ -324,18 +324,18 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                         "{\n    " +
                                     "\"user_uuid\": \"" + mConfiguration.getUserId() + "\",\n    " +
                                     "\"session_skus\": " + Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) + ",\n    " +
-                                    "\"model_version\": \"" + personalizationRequestData.getModelVersion() + "\"" +
+                                    "\"model_version\": \"" + personalization.getModelVersion() + "\"" +
                                 "\n}");
         return mSyteService.getPersonalization(
                 mConfiguration.getAccountId(),
-                mConfiguration.getSignature(),
+                mConfiguration.getApiSignature(),
                 RecommendationProduct.PERSONALIZATION.getName(),
                 mConfiguration.getLocale(),
-                personalizationRequestData.getFieldsToReturn().getName(),
+                personalization.getFieldsToReturn().getName(),
                 RecommendationProduct.PERSONALIZATION.getName(),
                 RecommendationProduct.PERSONALIZATION.getName(),
-                personalizationRequestData.getLimit(),
-                personalizationRequestData.getSyteUrlReferer(),
+                personalization.getLimit(),
+                personalization.getSyteUrlReferer(),
                 body
         );
     }

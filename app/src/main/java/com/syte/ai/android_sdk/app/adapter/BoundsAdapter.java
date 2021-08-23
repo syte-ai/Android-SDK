@@ -55,7 +55,6 @@ public class BoundsAdapter extends RecyclerView.Adapter<BoundsAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.bounds_list_item, viewGroup, false);
 
@@ -72,7 +71,7 @@ public class BoundsAdapter extends RecyclerView.Adapter<BoundsAdapter.ViewHolder
                 }
             }
         });
-        viewHolder.offerUrl.setText(mData.get(position).getOffersUrl());
+        viewHolder.offerUrl.setText(mData.get(position).getItemUrl());
         viewHolder.gender.setText(mData.get(position).getGender());
         viewHolder.catalog.setText(mData.get(position).getCatalog());
         viewHolder.label.setText(mData.get(position).getLabel());

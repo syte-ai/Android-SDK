@@ -37,7 +37,7 @@ public class BoundsFragment extends BaseFragment {
                     syteResult -> {
                         if (syteResult.isSuccessful) {
                             mSyteManager.setLastRetrievedItemsList(
-                                    syteResult.data.getOffers()
+                                    syteResult.data.getItems()
                             );
                             mNavigator.offersFragment();
                         }
