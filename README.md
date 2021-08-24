@@ -147,3 +147,23 @@ Personalized ranking is disabled by default.
 The SDK can be used to fire various events to Syte. Example:
 
     initSyte.fireEvent(new EventCheckoutStart());
+
+# Text Search
+
+The SDK can be used for the Text Search functionality.
+
+There are 3 main features:
+
+1. Popular Searches. Will retrieve the list of the most popular searches.
+
+    initSyte.getTextSearchClient().getPopularSearch("en_US");
+
+2. Text search. Will retrieve the results for the specified query.
+
+    initSyte.getTextSearchClient().getTextSearch(TextSearch textSearch);
+
+3. Auto-complete. Text auto-completion functionality.
+
+    initSyte.getTextSearchClient().getAutoCompleteAsync("query", "en_US", syteResult -> {
+        // Process the results here.
+    });

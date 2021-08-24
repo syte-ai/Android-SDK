@@ -2,6 +2,7 @@ package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 
+import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.SyteStorage;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -108,10 +109,21 @@ public class SyteConfiguration {
         return mStorage;
     }
 
+    /**
+     * Indicates whether the calls to {@link com.syte.ai.android_sdk.TextSearchClient#getAutoCompleteAsync(String, String, SyteCallback)}
+     * method that are made within 500ms will be saved to queue and invoked.
+     * (Only the last call made within 500ms will be saved).
+     * If false, the calls made within 500ms will be ignored.
+     * @param allowAutoCompletionQueue indicates whether to use the queue
+     */
     public void setAllowAutoCompletionQueue(boolean allowAutoCompletionQueue) {
         mAllowAutoCompletionQueue = allowAutoCompletionQueue;
     }
 
+    /**
+     * Indicates whether the auto-completion queue is allowed
+     * @return is queue allowed.
+     */
     public boolean getAllowAutoCompletionQueue() {
         return mAllowAutoCompletionQueue;
     }

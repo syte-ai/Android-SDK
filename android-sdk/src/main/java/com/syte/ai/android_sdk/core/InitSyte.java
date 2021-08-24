@@ -77,6 +77,10 @@ public abstract class InitSyte {
      */
     public abstract ImageSearchClient getImageSearchClient();
 
+    /**
+     * Build and get a {@link TextSearchClient} instance.
+     * @return {@link TextSearchClient}
+     */
     public abstract TextSearchClient getTextSearchClient();
 
     /**
@@ -104,6 +108,11 @@ public abstract class InitSyte {
      */
     public abstract Set<String> getViewedProducts();
 
+    /**
+     * Retrieves the list of recent text searches.
+     * NOTE: searches with no results will not be saved.
+     * @return list of recent text searches.
+     */
     public abstract List<String> getResentTextSearches();
 
     /**
