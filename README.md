@@ -156,14 +156,14 @@ There are 3 main features:
 
 1. Popular Searches. Will retrieve the list of the most popular searches.
 
-    initSyte.getTextSearchClient().getPopularSearch("en_US");
+    `initSyte.getTextSearchClient().getPopularSearch("en_US");`
 
 2. Text search. Will retrieve the results for the specified query.
 
-    initSyte.getTextSearchClient().getTextSearch(TextSearch textSearch);
+    `initSyte.getTextSearchClient().getTextSearch(TextSearch textSearch);`
 
 3. Auto-complete. Text auto-completion functionality.
 
-    initSyte.getTextSearchClient().getAutoCompleteAsync("query", "en_US", syteResult -> {
-        // Process the results here.
-    });
+    `initSyte.getTextSearchClient().getAutoCompleteAsync("query", "en_US", syteResult -> {`
+        `// Process the results here.`
+    `});`
