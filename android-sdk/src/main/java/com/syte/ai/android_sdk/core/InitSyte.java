@@ -113,7 +113,7 @@ public abstract class InitSyte {
      * NOTE: searches with no results will not be saved.
      * @return list of recent text searches.
      */
-    public abstract List<String> getResentTextSearches();
+    public abstract List<String> getRecentTextSearches();
 
     /**
      * Set log level.

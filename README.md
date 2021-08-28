@@ -64,6 +64,8 @@ Event fires automatically: https://syteapi.com/et?name=syte_init&account_id=[acc
  
 API used: https://cdn.syteapi.com/accounts/[account_id]
 
+To retrieve the instance of SytePlatformSettings use the initSyte.getSytePlatformSettings() method.
+
 ## Image Search
 
 Object detection ("bounds") and a similarity search ("Items") per object detected in the image. 
@@ -112,6 +114,7 @@ You can pass CropCoordinates instance instead of *null* here to enable the crop 
 **NOTE**
 Items for the first bound will be retrieved by default.
 Use **urlImageSearch.setRetrieveItemsForTheFirstBound(false)**  or **imageSearch.setRetrieveItemsForTheFirstBound(false)** to disable this behaviour.
+To get the items for the first bound use the BoundsResult.getItemsForFirstBound() method.
 
 # Product Recommendations
 To use the "Recommendations" functionality, do the following:
@@ -161,6 +164,8 @@ There are 3 main features:
 2. Text search. Will retrieve the results for the specified query.
 
     `initSyte.getTextSearchClient().getTextSearch(TextSearch textSearch);`
+
+    To retrieve a list of recent text searches use initSyte.getRecentTextSearches() method.
 
 3. Auto-complete. Text auto-completion functionality.
 

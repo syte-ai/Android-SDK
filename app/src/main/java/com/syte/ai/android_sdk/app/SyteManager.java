@@ -1,11 +1,9 @@
 package com.syte.ai.android_sdk.app;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.core.InitSyte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.ImageSearch;
@@ -27,7 +25,6 @@ import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -246,6 +243,6 @@ public class SyteManager {
     }
 
     public List<String> getSearchHistory() {
-        return mInitSyte.getResentTextSearches();
+        return mInitSyte.getRecentTextSearches();
     }
 }

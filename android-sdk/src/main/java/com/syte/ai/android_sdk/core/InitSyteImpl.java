@@ -198,7 +198,7 @@ class InitSyteImpl extends InitSyte {
     }
 
     @Override
-    public List<String> getResentTextSearches() {
+    public List<String> getRecentTextSearches() {
         if (mConfiguration != null) {
             String searchTerms = mConfiguration.getStorage().getTextSearchTerms();
             if (!searchTerms.isEmpty()) {

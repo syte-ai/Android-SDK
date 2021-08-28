@@ -1,16 +1,10 @@
 package com.syte.ai.android_sdk.core;
 
-import android.app.Instrumentation;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import com.syte.ai.android_sdk.TextSearchClient;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -89,7 +83,7 @@ public class TextSearchClientImplTest extends BaseTest {
         assertNotNull(syteResult.data);
         assertNotEquals(syteResult.data.getResult().getExactCount(), 0);
         assertNotNull(syteResult.data.getResult().getHits().get(0).getOriginalData());
-        assertFalse(mInitSyte.getResentTextSearches().isEmpty());
+        assertFalse(mInitSyte.getRecentTextSearches().isEmpty());
     }
 
     @Test
