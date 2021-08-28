@@ -244,7 +244,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 catalog,
                 requestData.getSku(),
                 requestData.getImageUrl(),
-                requestData.getPersonalizedRanking() ?
+                requestData.getPersonalizedRanking() && mConfiguration.isLocalStorageEnabled() ?
                         Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null
         );
     }

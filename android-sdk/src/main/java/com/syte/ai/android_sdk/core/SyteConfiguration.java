@@ -25,11 +25,10 @@ public class SyteConfiguration {
     private final String mSignature;
 
     private String mLocale = "en_US";
-    private String mUserId;
-    private String mSessionId;
 
-    private SyteStorage mStorage;
+    private final SyteStorage mStorage;
     private boolean mAllowAutoCompletionQueue = true;
+    private boolean mLocalStorageEnabled = true;
 
     /**
      *
@@ -41,8 +40,6 @@ public class SyteConfiguration {
         this.mAccountId = accountId;
         this.mSignature = signature;
         this.mStorage = new SyteStorage(context);
-        this.mSessionId = Long.toString(mStorage.getSessionId());
-        this.mUserId = mStorage.getUserId();
     }
 
     /**
@@ -82,7 +79,11 @@ public class SyteConfiguration {
      * @return user ID. This value is generated automatically.
      */
     public String getUserId() {
-        return mStorage.getUserId();
+        if (mLocalStorageEnabled) {
+            return mStorage.getUserId();
+        } else {
+            return "OptedOut";
+        }
     }
 
     /**
@@ -90,14 +91,23 @@ public class SyteConfiguration {
      * @return session ID. This value is generated automatically.
      */
     public Long getSessionId() {
-        return mStorage.getSessionId();
+        if (mLocalStorageEnabled) {
+            return mStorage.getSessionId();
+        } else {
+            return 0L;
+        }
     }
 
     void addViewedProduct(String sessionSku) {
-        mStorage.addViewedProduct(sessionSku);
+        if (mLocalStorageEnabled) {
+            mStorage.addViewedProduct(sessionSku);
+        }
     }
 
     Set<String> getViewedProducts() {
+        if (!mLocalStorageEnabled) {
+            return new LinkedHashSet<>();
+        }
         String viewedProductsString = mStorage.getViewedProducts();
         if (viewedProductsString == null || viewedProductsString.isEmpty()) {
             return new LinkedHashSet<>();
@@ -126,6 +136,23 @@ public class SyteConfiguration {
      */
     public boolean getAllowAutoCompletionQueue() {
         return mAllowAutoCompletionQueue;
+    }
+
+    /**
+     * Call this method to either enable or disable the usage of the local storage
+     * @param enable whether local storage should be enabled
+     */
+    public void enableLocalStorage(boolean enable) {
+        mLocalStorageEnabled = enable;
+        mStorage.setEnabled(enable);
+    }
+
+    /**
+     * Indicates whether the usage of local storage is enabled.
+     * @return whether local storage is enabled
+     */
+    public boolean isLocalStorageEnabled() {
+        return mLocalStorageEnabled;
     }
 
 }

@@ -54,4 +54,6 @@
     java.lang.Long getSessionId();
     boolean getAllowAutoCompletionQueue();
     void setAllowAutoCompletionQueue(boolean);
+    void enableLocalStorage(boolean);
+    boolean isLocalStorageEnabled();
 }

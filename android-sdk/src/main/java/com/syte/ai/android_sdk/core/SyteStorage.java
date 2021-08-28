@@ -32,6 +32,8 @@ class SyteStorage {
 
     @Nullable private SharedPreferences mSharedPreferences = null;
 
+    private boolean mIsEnabled = true;
+
     SyteStorage(Context context) {
 
         MasterKey masterKey = null;
@@ -60,7 +62,15 @@ class SyteStorage {
 
     }
 
+    public void setEnabled(boolean enabled) {
+        mIsEnabled = enabled;
+
+    }
+
     public Long getSessionId() {
+        if (!mIsEnabled) {
+            return -1L;
+        }
         long sessionId = -1;
         if (mSharedPreferences != null) {
             sessionId = mSharedPreferences.getLong(SESSION_ID_PREF_KEY, -1);
@@ -120,6 +130,9 @@ class SyteStorage {
     }
 
     public String getUserId() {
+        if (!mIsEnabled) {
+            return "";
+        }
         String userId = "";
         if (mSharedPreferences != null) {
             userId = mSharedPreferences.getString(USER_ID_PREF_KEY, "");
@@ -137,6 +150,9 @@ class SyteStorage {
     }
 
     public void addViewedProduct(String sessionSku) {
+        if (!mIsEnabled) {
+            return;
+        }
         if (mSharedPreferences != null) {
             String viewedProducts = mSharedPreferences.getString(VIEWED_PRODUCTS_KEY, "");
             mSharedPreferences
@@ -149,6 +165,9 @@ class SyteStorage {
     }
 
     public String getViewedProducts() {
+        if (!mIsEnabled) {
+            return "";
+        }
         if (mSharedPreferences != null) {
             return mSharedPreferences.getString(VIEWED_PRODUCTS_KEY, "");
         }
@@ -156,6 +175,10 @@ class SyteStorage {
     }
 
     public void addPopularSearch(List<String> data, String lang) {
+        if (!mIsEnabled) {
+            return;
+        }
+
         if (data == null || data.isEmpty()) {
             return;
         }
@@ -179,6 +202,9 @@ class SyteStorage {
     }
 
     public String getPopularSearch(String lang) {
+        if (!mIsEnabled) {
+            return "";
+        }
         if (mSharedPreferences != null) {
             return mSharedPreferences.getString(POPULAR_SEARCH_KEY + lang, "");
         }
@@ -203,6 +229,9 @@ class SyteStorage {
     }
 
     public void addTextSearchTerm(String term) {
+        if (!mIsEnabled) {
+            return;
+        }
         if (mSharedPreferences != null) {
             String textSearchTerms = mSharedPreferences.getString(TEXT_SEARCH_TERM_KEY, "");
             if (!textSearchTerms.isEmpty()) {
@@ -223,6 +252,9 @@ class SyteStorage {
     }
 
     public String getTextSearchTerms() {
+        if (!mIsEnabled) {
+            return "";
+        }
         if (mSharedPreferences != null) {
             return mSharedPreferences.getString(TEXT_SEARCH_TERM_KEY, "");
         }

@@ -87,6 +87,14 @@ class Utils {
         return stringBuilder.toString();
     }
 
+    static String viewedProductsJSONArray(String sku) {
+        if (sku == null) {
+            return null;
+        }
+
+        return String.format("[%s]", sku);
+    }
+
     static String generateFiltersString(List<String> filters) {
         if (filters.isEmpty()) {
             return null;
