@@ -26,11 +26,11 @@ public class EventBBClick extends BaseSyteEvent {
             String imageUrl,
             String category,
             String gender,
-            Catalog catalog,
+            String catalog,
             String syteUrlReferer) {
         super("fe_bb_bb_click", syteUrlReferer, EventsTag.CAMERA);
         mImageUrl = imageUrl;
-        mCatalog = catalog.getName();
+        mCatalog = catalog;
         mGender = gender;
         mCategory = category;
     }

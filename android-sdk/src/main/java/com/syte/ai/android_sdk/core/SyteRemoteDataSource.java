@@ -11,7 +11,7 @@ import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -109,14 +109,14 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     SyteResult<SimilarProductsResult> getSimilarProducts(
-            SimilarProducts similarProducts
+            SimilarItems similarProducts
     ) {
         renewTimestamp();
         return mRecommendationRemoteDataSource.getSimilarProducts(similarProducts);
     }
 
     void getSimilarProductsAsync(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
         renewTimestamp();
@@ -245,7 +245,8 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 requestData.getSku(),
                 requestData.getImageUrl(),
                 requestData.getPersonalizedRanking() && mConfiguration.isLocalStorageEnabled() ?
-                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null
+                        Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
+                requestData.getOptions()
         );
     }
 
@@ -499,7 +500,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         return mSyteService.getOffers(
                 actualUrl,
                 coordinatesBase64,
-                cropEnabled ? Catalog.GENERAL.getName() : null,
+                cropEnabled ? Catalog.GENERAL : null,
                 cropEnabled ? sytePlatformSettings
                         .getData()
                         .getProducts()

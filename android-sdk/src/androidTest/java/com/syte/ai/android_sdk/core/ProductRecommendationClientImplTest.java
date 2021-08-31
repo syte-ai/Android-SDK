@@ -4,7 +4,7 @@ import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
@@ -53,7 +53,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsImageUrlNull() {
         startSessionInternal();
-        SimilarProducts requestData = new SimilarProducts("test", null);
+        SimilarItems requestData = new SimilarItems("test", null);
         SyteResult<SimilarProductsResult> result =
                 mInitSyte.getProductRecommendationClient()
                         .getSimilarProducts(requestData);
@@ -67,7 +67,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsSkuNull() {
         startSessionInternal();
-        SimilarProducts requestData = new SimilarProducts(null, "test");
+        SimilarItems requestData = new SimilarItems(null, "test");
         SyteResult<SimilarProductsResult> result =
                 mInitSyte.getProductRecommendationClient()
                         .getSimilarProducts(requestData);
@@ -81,7 +81,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultLimit() {
         startSessionInternal();
-        SimilarProducts requestData = createSimilarProductsRequestData();
+        SimilarItems requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
 
         SyteResult<SimilarProductsResult> result = getSimilarsInternal(requestData);
@@ -97,7 +97,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultSyteUrlReferer() {
         startSessionInternal();
-        SimilarProducts requestData = createSimilarProductsRequestData();
+        SimilarItems requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
 
@@ -114,7 +114,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultReturnFieldsSku() {
         startSessionInternal();
-        SimilarProducts requestData = createSimilarProductsRequestData();
+        SimilarItems requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
         requestData.setFieldsToReturn(RecommendationReturnField.SKU);
@@ -133,7 +133,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultReturnFieldsImageUrl() {
         startSessionInternal();
-        SimilarProducts requestData = createSimilarProductsRequestData();
+        SimilarItems requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL);
@@ -152,7 +152,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
     @Test
     public void getSimilarProductsWithNonDefaultReturnFieldsImageUrlAndSku() {
         startSessionInternal();
-        SimilarProducts requestData = createSimilarProductsRequestData();
+        SimilarItems requestData = createSimilarProductsRequestData();
         requestData.setLimit(20);
         requestData.setSyteUrlReferer("test");
         requestData.setFieldsToReturn(RecommendationReturnField.IMAGE_URL_AND_SKU);
@@ -215,7 +215,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        SimilarProducts requestData = new SimilarProducts("test", null);
+        SimilarItems requestData = new SimilarItems("test", null);
         client.getSimilarProductsAsync(requestData, new SyteCallback<SimilarProductsResult>() {
             @Override
             public void onResult(SyteResult<SimilarProductsResult> result) {
@@ -236,7 +236,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
-        SimilarProducts requestData = new SimilarProducts(null, "test");
+        SimilarItems requestData = new SimilarItems(null, "test");
         client.getSimilarProductsAsync(requestData, new SyteCallback<SimilarProductsResult>() {
             @Override
             public void onResult(SyteResult<SimilarProductsResult> result) {
@@ -685,8 +685,8 @@ public class ProductRecommendationClientImplTest extends BaseTest {
 
     }
 
-    private SimilarProducts createSimilarProductsRequestData() {
-        return new SimilarProducts(
+    private SimilarItems createSimilarProductsRequestData() {
+        return new SimilarItems(
                 "13705596",
                 "https://cdn-images.farfetch-contents.com/13/70/55/96/13705596_18130188_1000.jpg"
         );
@@ -708,7 +708,7 @@ public class ProductRecommendationClientImplTest extends BaseTest {
         return client.getPersonalizedProducts(requestData == null ? createPersonalizationRequestData() : requestData);
     }
 
-    private SyteResult<SimilarProductsResult> getSimilarsInternal(@Nullable SimilarProducts requestData) {
+    private SyteResult<SimilarProductsResult> getSimilarsInternal(@Nullable SimilarItems requestData) {
         ProductRecommendationClient client = mInitSyte.getProductRecommendationClient();
         return client.getSimilarProducts(requestData == null ? createSimilarProductsRequestData() : requestData);
     }

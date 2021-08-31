@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,8 +65,8 @@ public class SimilarsFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        SimilarProducts similarProducts =
-                new SimilarProducts(
+        SimilarItems similarProducts =
+                new SimilarItems(
                         mSKUEditText.getText().toString(),
                         mImageUrlEditText.getText().toString()
                 );

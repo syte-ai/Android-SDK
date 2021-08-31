@@ -4,6 +4,9 @@ import android.net.Uri;
 
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class that is used to configure the 'wild' image search.
  */
@@ -13,12 +16,30 @@ public class ImageSearch {
     private CropCoordinates mCoordinates;
     private boolean mRetrieveOffersForTheFirstBound = true;
     private boolean mPersonalizedRanking = false;
+    private Map<String, String> mOptions = new HashMap<>();
 
     /**
      * @param imageUri - a path to the image on device.
      */
     public ImageSearch(Uri imageUri) {
         this.mImageUri = imageUri;
+    }
+
+    /**
+     * Add additional query parameters to request.
+     * @param key query name
+     * @param value query value
+     */
+    public void addOption(String key, String value) {
+        mOptions.put(key, value);
+    }
+
+    /**
+     * Get additional query parameters.
+     * @return additional query parameters
+     */
+    public Map<String, String> getOptions() {
+        return mOptions;
     }
 
     /**

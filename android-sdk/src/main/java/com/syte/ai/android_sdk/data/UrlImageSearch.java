@@ -5,6 +5,9 @@ import androidx.annotation.Nullable;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class that is used to configure the Url image search.
  */
@@ -16,6 +19,7 @@ public class UrlImageSearch {
     private boolean mRetrieveOffersForTheFirstBound = true;
     private CropCoordinates mCoordinates;
     private boolean mPersonalizedRanking = false;
+    private Map<String, String> mOptions = new HashMap<>();
 
     /**
      * @param imageUrl - image URL
@@ -24,6 +28,23 @@ public class UrlImageSearch {
     public UrlImageSearch(String imageUrl, SyteProductType productType) {
         this.mImageUrl = imageUrl;
         this.mProductType = productType;
+    }
+
+    /**
+     * Add additional query parameters to request.
+     * @param key query name
+     * @param value query value
+     */
+    public void addOption(String key, String value) {
+        mOptions.put(key, value);
+    }
+
+    /**
+     * Get additional query parameters.
+     * @return additional query parameters
+     */
+    public Map<String, String> getOptions() {
+        return mOptions;
     }
 
     /**

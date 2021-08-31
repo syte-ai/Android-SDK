@@ -2,7 +2,7 @@ package com.syte.ai.android_sdk;
 
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
@@ -16,21 +16,21 @@ public interface ProductRecommendationClient {
     /**
      * Make 'Similars' call
      * Synchronous method. Must NOT be called on the UI thread!
-     * @param similarProducts {@link SimilarProducts}
+     * @param similarProducts {@link SimilarItems}
      * @return {@link SyteResult}
      */
     SyteResult<SimilarProductsResult> getSimilarProducts(
-            SimilarProducts similarProducts
+            SimilarItems similarProducts
     );
 
     /**
      * Make 'Similars' call
-     * Asynchronous equivalent for the {@link #getSimilarProducts(SimilarProducts)} method.
-     * @param similarProducts {@link SimilarProducts}
+     * Asynchronous equivalent for the {@link #getSimilarProducts(SimilarItems)} method.
+     * @param similarProducts {@link SimilarItems}
      * @param callback {@link SyteCallback}
      */
     void getSimilarProductsAsync(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback
     );
 

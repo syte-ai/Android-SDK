@@ -14,11 +14,11 @@ public class EventCameraButtonClick extends BaseSyteEvent{
     private String mPlacement;
 
     public EventCameraButtonClick(
-            Placement placement,
+            String placement,
             String syteUrlReferer
     ) {
         super("fe_camera_button_click", syteUrlReferer, EventsTag.CAMERA);
-        mPlacement = placement.getName();
+        mPlacement = placement;
     }
 
     @Override

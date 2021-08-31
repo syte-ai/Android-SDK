@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
@@ -54,7 +54,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         mSyteService = syteService;
     }
 
-    public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarProducts similarProducts) {
+    public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarItems similarProducts) {
         Response<ResponseBody> result = null;
         try {
             result =
@@ -66,7 +66,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public void getSimilarProductsAsync(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback) {
         generateSimilarsCall(similarProducts).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -271,7 +271,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         return syteResult;
     }
 
-    private Call<ResponseBody> generateSimilarsCall(SimilarProducts similarProducts) {
+    private Call<ResponseBody> generateSimilarsCall(SimilarItems similarProducts) {
         return mSyteService.getSimilars(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
@@ -287,7 +287,8 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                         Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 similarProducts.getLimit(),
                 similarProducts.getSyteUrlReferer(),
-                similarProducts.getImageUrl()
+                similarProducts.getImageUrl(),
+                similarProducts.getOptions()
         );
     }
 
@@ -310,7 +311,8 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 shopTheLook.getLimitPerBound() == -1 ? null :
                         Integer.toString(shopTheLook.getLimitPerBound()),
                 shopTheLook.getSyteOriginalItem(),
-                shopTheLook.getImageUrl()
+                shopTheLook.getImageUrl(),
+                shopTheLook.getOptions()
         );
     }
 
@@ -340,7 +342,8 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RecommendationProduct.PERSONALIZATION.getName(),
                 personalization.getLimit(),
                 personalization.getSyteUrlReferer(),
-                body
+                body,
+                personalization.getOptions()
         );
     }
 

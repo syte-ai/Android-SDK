@@ -246,7 +246,8 @@ class TextSearchRemoteDataSource extends BaseRemoteDataSource {
                 textSearch.getFrom(),
                 textSearch.getSize(),
                 textSearch.getSorting() == TextSearchSorting.DEFAULT ? null :
-                        textSearch.getSorting().getName()
+                        textSearch.getSorting().getName(),
+                textSearch.getOptions()
         );
     }
 

@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.core;
 
+import java.util.Map;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -8,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 public interface SyteService {
@@ -25,7 +28,8 @@ public interface SyteService {
                                  @Query("catalog") String catalog,
                                  @Query("sku") String sku,
                                  @Query("imageUrl") String imageUrl,
-                                 @Query("session_skus") String sessionSkus);
+                                 @Query("session_skus") String sessionSkus,
+                                 @QueryMap Map<String, String> options);
 
     @GET
     Call<ResponseBody> getOffers(
@@ -49,7 +53,8 @@ public interface SyteService {
                                    @Query("session_skus") String sessionSkus,
                                    @Query("limit") int limit,
                                    @Query("syte_url_referer") String syteUrlReferer,
-                                   @Query("imageUrl") String imageUrl);
+                                   @Query("imageUrl") String imageUrl,
+                                   @QueryMap Map<String, String> options);
 
     @GET("v1.1/similars")
     Call<ResponseBody> getShopTheLook(@Query("account_id") String accountId,
@@ -67,7 +72,8 @@ public interface SyteService {
                                       @Query("syte_url_referer") String syteUrlReferer,
                                       @Query("limit_per_bound") String limitPerBound,
                                       @Query("syte_original_item") String originalItem,
-                                      @Query("imageUrl") String imageUrl);
+                                      @Query("imageUrl") String imageUrl,
+                                      @QueryMap Map<String, String> options);
 
     @POST("v1.1/personalization")
     Call<ResponseBody> getPersonalization(@Query("account_id") String accountId,
@@ -79,7 +85,8 @@ public interface SyteService {
                                           @Query("syte_product") String product,
                                           @Query("limit") int limit,
                                           @Query("syte_url_referer") String syteUrlReferer,
-                                          @Body RequestBody body);
+                                          @Body RequestBody body,
+                                          @QueryMap Map<String, String> options);
 
     @GET("search/{accountId}/popularSearches")
     Call<ResponseBody> getPopularSearch(@Path("accountId") String accountId,
@@ -94,7 +101,8 @@ public interface SyteService {
                                      @Query("filters") String filters,
                                      @Query("from") int from,
                                      @Query("size") int size,
-                                     @Query("sorting") String sorting);
+                                     @Query("sorting") String sorting,
+                                     @QueryMap Map<String, String> options);
 
     @GET("search/{accountId}/autocomplete")
     Call<ResponseBody> getAutoComplete(@Path("accountId") String accountId,

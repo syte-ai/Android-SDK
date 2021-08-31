@@ -9,7 +9,7 @@ import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -64,6 +64,7 @@ public class SyteManager {
                 mContext.getResources().getString(R.string.default_sig)
         );
         syteConfiguration.setLocale("en_US");
+//        syteConfiguration.enableLocalStorage(false);
         mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<Boolean>() {
             @Override
             public void onResult(SyteResult<Boolean> syteResult) {
@@ -173,7 +174,7 @@ public class SyteManager {
     }
 
     public void getSimilars(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
         mInitSyte.getProductRecommendationClient().getSimilarProductsAsync(

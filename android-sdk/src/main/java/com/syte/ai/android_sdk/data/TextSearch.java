@@ -3,7 +3,9 @@ package com.syte.ai.android_sdk.data;
 import com.syte.ai.android_sdk.enums.TextSearchSorting;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class that is used to configure the Text search.
@@ -16,6 +18,7 @@ public class TextSearch {
     private int mFrom = 0;
     private int mSize = 20;
     private TextSearchSorting mTextSearchSorting = TextSearchSorting.DEFAULT;
+    private Map<String, String> mOptions = new HashMap<>();
 
     /**
      * @param query text query
@@ -24,6 +27,23 @@ public class TextSearch {
     public TextSearch(String query, String lang) {
         mQuery = query;
         mLang = lang;
+    }
+
+    /**
+     * Add additional query parameters to request.
+     * @param key query name
+     * @param value query value
+     */
+    public void addOption(String key, String value) {
+        mOptions.put(key, value);
+    }
+
+    /**
+     * Get additional query parameters.
+     * @return additional query parameters
+     */
+    public Map<String, String> getOptions() {
+        return mOptions;
     }
 
     /**

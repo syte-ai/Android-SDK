@@ -14,11 +14,11 @@ public class EventDiscoveryButtonClick extends BaseSyteEvent {
     private String mImageSrc;
 
     @SerializedName("placement")
-    private Placement mPlacement;
+    private String mPlacement;
 
     public EventDiscoveryButtonClick(
             String imageSrc,
-            Placement placement,
+            String placement,
             String syteUrlReferer) {
         super("fe_discovery_button_click", syteUrlReferer, EventsTag.DISCOVERY_BUTTON);
         mImageSrc = imageSrc;

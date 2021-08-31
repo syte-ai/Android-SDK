@@ -4,6 +4,8 @@ import com.syte.ai.android_sdk.enums.RecommendationReturnField;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -19,6 +21,7 @@ public class ShopTheLook {
     private int mLimitPerBound = -1;
     private String mSyteOriginalItem = null;
     private RecommendationReturnField mFieldsToReturn = RecommendationReturnField.ALL;
+    private Map<String, String> mOptions = new HashMap<>();
 
     /**
      * @param sku - product ID
@@ -27,6 +30,23 @@ public class ShopTheLook {
     public ShopTheLook(String sku, String imageUrl) {
         this.mSku = sku;
         this.mImageUrl = imageUrl;
+    }
+
+    /**
+     * Add additional query parameters to request.
+     * @param key query name
+     * @param value query value
+     */
+    public void addOption(String key, String value) {
+        mOptions.put(key, value);
+    }
+
+    /**
+     * Get additional query parameters.
+     * @return additional query parameters
+     */
+    public Map<String, String> getOptions() {
+        return mOptions;
     }
 
     /**

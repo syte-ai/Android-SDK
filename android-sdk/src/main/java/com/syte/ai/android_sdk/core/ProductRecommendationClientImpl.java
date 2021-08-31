@@ -6,7 +6,7 @@ import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
@@ -28,7 +28,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
 
     @Override
     public SyteResult<SimilarProductsResult> getSimilarProducts(
-            SimilarProducts similarProducts
+            SimilarItems similarProducts
     ) {
         try {
             InputValidator.validateInput(similarProducts);
@@ -42,7 +42,7 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
 
     @Override
     public void getSimilarProductsAsync(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
         try {
