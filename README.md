@@ -50,13 +50,12 @@ Then use the created instance to set the locale.
         <account_id>,
         <api_signature>
     );
-    syteConfiguration.setLocale("en_US);
+    syteConfiguration.setLocale("en_US");
 
 Then you'll need to create a new instance of InitSyte class and start the session passing the configuration instance:
 
 
-    InitSyte syte = InitSyte.newInstance();
-    syte.startSessionAsync(syteConfiguration, syteResult -> {
+    Syte syte = Syte.initialize(syteConfiguration, syteResult -> {
         // Check the result here and process it.
     });
 
@@ -73,11 +72,7 @@ Search can be performed with an image or image URL.
 
 To use the image Search functionality do the following:
 
-1. Retrieve the Image Search client:
-
-    `ImageSearchClient imageSearchClient = syte.getImageSearchClient();`
-
-2. Create dedicated class instance and pass the required data.
+1. Create dedicated class instance and pass the required data.
 
 For Url image search:
 
@@ -92,24 +87,24 @@ For image search:
         <image Uri>
     );`
 
-3. Retrieve bounds:
+2. Retrieve bounds:
 
 For Url image search:
 
-    `SyteResult<BoundsResult> result = imageSearchClient.getBounds(urlImageSearch);`
+    `SyteResult<BoundsResult> result = syte.getBounds(urlImageSearch);`
     
 For image search:
 
-    `SyteResult<BoundsResult> result = imageSearchClient.getBounds(context, imageSearch);`
+    `SyteResult<BoundsResult> result = syte.getBounds(context, imageSearch);`
 
-4. Retrieve Items for a bound:
+3. Retrieve Items for a bound:
 
-    `SyteResult<ItemsResult> imageSearchClient.getItemsForBound(result.data.getBounds().get(index), null);`
+    `SyteResult<ItemsResult> syte.getItemsForBound(result.data.getBounds().get(index), null);`
 
 You can pass CropCoordinates instance instead of *null* here to enable the crop functionality. Example:
 
     CropCoordinates coordinates = new CropCoordinates(0.2, 0.2, 0.8, 0.8); // The coordinates should be relative ranging from 0.0 to 1.0
-    SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), coordinates);
+    SyteResult<ItemsResult> syte.getItems(result.data.getBounds().get(index), coordinates);
 
 **NOTE**
 Items for the first bound will be retrieved by default.
@@ -119,11 +114,7 @@ To get the items for the first bound use the BoundsResult.getItemsForFirstBound(
 # Product Recommendations
 To use the "Recommendations" functionality, do the following:
 
-1. Retrieve the Recommendations client:
-
-    `ProductRecommendationClient client = syte.getProductRecommendationClient();`
-
-2. Use this client to get results for different features:
+1. Use Syte class instance to get results for different features:
 
 *   `SyteResult<SimilarProductsResult> getSimilarProducts(
         SimilarProducts similarProducts
@@ -135,12 +126,12 @@ To use the "Recommendations" functionality, do the following:
         Personalization personalization
     );`
     
-**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **InitSyte.addViewedItem(String)** method.
+**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **Syte.addViewedItem(String)** method.
 
 # Personalized ranking
 
 Enabling the personalized ranking will attach the list of viewed products to the requests. 
-To add a product to the list of viewed ones use the **InitSyte.addViewedItem(String)** method.
+To add a product to the list of viewed ones use the **Syte.addViewedItem(String)** method.
 To enable this functionality use the **setPersonalizedRanking(true)** method. 
 It is supported in the following classes: **UrlImageSearch, ImageSearch, ShopTheLook, SimilarProducts**.
 Personalized ranking is disabled by default.
@@ -159,16 +150,16 @@ There are 3 main features:
 
 1. Popular Searches. Will retrieve the list of the most popular searches.
 
-    `syte.getTextSearchClient().getPopularSearch("en_US");`
+    `syte.getPopularSearch("en_US");`
 
 2. Text search. Will retrieve the results for the specified query.
 
-    `syte.getTextSearchClient().getTextSearch(TextSearch textSearch);`
+    `syte.getTextSearch(TextSearch textSearch);`
 
     To retrieve a list of recent text searches use syte.getRecentTextSearches() method.
 
 3. Auto-complete. Text auto-completion functionality.
 
-    `syte.getTextSearchClient().getAutoCompleteAsync("query", "en_US", syteResult -> {`
+    `syte.getAutoCompleteAsync("query", "en_US", syteResult -> {`
         `// Process the results here.`
     `});`
