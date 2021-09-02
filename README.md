@@ -160,6 +160,6 @@ There are 3 main features:
 
 3. Auto-complete. Text auto-completion functionality.
 
-    `syte.getAutoCompleteAsync("query", "en_US", syteResult -> {`
+    `syte.getAutoComplete("query", "en_US", syteResult -> {`
         `// Process the results here.`
     `});`
