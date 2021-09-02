@@ -52,7 +52,7 @@ Then use the created instance to set the locale.
     );
     syteConfiguration.setLocale("en_US");
 
-Then you'll need to create a new instance of InitSyte class and start the session passing the configuration instance:
+Then you'll need to initialize Syte class passing the configuration instance and the callback:
 
 
     Syte syte;
