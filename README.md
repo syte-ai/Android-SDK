@@ -55,8 +55,11 @@ Then use the created instance to set the locale.
 Then you'll need to create a new instance of InitSyte class and start the session passing the configuration instance:
 
 
-    Syte syte = Syte.initialize(syteConfiguration, syteResult -> {
-        // Check the result here and process it.
+    Syte syte;
+    Syte.initialize(syteConfiguration, syteResult -> {
+        if (syteResult.isSuccessful) {
+	    syte = syteResult.data;
+	}
     });
 
 Event fires automatically: https://syteapi.com/et?name=syte_init&account_id=[account_id]&session_id=[session_id]&sig=[api_signature]&syte_uuid=[user_id]&build_num=&lang=&tags=android_sdk&syte_url_referer=[app_name]
