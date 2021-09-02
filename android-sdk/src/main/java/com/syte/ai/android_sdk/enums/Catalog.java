@@ -3,8 +3,19 @@ package com.syte.ai.android_sdk.enums;
 /**
  * Default Syte product catalogs.
  */
-public class Catalog {
-    public static final String GENERAL = "general";
-    public static final String HOME = "home";
-    public static final String FASHION = "fashion";
+public enum Catalog {
+    GENERAL("general"),
+    HOME("home"),
+    FASHION("fashion");
+
+    private final String mName;
+
+    Catalog(String name) {
+        mName = name;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
 }

@@ -3,12 +3,15 @@ package com.syte.ai.android_sdk.events;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time discovery button becomes visible to a user / enters user viewport.
  */
 public class EventDiscoveryButtonImpression extends BaseSyteEvent {
 
-    public EventDiscoveryButtonImpression(String syteUrlReferer) {
-        super("fe_discovery_button_impression", syteUrlReferer, EventsTag.DISCOVERY_BUTTON);
+    /**
+     * @param pageName unique page name given by the app developer
+     */
+    public EventDiscoveryButtonImpression(String pageName) {
+        super("fe_discovery_button_impression", pageName, EventsTag.DISCOVERY_BUTTON);
     }
 
     @Override

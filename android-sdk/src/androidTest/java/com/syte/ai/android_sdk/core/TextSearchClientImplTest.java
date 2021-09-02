@@ -22,21 +22,12 @@ public class TextSearchClientImplTest extends BaseTest {
     }
 
     @Test
-    public void testGetPopularSearchDeletedOnEndSession() throws InterruptedException {
-        startSessionInternal();
-        Thread.sleep(1000);
-        assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-        mInitSyte.endSession();
-        assertEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-    }
-
-    @Test
     public void getPopularSearchAsync() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         startSessionInternal();
         Thread.sleep(1000);
         assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-        mInitSyte.getTextSearchClient().getPopularSearchAsync("en_US", syteResult -> {
+        mSyte.getPopularSearchAsync("en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertNull(syteResult.errorMessage);
             assertNotNull(syteResult.data);
@@ -50,7 +41,7 @@ public class TextSearchClientImplTest extends BaseTest {
         startSessionInternal();
         Thread.sleep(1000);
         assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-        SyteResult<List<String>> syteResult = mInitSyte.getTextSearchClient().getPopularSearch("en_US");
+        SyteResult<List<String>> syteResult = mSyte.getPopularSearch("en_US");
         assertTrue(syteResult.isSuccessful);
         assertNull(syteResult.errorMessage);
         assertNotNull(syteResult.data);
@@ -61,36 +52,33 @@ public class TextSearchClientImplTest extends BaseTest {
         startSessionInternal();
         Thread.sleep(1000);
         assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-        SyteResult<List<String>> syteResult = mInitSyte.getTextSearchClient().getPopularSearch("some_lang");
+        SyteResult<List<String>> syteResult = mSyte.getPopularSearch("some_lang");
         assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
         assertEquals(mConfiguration.getStorage().getPopularSearch("some_lang"), "");
         assertTrue(syteResult.isSuccessful);
         assertNull(syteResult.errorMessage);
         assertNotNull(syteResult.data);
-        mInitSyte.endSession();
-        assertEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-        assertEquals(mConfiguration.getStorage().getPopularSearch("some_lang"), "");
     }
 
     @Test
     public void getTextSearch() {
         startSessionInternal();
         SyteResult<TextSearchResult> syteResult
-                = mInitSyte.getTextSearchClient().getTextSearch(generateTextSearchRequestData());
+                = mSyte.getTextSearch(generateTextSearchRequestData());
         assertTrue(syteResult.isSuccessful);
         assertEquals(syteResult.resultCode, 200);
         assertNull(syteResult.errorMessage);
         assertNotNull(syteResult.data);
         assertNotEquals(syteResult.data.getResult().getExactCount(), 0);
         assertNotNull(syteResult.data.getResult().getHits().get(0).getOriginalData());
-        assertFalse(mInitSyte.getRecentTextSearches().isEmpty());
+        assertFalse(mSyte.getRecentTextSearches().isEmpty());
     }
 
     @Test
     public void getTextSearchNullQuery() {
         startSessionInternal();
         SyteResult<TextSearchResult> syteResult
-                = mInitSyte.getTextSearchClient().getTextSearch(new TextSearch(null, "lang"));
+                = mSyte.getTextSearch(new TextSearch(null, "lang"));
         assertFalse(syteResult.isSuccessful);
         assertEquals(syteResult.resultCode, -1);
         assertNotNull(syteResult.errorMessage);
@@ -99,7 +87,7 @@ public class TextSearchClientImplTest extends BaseTest {
     @Test
     public void getTextSearchAsync() {
         startSessionInternal();
-        mInitSyte.getTextSearchClient().getTextSearchAsync(generateTextSearchRequestData(), syteResult -> {
+        mSyte.getTextSearchAsync(generateTextSearchRequestData(), syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
@@ -113,14 +101,14 @@ public class TextSearchClientImplTest extends BaseTest {
     public void getAutoCompleteAsync() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         startSessionInternal();
-        mInitSyte.getTextSearchClient().getAutoCompleteAsync("a", "en_US", syteResult -> {
+        mSyte.getAutoComplete("a", "en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
             assertNotNull(syteResult.data);
             countDownLatch.countDown();
         });
-        mInitSyte.getTextSearchClient().getAutoCompleteAsync("a", "en_US", syteResult -> {
+        mSyte.getAutoComplete("a", "en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
@@ -135,15 +123,15 @@ public class TextSearchClientImplTest extends BaseTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         startSessionInternal();
         mConfiguration.setAllowAutoCompletionQueue(false);
-        mInitSyte.setConfiguration(mConfiguration);
-        mInitSyte.getTextSearchClient().getAutoCompleteAsync("a", "en_US", syteResult -> {
+        mSyte.setConfiguration(mConfiguration);
+        mSyte.getAutoComplete("a", "en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
             assertNotNull(syteResult.data);
             countDownLatch.countDown();
         });
-        mInitSyte.getTextSearchClient().getAutoCompleteAsync("a", "en_US", syteResult -> {
+        mSyte.getAutoComplete("a", "en_US", syteResult -> {
             fail("Should not be called");
         });
         countDownLatch.await();

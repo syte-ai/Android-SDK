@@ -2,6 +2,7 @@ package com.syte.ai.android_sdk.data;
 
 import androidx.annotation.Nullable;
 
+import com.syte.ai.android_sdk.core.Syte;
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 /**
  * Class that is used to configure the Personalization requests.
- * NOTE: you MUST add at least one viewed product in {@link com.syte.ai.android_sdk.core.InitSyte#addViewedItem(String)}
+ * NOTE: you MUST add at least one viewed product in {@link Syte#addViewedItem(String)}
  * for the Personalization functionality to work.
  */
 public class Personalization {
@@ -103,7 +104,7 @@ public class Personalization {
      * Set current product id to get results for.
      * This method should only be called in the situation when the
      * local storage usage is disabled. ({@link com.syte.ai.android_sdk.core.SyteConfiguration#enableLocalStorage(boolean)})
-     * Otherwise, please, use the {@link com.syte.ai.android_sdk.core.InitSyte#addViewedItem(String)} method to add product IDs
+     * Otherwise, please, use the {@link Syte#addViewedItem(String)} method to add product IDs
      * (They will be used for the personalization calls.)
      * @param sku - product id
      */

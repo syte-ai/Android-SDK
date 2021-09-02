@@ -34,6 +34,13 @@ abstract class BaseRemoteDataSource {
         return syteResult;
     }
 
+    protected  <T> SyteResult<T> handleEmptyBody(Response<ResponseBody> result, String customError) throws IOException {
+        SyteResult<T> syteResult = new SyteResult<>();
+        syteResult.errorMessage = customError;
+        syteResult.resultCode = result.code();
+        return syteResult;
+    }
+
     protected <T> SyteResult<T> handleOnFailure(Throwable t) {
         SyteResult<T> syteResult = new SyteResult<>();
         syteResult.errorMessage = t.getMessage();

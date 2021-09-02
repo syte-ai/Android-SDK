@@ -44,6 +44,8 @@ public class SyteConfiguration {
 
     /**
      * Method to set locale. Will be used in requests.
+     * A locale with an underscore must be used.
+     * Example: "en_US"
      * @param locale locale to use
      */
     public void setLocale(String locale) {

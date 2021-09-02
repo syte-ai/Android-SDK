@@ -6,18 +6,22 @@ import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a user opens a new page (on the web) or visit an app screen on mobile apps
  */
 public class EventPageView extends BaseSyteEvent {
 
     @SerializedName("sku")
     private final String mSKU;
 
+    /**
+     * @param SKU product ID
+     * @param pageName unique page name given by the app developer
+     */
     public EventPageView(
             String SKU,
-            String syteUrlReferer
+            String pageName
     ) {
-        super("fe_page_view", syteUrlReferer, EventsTag.ECOMMERCE);
+        super("fe_page_view", pageName, EventsTag.ECOMMERCE);
         mSKU = SKU;
     }
 

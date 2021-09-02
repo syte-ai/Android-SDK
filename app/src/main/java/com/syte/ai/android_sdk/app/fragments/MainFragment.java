@@ -14,10 +14,9 @@ import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.app.Navigator;
 import com.syte.ai.android_sdk.app.R;
 import com.syte.ai.android_sdk.app.common.BaseFragment;
-import com.syte.ai.android_sdk.core.InitSyte;
+import com.syte.ai.android_sdk.core.Syte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.enums.Placement;
@@ -143,134 +142,133 @@ public class MainFragment extends BaseFragment {
         mFireEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitSyte initSyte = InitSyte.newInstance();
                 try {
-                    initSyte.startSessionAsync(new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3"), new SyteCallback<Boolean>() {
-                        @Override
-                        public void onResult(SyteResult<Boolean> syteResult) {
-                            initSyte.fireEvent(
-                                    new EventCheckoutStart(
-                                            2,
-                                            "UAH",
-                                            Arrays.asList(new Product("test", 2, 2)),
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventBBClick(
-                                            "url",
-                                            "category",
-                                            "gender",
-                                            Catalog.GENERAL,
-                                            "sdk-test")
-                            );
-                            initSyte.fireEvent(
-                                    new EventBBShowLayout(
-                                            "url",
-                                            2,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventBBShowResults(
-                                            "url",
-                                            "category",
-                                            3,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventCameraButtonClick(
-                                            Placement.DEFAULT,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventCameraButtonImpression(
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventCheckoutComplete(
-                                            "1",
-                                            2,
-                                            "USD",
-                                            Arrays.asList(new Product("test", 2, 2)),
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventDiscoveryButtonClick(
-                                            "src",
-                                            Placement.DEFAULT,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventDiscoveryButtonImpression(
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventOfferClick(
-                                            "sku",
-                                            123,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventPageView(
-                                            "sku",
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventProductsAddedToCart(
-                                            Arrays.asList(new Product("test", 2, 2)),
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventShopTheLookOfferClick(
-                                            "sku",
-                                            123,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventShopTheLookShowLayout(
-                                            3,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventSimilarItemsOfferClick(
-                                            "sku",
-                                            1,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(
-                                    new EventSimilarItemsShowLayout(
-                                            2,
-                                            "sdk-test"
-                                    )
-                            );
-                            initSyte.fireEvent(new BaseSyteEvent("custom_event", "sdk-test", EventsTag.SYTE_ANDROID_SDK) {
-                                @Override
-                                public String getRequestBodyString() {
-                                    return null;
-                                }
-                            });
-                            initSyte.fireEvent(
-                                    new EventTextShowResults(
-                                            "text",
-                                            TextSearchEventType.POPULAR_SEARCH,
-                                            10,
-                                            "sdk-test")
-                            );
+                    SyteConfiguration configuration = new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3");
+//                    configuration.enableLocalStorage(false);
+                    Syte.initialize(configuration, syteResult -> {
+                        Syte syte = syteResult.data;
+                        syte.fireEvent(
+                                new EventCheckoutStart(
+                                        2,
+                                        "UAH",
+                                        Arrays.asList(new Product("test", 2, 2)),
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventBBClick(
+                                        "url",
+                                        "category",
+                                        "gender",
+                                        Catalog.GENERAL.getName(),
+                                        "sdk-test")
+                        );
+                        syte.fireEvent(
+                                new EventBBShowLayout(
+                                        "url",
+                                        2,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventBBShowResults(
+                                        "url",
+                                        "category",
+                                        3,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventCameraButtonClick(
+                                        Placement.DEFAULT,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventCameraButtonImpression(
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventCheckoutComplete(
+                                        "1",
+                                        2,
+                                        "USD",
+                                        Arrays.asList(new Product("test", 2, 2)),
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventDiscoveryButtonClick(
+                                        "src",
+                                        Placement.DEFAULT,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventDiscoveryButtonImpression(
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventOfferClick(
+                                        "sku",
+                                        123,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventPageView(
+                                        "sku",
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventProductsAddedToCart(
+                                        Arrays.asList(new Product("test", 2, 2)),
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventShopTheLookOfferClick(
+                                        "sku",
+                                        123,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventShopTheLookShowLayout(
+                                        3,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventSimilarItemsOfferClick(
+                                        "sku",
+                                        1,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(
+                                new EventSimilarItemsShowLayout(
+                                        2,
+                                        "sdk-test"
+                                )
+                        );
+                        syte.fireEvent(new BaseSyteEvent("custom_event", "sdk-test", EventsTag.SYTE_ANDROID_SDK) {
+                            @Override
+                            public String getRequestBodyString() {
+                                return null;
+                            }
+                        });
+                        syte.fireEvent(
+                                new EventTextShowResults(
+                                        "text",
+                                        TextSearchEventType.POPULAR_SEARCH,
+                                        10,
+                                        "sdk-test")
+                        );
 
-                        }
                     });
                 } catch (SyteInitializationException syteInitializationException) {
                     syteInitializationException.printStackTrace();

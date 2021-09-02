@@ -5,17 +5,21 @@ import com.google.gson.annotations.SerializedName;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a similar items carousel is visible
  */
 public class EventSimilarItemsShowLayout extends BaseSyteEvent {
 
     @SerializedName("results_count")
     private final int mResultsCount;
 
+    /**
+     * @param resultsCount The number of displayed results
+     * @param pageName unique page name given by the app developer
+     */
     public EventSimilarItemsShowLayout(
             int resultsCount,
-            String syteUrlReferer) {
-        super("fe_si_show_layout", syteUrlReferer, EventsTag.SIMILAR_ITEMS);
+            String pageName) {
+        super("fe_si_show_layout", pageName, EventsTag.SIMILAR_ITEMS);
         mResultsCount = resultsCount;
     }
 

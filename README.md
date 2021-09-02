@@ -55,8 +55,8 @@ Then use the created instance to set the locale.
 Then you'll need to create a new instance of InitSyte class and start the session passing the configuration instance:
 
 
-    InitSyte initSyte = InitSyte.newInstance();
-    initSyte.startSessionAsync(syteConfiguration, syteResult -> {
+    InitSyte syte = InitSyte.newInstance();
+    syte.startSessionAsync(syteConfiguration, syteResult -> {
         // Check the result here and process it.
     });
 
@@ -64,7 +64,7 @@ Event fires automatically: https://syteapi.com/et?name=syte_init&account_id=[acc
  
 API used: https://cdn.syteapi.com/accounts/[account_id]
 
-To retrieve the instance of SytePlatformSettings use the initSyte.getSytePlatformSettings() method.
+To retrieve the instance of SytePlatformSettings use the syte.getSytePlatformSettings() method.
 
 ## Image Search
 
@@ -75,7 +75,7 @@ To use the image Search functionality do the following:
 
 1. Retrieve the Image Search client:
 
-    `ImageSearchClient imageSearchClient = initSyte.getImageSearchClient();`
+    `ImageSearchClient imageSearchClient = syte.getImageSearchClient();`
 
 2. Create dedicated class instance and pass the required data.
 
@@ -121,7 +121,7 @@ To use the "Recommendations" functionality, do the following:
 
 1. Retrieve the Recommendations client:
 
-    `ProductRecommendationClient client = initSyte.getProductRecommendationClient();`
+    `ProductRecommendationClient client = syte.getProductRecommendationClient();`
 
 2. Use this client to get results for different features:
 
@@ -149,7 +149,7 @@ Personalized ranking is disabled by default.
 
 The SDK can be used to fire various events to Syte. Example:
 
-    initSyte.fireEvent(new EventCheckoutStart());
+    syte.fireEvent(new EventCheckoutStart());
 
 # Text Search
 
@@ -159,16 +159,16 @@ There are 3 main features:
 
 1. Popular Searches. Will retrieve the list of the most popular searches.
 
-    `initSyte.getTextSearchClient().getPopularSearch("en_US");`
+    `syte.getTextSearchClient().getPopularSearch("en_US");`
 
 2. Text search. Will retrieve the results for the specified query.
 
-    `initSyte.getTextSearchClient().getTextSearch(TextSearch textSearch);`
+    `syte.getTextSearchClient().getTextSearch(TextSearch textSearch);`
 
-    To retrieve a list of recent text searches use initSyte.getRecentTextSearches() method.
+    To retrieve a list of recent text searches use syte.getRecentTextSearches() method.
 
 3. Auto-complete. Text auto-completion functionality.
 
-    `initSyte.getTextSearchClient().getAutoCompleteAsync("query", "en_US", syteResult -> {`
+    `syte.getTextSearchClient().getAutoCompleteAsync("query", "en_US", syteResult -> {`
         `// Process the results here.`
     `});`

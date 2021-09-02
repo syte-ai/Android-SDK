@@ -216,7 +216,7 @@ class TextSearchRemoteDataSource extends BaseRemoteDataSource {
             Response<ResponseBody> result
     ) throws IOException, JSONException {
         if (result.body() == null) {
-            return handleEmptyBody(result);
+            return handleEmptyBody(result, "Sorry! There are no results for the requests.");
         }
 
         String responseString = result.body().string();

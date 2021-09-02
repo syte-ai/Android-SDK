@@ -7,7 +7,7 @@ import com.syte.ai.android_sdk.enums.EventsTag;
 import java.util.List;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a user starts a checkout process
  */
 public class EventCheckoutStart extends BaseSyteEvent {
 
@@ -20,14 +20,20 @@ public class EventCheckoutStart extends BaseSyteEvent {
     @SerializedName("currency")
     private final String mCurrency;
 
+    /**
+     * @param price total cost of a cart for checkout including delivery fee
+     * @param currency currency of checkout
+     * @param productList array of product objects
+     * @param pageName unique page name given by the app developer
+     */
     public EventCheckoutStart(
-            double value,
+            double price,
             String currency,
             List<Product> productList,
-            String syteUrlReferer) {
-        super("checkout_start", syteUrlReferer, EventsTag.ECOMMERCE);
+            String pageName) {
+        super("checkout_start", pageName, EventsTag.ECOMMERCE);
         mProducts = productList;
-        mValue = value;
+        mValue = price;
         mCurrency = currency;
     }
 

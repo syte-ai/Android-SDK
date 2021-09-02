@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,10 @@ public class ImageSearch {
      */
     public ImageSearch(Uri imageUri) {
         this.mImageUri = imageUri;
+    }
+
+    public ImageSearch(File file) {
+        this(Uri.fromFile(file));
     }
 
     /**

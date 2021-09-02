@@ -8,18 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a user adds a products to cart
  */
 public class EventProductsAddedToCart extends BaseSyteEvent {
 
     @SerializedName("products")
     private final List<Product> mProducts;
 
+    /**
+     * @param productList list of {@link Product}
+     * @param pageName unique page name given by the app developer
+     */
     public EventProductsAddedToCart(
             List<Product> productList,
-            String syteUrlReferer
+            String pageName
     ) {
-        super("products_added_to_cart", syteUrlReferer, EventsTag.ECOMMERCE);
+        super("products_added_to_cart", pageName, EventsTag.ECOMMERCE);
         mProducts = productList;
     }
 

@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.ImageSearch;
@@ -114,8 +113,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     public void getOffers() {
         startSessionInternal();
         SyteResult<BoundsResult> boundsResult = getBoundsInternal(null);
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
-        SyteResult<ItemsResult> offersResult = client.getItemsForBound(boundsResult.data.getBounds().get(1), null);
+        SyteResult<ItemsResult> offersResult = mSyte.getItemsForBound(boundsResult.data.getBounds().get(1), null);
         assertNotNull(offersResult);
         assertNotNull(offersResult.data);
         assertEquals(offersResult.resultCode, 200);
@@ -126,8 +124,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getOffersBoundNull() {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
-        SyteResult<ItemsResult> offersResult = client.getItemsForBound(null, null);
+        SyteResult<ItemsResult> offersResult = mSyte.getItemsForBound(null, null);
         assertNotNull(offersResult);
         assertNotNull(offersResult.errorMessage);
         assertNull(offersResult.data);
@@ -139,7 +136,6 @@ public class ImageSearchClientImplTest extends BaseTest {
     public void getOffersWithCrop() {
         startSessionInternal();
         SyteResult<BoundsResult> boundsResult = getBoundsInternal(null);
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
 
         CropCoordinates coordinates = new CropCoordinates(
                 0,
@@ -148,7 +144,7 @@ public class ImageSearchClientImplTest extends BaseTest {
                 1
         );
 
-        SyteResult<ItemsResult> offersResult = client.getItemsForBound(boundsResult.data.getBounds().get(1), coordinates);
+        SyteResult<ItemsResult> offersResult = mSyte.getItemsForBound(boundsResult.data.getBounds().get(1), coordinates);
         assertNotNull(offersResult);
         assertNotNull(offersResult.data);
         assertEquals(offersResult.resultCode, 200);
@@ -161,8 +157,7 @@ public class ImageSearchClientImplTest extends BaseTest {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
         SyteResult<BoundsResult> boundsResult = getBoundsInternal(null);
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
-        client.getItemsForBoundAsync(boundsResult.data.getBounds().get(1), null, new SyteCallback<ItemsResult>() {
+        mSyte.getItemsForBoundAsync(boundsResult.data.getBounds().get(1), null, new SyteCallback<ItemsResult>() {
             @Override
             public void onResult(SyteResult<ItemsResult> offersResult) {
                 assertNotNull(offersResult);
@@ -181,8 +176,7 @@ public class ImageSearchClientImplTest extends BaseTest {
     public void getOffersAsyncBoundNull() throws InterruptedException {
         startSessionInternal();
         CountDownLatch latch = new CountDownLatch(1);
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
-        client.getItemsForBoundAsync(null, null, new SyteCallback<ItemsResult>() {
+        mSyte.getItemsForBoundAsync(null, null, new SyteCallback<ItemsResult>() {
             @Override
             public void onResult(SyteResult<ItemsResult> offersResult) {
                 assertNotNull(offersResult);
@@ -200,10 +194,9 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsAsync() throws InterruptedException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         CountDownLatch latch = new CountDownLatch(1);
         UrlImageSearch requestData = createUrlImageSearchRequestData();
-        client.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
+        mSyte.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> result) {
                 assertNotNull(result);
@@ -222,10 +215,9 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsAsyncImageUrlNull() throws InterruptedException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         CountDownLatch latch = new CountDownLatch(1);
         UrlImageSearch requestData = new UrlImageSearch(null, SyteProductType.CAMERA);
-        client.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
+        mSyte.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> result) {
                 assertNotNull(result);
@@ -243,10 +235,9 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsAsyncProductTypeNull() throws InterruptedException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         CountDownLatch latch = new CountDownLatch(1);
         UrlImageSearch requestData = new UrlImageSearch("test", null);
-        client.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
+        mSyte.getBoundsAsync(requestData, new SyteCallback<BoundsResult>() {
             @Override
             public void onResult(SyteResult<BoundsResult> result) {
                 assertNotNull(result);
@@ -264,7 +255,6 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWildAsync() throws InterruptedException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         CountDownLatch latch = new CountDownLatch(1);
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         Uri uri = new Uri.Builder()
@@ -274,7 +264,7 @@ public class ImageSearchClientImplTest extends BaseTest {
                 .appendPath(resources.getResourceEntryName(com.syte.ai.android_sdk.test.R.raw.test))
                 .build();
         ImageSearch requestData = new ImageSearch(uri);
-        client.getBoundsAsync(
+        mSyte.getBoundsAsync(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData,
                 syteResult -> {
@@ -293,10 +283,9 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWildAsyncImageUriNull() throws InterruptedException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         CountDownLatch latch = new CountDownLatch(1);
-        ImageSearch requestData = new ImageSearch(null);
-        client.getBoundsAsync(
+        ImageSearch requestData = new ImageSearch((Uri) null);
+        mSyte.getBoundsAsync(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData,
                 result -> {
@@ -314,7 +303,6 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWild() {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         Uri uri = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
@@ -323,7 +311,7 @@ public class ImageSearchClientImplTest extends BaseTest {
                 .appendPath(resources.getResourceEntryName(com.syte.ai.android_sdk.test.R.raw.test))
                 .build();
         ImageSearch requestData = new ImageSearch(uri);
-        SyteResult<BoundsResult> syteResult = client.getBounds(
+        SyteResult<BoundsResult> syteResult = mSyte.getBounds(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData
         );
@@ -338,9 +326,8 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWildImageUriNull() {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
-        ImageSearch requestData = new ImageSearch(null);
-        SyteResult<BoundsResult> result = client.getBounds(
+        ImageSearch requestData = new ImageSearch((Uri) null);
+        SyteResult<BoundsResult> result = mSyte.getBounds(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData
         );
@@ -354,7 +341,6 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWildPng() {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         Uri uri = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
@@ -363,7 +349,7 @@ public class ImageSearchClientImplTest extends BaseTest {
                 .appendPath(resources.getResourceEntryName(com.syte.ai.android_sdk.test.R.raw.test3))
                 .build();
         ImageSearch requestData = new ImageSearch(uri);
-        SyteResult<BoundsResult> syteResult = client.getBounds(
+        SyteResult<BoundsResult> syteResult = mSyte.getBounds(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData
         );
@@ -378,7 +364,6 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWildWebp() {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         Uri uri = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
@@ -387,7 +372,7 @@ public class ImageSearchClientImplTest extends BaseTest {
                 .appendPath(resources.getResourceEntryName(com.syte.ai.android_sdk.test.R.raw.test4))
                 .build();
         ImageSearch requestData = new ImageSearch(uri);
-        SyteResult<BoundsResult> syteResult = client.getBounds(
+        SyteResult<BoundsResult> syteResult = mSyte.getBounds(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData
         );
@@ -402,7 +387,6 @@ public class ImageSearchClientImplTest extends BaseTest {
     @Test
     public void getBoundsWildRotationTagPresent() throws SyteGeneralException, IOException {
         startSessionInternal();
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
         Uri uri = new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
@@ -411,7 +395,7 @@ public class ImageSearchClientImplTest extends BaseTest {
                 .appendPath(resources.getResourceEntryName(com.syte.ai.android_sdk.test.R.raw.test_rotation))
                 .build();
         ImageSearch requestData = new ImageSearch(uri);
-        SyteResult<BoundsResult> syteResult = client.getBounds(
+        SyteResult<BoundsResult> syteResult = mSyte.getBounds(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 requestData
         );
@@ -424,9 +408,8 @@ public class ImageSearchClientImplTest extends BaseTest {
     }
 
     private SyteResult<BoundsResult> getBoundsInternal(@Nullable UrlImageSearch urlImageSearch) {
-        ImageSearchClient client = mInitSyte.getImageSearchClient();
         UrlImageSearch requestData = urlImageSearch == null ? createUrlImageSearchRequestData() : urlImageSearch;
-        return client.getBounds(requestData);
+        return mSyte.getBounds(requestData);
     }
 
 }

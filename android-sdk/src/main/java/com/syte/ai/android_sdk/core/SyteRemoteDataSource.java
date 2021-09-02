@@ -500,7 +500,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         return mSyteService.getOffers(
                 actualUrl,
                 coordinatesBase64,
-                cropEnabled ? Catalog.GENERAL : null,
+                cropEnabled ? Catalog.GENERAL.getName() : null,
                 cropEnabled ? sytePlatformSettings
                         .getData()
                         .getProducts()
