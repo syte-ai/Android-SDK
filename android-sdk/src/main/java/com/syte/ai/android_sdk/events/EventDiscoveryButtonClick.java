@@ -6,7 +6,7 @@ import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.enums.Placement;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a user clicks on discovery button
  */
 public class EventDiscoveryButtonClick extends BaseSyteEvent {
 
@@ -14,13 +14,18 @@ public class EventDiscoveryButtonClick extends BaseSyteEvent {
     private String mImageSrc;
 
     @SerializedName("placement")
-    private Placement mPlacement;
+    private String mPlacement;
 
+    /**
+     * @param imageSrc the path to the image that discovery button refers to
+     * @param placement see {@link Placement}
+     * @param pageName unique page name given by the app developer
+     */
     public EventDiscoveryButtonClick(
             String imageSrc,
-            Placement placement,
-            String syteUrlReferer) {
-        super("fe_discovery_button_click", syteUrlReferer, EventsTag.DISCOVERY_BUTTON);
+            String placement,
+            String pageName) {
+        super("fe_discovery_button_click", pageName, EventsTag.DISCOVERY_BUTTON);
         mImageSrc = imageSrc;
         mPlacement = placement;
     }

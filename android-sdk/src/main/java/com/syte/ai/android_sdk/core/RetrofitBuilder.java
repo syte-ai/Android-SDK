@@ -29,7 +29,7 @@ class RetrofitBuilder {
                     public Response intercept(@NotNull Chain chain) throws IOException {
                         Request originalRequest = chain.request();
                         Request requestWithUserAgent = originalRequest.newBuilder()
-                                .header("User-Agent", "syte_android_sdk")
+                                .header("User-Agent", System.getProperty("http.agent") + " syte_android_sdk")
                                 .build();
                         return chain.proceed(requestWithUserAgent);
                     }

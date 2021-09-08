@@ -34,4 +34,5 @@
     <string name="comma_separated_filters">Comma separated filters</string>
     <string name="query">query</string>
     <string name="text_search">TEXT SEARCH</string>
+    <string name="id_original_data">ID (Original data):</string>
 </resources>

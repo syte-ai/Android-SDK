@@ -41,7 +41,7 @@
     public<methods>;
     public<fields>;
 }
--keep class com.syte.ai.android_sdk.core.InitSyte {
+-keep class com.syte.ai.android_sdk.core.Syte {
     public<methods>;
 }
 -keep class com.syte.ai.android_sdk.core.SyteConfiguration {
@@ -54,4 +54,6 @@
     java.lang.Long getSessionId();
     boolean getAllowAutoCompletionQueue();
     void setAllowAutoCompletionQueue(boolean);
+    void enableLocalStorage(boolean);
+    boolean isLocalStorageEnabled();
 }

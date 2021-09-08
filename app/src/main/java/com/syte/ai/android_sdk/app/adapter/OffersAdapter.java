@@ -91,7 +91,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.ViewHolder
         Picasso.get().load(mData.get(position).getImageUrl()).into(viewHolder.imageView);
         try {
             if (mData.get(position).getOriginalData() != null)
-            viewHolder.originalDataTitle.setText(mData.get(position).getOriginalData().getString("title"));
+            viewHolder.originalDataTitle.setText(mData.get(position).getOriginalData().getString("id"));
         } catch (JSONException e) {}
     }
 

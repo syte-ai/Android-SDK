@@ -2,7 +2,6 @@ package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 
-import com.syte.ai.android_sdk.ImageSearchClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.CropCoordinates;
 import com.syte.ai.android_sdk.data.result.SyteResult;
@@ -14,7 +13,7 @@ import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
 import com.syte.ai.android_sdk.data.result.offers.ItemsResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
-class ImageSearchClientImpl implements ImageSearchClient {
+class ImageSearchClientImpl {
 
     private final SyteRemoteDataSource mSyteRemoteDataSource;
     private final SytePlatformSettings mSytePlatformSettings;
@@ -24,7 +23,6 @@ class ImageSearchClientImpl implements ImageSearchClient {
         mSytePlatformSettings = sytePlatformSettings;
     }
 
-    @Override
     public SyteResult<BoundsResult> getBounds(Context context, ImageSearch imageSearch) {
         try {
             InputValidator.validateInput(imageSearch);
@@ -42,7 +40,6 @@ class ImageSearchClientImpl implements ImageSearchClient {
         );
     }
 
-    @Override
     public SyteResult<BoundsResult> getBounds(UrlImageSearch urlImageSearch) {
         try {
             InputValidator.validateInput(urlImageSearch);
@@ -54,7 +51,6 @@ class ImageSearchClientImpl implements ImageSearchClient {
         return mSyteRemoteDataSource.getBounds(urlImageSearch, mSytePlatformSettings);
     }
 
-    @Override
     public SyteResult<ItemsResult> getItemsForBound(Bound bound, CropCoordinates cropCoordinates) {
         try {
             InputValidator.validateInput(bound);
@@ -66,7 +62,6 @@ class ImageSearchClientImpl implements ImageSearchClient {
         return mSyteRemoteDataSource.getOffers(bound, cropCoordinates, mSytePlatformSettings);
     }
 
-    @Override
     public void getItemsForBoundAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<ItemsResult> callback) {
         try {
             InputValidator.validateInput(bound);
@@ -81,7 +76,6 @@ class ImageSearchClientImpl implements ImageSearchClient {
         mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, mSytePlatformSettings, callback);
     }
 
-    @Override
     public void getBoundsAsync(
             Context context,
             ImageSearch imageSearch,
@@ -101,7 +95,6 @@ class ImageSearchClientImpl implements ImageSearchClient {
         mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearch, mSytePlatformSettings, callback);
     }
 
-    @Override
     public void getBoundsAsync(UrlImageSearch urlImageSearch, SyteCallback<BoundsResult> callback) {
         try {
             InputValidator.validateInput(urlImageSearch);

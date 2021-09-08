@@ -1,20 +1,17 @@
 package com.syte.ai.android_sdk.app;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.TextSearchClient;
-import com.syte.ai.android_sdk.core.InitSyte;
+import com.syte.ai.android_sdk.core.Syte;
 import com.syte.ai.android_sdk.core.SyteConfiguration;
 import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
-import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.auto_complete.AutoCompleteResult;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
@@ -27,13 +24,12 @@ import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 public class SyteManager {
 
-    private final InitSyte mInitSyte = InitSyte.newInstance();
+    private Syte mSyte;
     private final Context mContext;
     private List<Item> mLastRetrievedItemsList;
     private List<Bound> mLastRetrievedBoundsList;
@@ -47,49 +43,44 @@ public class SyteManager {
     }
 
     public void setLocale(String locale) {
-        SyteConfiguration configuration = mInitSyte.getConfiguration();
+        SyteConfiguration configuration = mSyte.getConfiguration();
         configuration.setLocale(locale);
         try {
-            mInitSyte.setConfiguration(configuration);
+            mSyte.setConfiguration(configuration);
         } catch (SyteWrongInputException e) {
             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     public String getLocale() {
-        return mInitSyte.getConfiguration().getLocale();
+        return mSyte.getConfiguration().getLocale();
     }
 
-    public void initialize(SyteCallback<Boolean> callback) {
+    public void initialize(SyteCallback<Syte> callback) {
         SyteConfiguration syteConfiguration = new SyteConfiguration(
                 mContext,
                 mContext.getResources().getString(R.string.default_account_id),
                 mContext.getResources().getString(R.string.default_sig)
         );
         syteConfiguration.setLocale("en_US");
-        mInitSyte.startSessionAsync(syteConfiguration, new SyteCallback<Boolean>() {
-            @Override
-            public void onResult(SyteResult<Boolean> syteResult) {
-                if (!syteResult.isSuccessful) {
-                    showToastError(syteResult.errorMessage);
-                }
-                callback.onResult(syteResult);
+//        syteConfiguration.enableLocalStorage(false);
+        Syte.initialize(syteConfiguration, syteResult -> {
+            if (!syteResult.isSuccessful) {
+                showToastError(syteResult.errorMessage);
             }
+            mSyte = syteResult.data;
+            callback.onResult(syteResult);
         });
     }
 
-    public void uninitialize() {
-        mInitSyte.endSession();
-    }
-
     public Set<String> getViewedProducts() {
-        return mInitSyte.getViewedProducts();
+        return mSyte.getViewedProducts();
     }
 
     public void addViewedProducts(Set<String> viewedProducts) {
         for (String viewedProduct : viewedProducts) {
             try {
-                mInitSyte.addViewedItem(viewedProduct);
+                mSyte.addViewedItem(viewedProduct);
             } catch (SyteWrongInputException e) {}
         }
     }
@@ -114,7 +105,7 @@ public class SyteManager {
             Personalization personalization,
             SyteCallback<PersonalizationResult> callback
     ) {
-        mInitSyte.getProductRecommendationClient().getPersonalizedProductsAsync(
+        mSyte.getPersonalizedProductsAsync(
                 personalization,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
@@ -126,9 +117,9 @@ public class SyteManager {
     }
 
     public void getAutoComplete(String query, SyteCallback<AutoCompleteResult> callback) {
-        mInitSyte.getTextSearchClient().getAutoCompleteAsync(
+        mSyte.getAutoComplete(
                 query,
-                mInitSyte.getConfiguration().getLocale(),
+                mSyte.getConfiguration().getLocale(),
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
                         showToastError(syteResult.errorMessage);
@@ -139,8 +130,8 @@ public class SyteManager {
     }
 
     public void getPopularSearch(SyteCallback<List<String>> callback) {
-        mInitSyte.getTextSearchClient().getPopularSearchAsync(
-                mInitSyte.getConfiguration().getLocale(),
+        mSyte.getPopularSearchAsync(
+                mSyte.getConfiguration().getLocale(),
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
                         showToastError(syteResult.errorMessage);
@@ -150,9 +141,9 @@ public class SyteManager {
     }
 
     public void getTextSearch(String query, SyteCallback<TextSearchResult> callback) {
-        TextSearch textSearch = new TextSearch(query, mInitSyte.getConfiguration().getLocale());
+        TextSearch textSearch = new TextSearch(query, mSyte.getConfiguration().getLocale());
 
-        mInitSyte.getTextSearchClient().getTextSearchAsync(textSearch, syteResult -> {
+        mSyte.getTextSearchAsync(textSearch, syteResult -> {
             if (!syteResult.isSuccessful) {
                 showToastError(syteResult.errorMessage);
             }
@@ -164,7 +155,7 @@ public class SyteManager {
             ShopTheLook shopTheLook,
             SyteCallback<ShopTheLookResult> callback
     ) {
-        mInitSyte.getProductRecommendationClient().getShopTheLookAsync(
+        mSyte.getShopTheLookAsync(
                 shopTheLook,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
@@ -176,10 +167,10 @@ public class SyteManager {
     }
 
     public void getSimilars(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
-        mInitSyte.getProductRecommendationClient().getSimilarProductsAsync(
+        mSyte.getSimilarProductsAsync(
                 similarProducts,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
@@ -194,7 +185,7 @@ public class SyteManager {
             UrlImageSearch requestData,
             SyteCallback<BoundsResult> callback
     ) {
-        mInitSyte.getImageSearchClient().getBoundsAsync(
+        mSyte.getBoundsAsync(
                 requestData,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
@@ -209,7 +200,7 @@ public class SyteManager {
             Bound bound,
             SyteCallback<ItemsResult> callback
     ) {
-        mInitSyte.getImageSearchClient().getItemsForBoundAsync(
+        mSyte.getItemsForBoundAsync(
                 bound,
                 null,
                 syteResult -> {
@@ -225,7 +216,7 @@ public class SyteManager {
             ImageSearch requestData,
             SyteCallback<BoundsResult> callback
     ) {
-        mInitSyte.getImageSearchClient().getBoundsAsync(
+        mSyte.getBoundsAsync(
                 mContext,
                 requestData,
                 syteResult -> {
@@ -246,6 +237,6 @@ public class SyteManager {
     }
 
     public List<String> getSearchHistory() {
-        return mInitSyte.getResentTextSearches();
+        return mSyte.getRecentTextSearches();
     }
 }

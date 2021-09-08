@@ -2,9 +2,11 @@ package com.syte.ai.android_sdk.data;
 
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-public class SimilarProducts {
+public class SimilarItems {
 
     private String mSku;
     private String mImageUrl;
@@ -12,14 +14,32 @@ public class SimilarProducts {
     private String mSyteUrlReferer = "mobile_sdk";
     private int mLimit = 7;
     private RecommendationReturnField mFieldsToReturn = RecommendationReturnField.ALL;
+    private Map<String, String> mOptions = new HashMap<>();
 
     /**
      * @param sku - product ID
      * @param imageUrl - image URL
      */
-    public SimilarProducts(String sku, String imageUrl) {
+    public SimilarItems(String sku, String imageUrl) {
         this.mSku = sku;
         this.mImageUrl = imageUrl;
+    }
+
+    /**
+     * Add additional query parameters to request.
+     * @param key query name
+     * @param value query value
+     */
+    public void addOption(String key, String value) {
+        mOptions.put(key, value);
+    }
+
+    /**
+     * Get additional query parameters.
+     * @return additional query parameters
+     */
+    public Map<String, String> getOptions() {
+        return mOptions;
     }
 
     /**

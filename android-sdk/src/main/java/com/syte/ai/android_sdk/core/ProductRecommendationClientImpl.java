@@ -1,19 +1,18 @@
 package com.syte.ai.android_sdk.core;
 
 
-import com.syte.ai.android_sdk.ProductRecommendationClient;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
 import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
-class ProductRecommendationClientImpl implements ProductRecommendationClient {
+class ProductRecommendationClientImpl {
 
     private final SyteRemoteDataSource mSyteRemoteDataSource;
     private final SytePlatformSettings mSytePlatformSettings;
@@ -26,9 +25,8 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
         mSytePlatformSettings = sytePlatformSettings;
     }
 
-    @Override
     public SyteResult<SimilarProductsResult> getSimilarProducts(
-            SimilarProducts similarProducts
+            SimilarItems similarProducts
     ) {
         try {
             InputValidator.validateInput(similarProducts);
@@ -40,9 +38,8 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
         return mSyteRemoteDataSource.getSimilarProducts(similarProducts);
     }
 
-    @Override
     public void getSimilarProductsAsync(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback
     ) {
         try {
@@ -68,7 +65,6 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
         );
     }
 
-    @Override
     public SyteResult<ShopTheLookResult> getShopTheLook(
             ShopTheLook shopTheLook
     ) {
@@ -82,7 +78,6 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
         return mSyteRemoteDataSource.getShopTheLook(shopTheLook, mSytePlatformSettings);
     }
 
-    @Override
     public void getShopTheLookAsync(
             ShopTheLook shopTheLook,
             SyteCallback<ShopTheLookResult> callback
@@ -111,7 +106,6 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
         );
     }
 
-    @Override
     public SyteResult<PersonalizationResult> getPersonalizedProducts(
             Personalization personalization
     ) {
@@ -125,7 +119,6 @@ class ProductRecommendationClientImpl implements ProductRecommendationClient {
         return mSyteRemoteDataSource.getPersonalization(personalization);
     }
 
-    @Override
     public void getPersonalizedProductsAsync(
             Personalization personalization,
             SyteCallback<PersonalizationResult> callback

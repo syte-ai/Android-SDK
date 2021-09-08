@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.recommendation.PersonalizationResult;
@@ -54,7 +54,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         mSyteService = syteService;
     }
 
-    public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarProducts similarProducts) {
+    public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarItems similarProducts) {
         Response<ResponseBody> result = null;
         try {
             result =
@@ -66,7 +66,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public void getSimilarProductsAsync(
-            SimilarProducts similarProducts,
+            SimilarItems similarProducts,
             SyteCallback<SimilarProductsResult> callback) {
         generateSimilarsCall(similarProducts).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -271,7 +271,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
         return syteResult;
     }
 
-    private Call<ResponseBody> generateSimilarsCall(SimilarProducts similarProducts) {
+    private Call<ResponseBody> generateSimilarsCall(SimilarItems similarProducts) {
         return mSyteService.getSimilars(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
@@ -283,11 +283,12 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 "sku:" + similarProducts.getSku(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
-                similarProducts.getPersonalizedRanking() ?
+                similarProducts.getPersonalizedRanking() && mConfiguration.isLocalStorageEnabled() ?
                         Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 similarProducts.getLimit(),
                 similarProducts.getSyteUrlReferer(),
-                similarProducts.getImageUrl()
+                similarProducts.getImageUrl(),
+                similarProducts.getOptions()
         );
     }
 
@@ -303,27 +304,32 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 "sku:" + shopTheLook.getSku(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
-                shopTheLook.getPersonalizedRanking() ?
+                shopTheLook.getPersonalizedRanking() && mConfiguration.isLocalStorageEnabled() ?
                         Utils.viewedProductsString(mConfiguration.getViewedProducts()) : null,
                 shopTheLook.getLimit(),
                 shopTheLook.getSyteUrlReferer(),
                 shopTheLook.getLimitPerBound() == -1 ? null :
                         Integer.toString(shopTheLook.getLimitPerBound()),
                 shopTheLook.getSyteOriginalItem(),
-                shopTheLook.getImageUrl()
+                shopTheLook.getImageUrl(),
+                shopTheLook.getOptions()
         );
     }
 
     private Call<ResponseBody> generatePersonalizationCall(Personalization personalization) throws SyteWrongInputException {
-        if (Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) == null) {
+        if (Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) == null
+                && Utils.viewedProductsJSONArray(personalization.getSku()) == null) {
             throw new SyteWrongInputException("There are no viewed products added. Can not proceed with the personalization call.");
         }
+        String viewedProducts = Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts());
+        viewedProducts = viewedProducts == null ? Utils.viewedProductsJSONArray(personalization.getSku()) : viewedProducts;
+
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body =
                 RequestBody.create(mediaType,
                         "{\n    " +
                                     "\"user_uuid\": \"" + mConfiguration.getUserId() + "\",\n    " +
-                                    "\"session_skus\": " + Utils.viewedProductsJSONArray(mConfiguration.getViewedProducts()) + ",\n    " +
+                                    "\"session_skus\": " + viewedProducts + ",\n    " +
                                     "\"model_version\": \"" + personalization.getModelVersion() + "\"" +
                                 "\n}");
         return mSyteService.getPersonalization(
@@ -336,7 +342,8 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 RecommendationProduct.PERSONALIZATION.getName(),
                 personalization.getLimit(),
                 personalization.getSyteUrlReferer(),
-                body
+                body,
+                personalization.getOptions()
         );
     }
 

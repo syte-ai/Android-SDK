@@ -50,19 +50,23 @@ Then use the created instance to set the locale.
         <account_id>,
         <api_signature>
     );
-    syteConfiguration.setLocale("en_US);
+    syteConfiguration.setLocale("en_US");
 
-Then you'll need to create a new instance of InitSyte class and start the session passing the configuration instance:
+Then you'll need to initialize Syte class passing the configuration instance and the callback:
 
 
-    InitSyte initSyte = InitSyte.newInstance();
-    initSyte.startSessionAsync(syteConfiguration, syteResult -> {
-        // Check the result here and process it.
+    Syte syte;
+    Syte.initialize(syteConfiguration, syteResult -> {
+        if (syteResult.isSuccessful) {
+            syte = syteResult.data;
+        }
     });
 
 Event fires automatically: https://syteapi.com/et?name=syte_init&account_id=[account_id]&session_id=[session_id]&sig=[api_signature]&syte_uuid=[user_id]&build_num=&lang=&tags=android_sdk&syte_url_referer=[app_name]
  
 API used: https://cdn.syteapi.com/accounts/[account_id]
+
+To retrieve the instance of SytePlatformSettings use the syte.getSytePlatformSettings() method.
 
 ## Image Search
 
@@ -71,11 +75,7 @@ Search can be performed with an image or image URL.
 
 To use the image Search functionality do the following:
 
-1. Retrieve the Image Search client:
-
-    `ImageSearchClient imageSearchClient = initSyte.getImageSearchClient();`
-
-2. Create dedicated class instance and pass the required data.
+1. Create dedicated class instance and pass the required data.
 
 For Url image search:
 
@@ -90,37 +90,34 @@ For image search:
         <image Uri>
     );`
 
-3. Retrieve bounds:
+2. Retrieve bounds:
 
 For Url image search:
 
-    `SyteResult<BoundsResult> result = imageSearchClient.getBounds(urlImageSearch);`
+    `SyteResult<BoundsResult> result = syte.getBounds(urlImageSearch);`
     
 For image search:
 
-    `SyteResult<BoundsResult> result = imageSearchClient.getBounds(context, imageSearch);`
+    `SyteResult<BoundsResult> result = syte.getBounds(context, imageSearch);`
 
-4. Retrieve Items for a bound:
+3. Retrieve Items for a bound:
 
-    `SyteResult<ItemsResult> imageSearchClient.getItemsForBound(result.data.getBounds().get(index), null);`
+    `SyteResult<ItemsResult> syte.getItemsForBound(result.data.getBounds().get(index), null);`
 
 You can pass CropCoordinates instance instead of *null* here to enable the crop functionality. Example:
 
     CropCoordinates coordinates = new CropCoordinates(0.2, 0.2, 0.8, 0.8); // The coordinates should be relative ranging from 0.0 to 1.0
-    SyteResult<ItemsResult> imageSearchClient.getItems(result.data.getBounds().get(index), coordinates);
+    SyteResult<ItemsResult> syte.getItems(result.data.getBounds().get(index), coordinates);
 
 **NOTE**
 Items for the first bound will be retrieved by default.
 Use **urlImageSearch.setRetrieveItemsForTheFirstBound(false)**  or **imageSearch.setRetrieveItemsForTheFirstBound(false)** to disable this behaviour.
+To get the items for the first bound use the BoundsResult.getItemsForFirstBound() method.
 
 # Product Recommendations
 To use the "Recommendations" functionality, do the following:
 
-1. Retrieve the Recommendations client:
-
-    `ProductRecommendationClient client = initSyte.getProductRecommendationClient();`
-
-2. Use this client to get results for different features:
+1. Use Syte class instance to get results for different features:
 
 *   `SyteResult<SimilarProductsResult> getSimilarProducts(
         SimilarProducts similarProducts
@@ -132,12 +129,12 @@ To use the "Recommendations" functionality, do the following:
         Personalization personalization
     );`
     
-**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **InitSyte.addViewedItem(String)** method.
+**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **Syte.addViewedItem(String)** method.
 
 # Personalized ranking
 
 Enabling the personalized ranking will attach the list of viewed products to the requests. 
-To add a product to the list of viewed ones use the **InitSyte.addViewedItem(String)** method.
+To add a product to the list of viewed ones use the **Syte.addViewedItem(String)** method.
 To enable this functionality use the **setPersonalizedRanking(true)** method. 
 It is supported in the following classes: **UrlImageSearch, ImageSearch, ShopTheLook, SimilarProducts**.
 Personalized ranking is disabled by default.
@@ -146,4 +143,26 @@ Personalized ranking is disabled by default.
 
 The SDK can be used to fire various events to Syte. Example:
 
-    initSyte.fireEvent(new EventCheckoutStart());
+    syte.fireEvent(new EventCheckoutStart());
+
+# Text Search
+
+The SDK can be used for the Text Search functionality.
+
+There are 3 main features:
+
+1. Popular Searches. Will retrieve the list of the most popular searches.
+
+    `syte.getPopularSearch("en_US");`
+
+2. Text search. Will retrieve the results for the specified query.
+
+    `syte.getTextSearch(TextSearch textSearch);`
+
+    To retrieve a list of recent text searches use syte.getRecentTextSearches() method.
+
+3. Auto-complete. Text auto-completion functionality.
+
+    `syte.getAutoComplete("query", "en_US", syteResult -> {`
+        `// Process the results here.`
+    `});`

@@ -23,7 +23,7 @@ public class Features{
 	private HistoryRouter historyRouter;
 
 	@SerializedName("shopTheLook")
-	private ShopTheLook shopTheLook;
+	private ShopTheLookSettings shopTheLook;
 
 	@SerializedName("similarItems")
 	private SimilarItems similarItems;
@@ -73,7 +73,7 @@ public class Features{
 		return historyRouter;
 	}
 
-	public ShopTheLook getShopTheLook(){
+	public ShopTheLookSettings getShopTheLook(){
 		return shopTheLook;
 	}
 

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a user clicks on product in Camera results
  */
 public class EventOfferClick extends BaseSyteEvent {
 
@@ -18,11 +18,16 @@ public class EventOfferClick extends BaseSyteEvent {
     @SerializedName("position")
     private final int mPosition;
 
+    /**
+     * @param sku Unique identifier of product sent to Syte before
+     * @param position index of the result in the results list
+     * @param pageName unique page name given by the app developer
+     */
     public EventOfferClick(
             String sku,
             int position,
-            String syteUrlReferer) {
-        super("fe_offer_click", syteUrlReferer, Arrays.asList(EventsTag.DISCOVERY_BUTTON, EventsTag.CAMERA));
+            String pageName) {
+        super("fe_offer_click", pageName, Arrays.asList(EventsTag.DISCOVERY_BUTTON, EventsTag.CAMERA));
         mPosition = position;
         mSku = sku;
     }

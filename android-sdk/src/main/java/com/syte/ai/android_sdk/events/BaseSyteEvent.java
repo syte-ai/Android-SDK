@@ -13,14 +13,14 @@ abstract public class BaseSyteEvent {
 
     protected transient final String mSyteUrlReferer;
     protected transient final String mName;
-    protected transient final List<EventsTag> mEventsTags = new ArrayList<>();
+    protected transient final List<String> mEventsTags = new ArrayList<>();
 
     /**
      * @param name - event name
      * @param syteUrlReferer - Syte URL referer
-     * @param tag - event tag
+     * @param tag - event tag {@link EventsTag}
      */
-    public BaseSyteEvent(String name, String syteUrlReferer, EventsTag tag) {
+    public BaseSyteEvent(String name, String syteUrlReferer, String tag) {
         mName = name;
         mSyteUrlReferer = syteUrlReferer;
         mEventsTags.add(tag);
@@ -31,7 +31,7 @@ abstract public class BaseSyteEvent {
      * @param syteUrlReferer - Syte URL referer
      * @param tags - list of event tags
      */
-    public BaseSyteEvent(String name, String syteUrlReferer, List<EventsTag> tags) {
+    public BaseSyteEvent(String name, String syteUrlReferer, List<String> tags) {
         mName = name;
         mSyteUrlReferer = syteUrlReferer;
         mEventsTags.addAll(tags);
@@ -55,7 +55,7 @@ abstract public class BaseSyteEvent {
      * Getter for list of tags
      * @return list of tags
      */
-    public List<EventsTag> getTags() {
+    public List<String> getTags() {
         return mEventsTags;
     }
 
@@ -65,8 +65,8 @@ abstract public class BaseSyteEvent {
      */
     public String getTagsString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for(EventsTag tag : mEventsTags) {
-            stringBuilder.append(tag.getName());
+        for(String tag : mEventsTags) {
+            stringBuilder.append(tag);
             stringBuilder.append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);

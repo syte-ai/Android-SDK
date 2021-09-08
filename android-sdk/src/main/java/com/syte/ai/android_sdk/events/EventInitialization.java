@@ -3,7 +3,7 @@ package com.syte.ai.android_sdk.events;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
 /**
- * Default Syte event
+ * The event is fired once the session is started
  */
 public class EventInitialization extends BaseSyteEvent {
 

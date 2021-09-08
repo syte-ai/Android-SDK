@@ -1,10 +1,16 @@
 package com.syte.ai.android_sdk.data;
 
+import androidx.annotation.Nullable;
+
+import com.syte.ai.android_sdk.core.Syte;
 import com.syte.ai.android_sdk.enums.RecommendationReturnField;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that is used to configure the Personalization requests.
- * NOTE: you MUST add at least one viewed product in {@link com.syte.ai.android_sdk.core.InitSyte#addViewedItem(String)}
+ * NOTE: you MUST add at least one viewed product in {@link Syte#addViewedItem(String)}
  * for the Personalization functionality to work.
  */
 public class Personalization {
@@ -12,7 +18,9 @@ public class Personalization {
     private String mSyteUrlReferer = "mobile_sdk";
     private int mLimit = 7;
     private String mModelVersion = "A";
+    @Nullable private String mSku = null;
     private RecommendationReturnField mFieldsToReturn = RecommendationReturnField.ALL;
+    private Map<String, String> mOptions = new HashMap<>();
 
     /**
      * Configure what fields must be returned in response. All fields will be returned by default.
@@ -21,6 +29,23 @@ public class Personalization {
      */
     public void setFieldsToReturn(RecommendationReturnField fieldsToReturn) {
         this.mFieldsToReturn = fieldsToReturn;
+    }
+
+    /**
+     * Add additional query parameters to request.
+     * @param key query name
+     * @param value query value
+     */
+    public void addOption(String key, String value) {
+        mOptions.put(key, value);
+    }
+
+    /**
+     * Get additional query parameters.
+     * @return additional query parameters
+     */
+    public Map<String, String> getOptions() {
+        return mOptions;
     }
 
     /**
@@ -73,6 +98,26 @@ public class Personalization {
      */
     public String getModelVersion() {
         return mModelVersion;
+    }
+
+    /**
+     * Set current product id to get results for.
+     * This method should only be called in the situation when the
+     * local storage usage is disabled. ({@link com.syte.ai.android_sdk.core.SyteConfiguration#enableLocalStorage(boolean)})
+     * Otherwise, please, use the {@link Syte#addViewedItem(String)} method to add product IDs
+     * (They will be used for the personalization calls.)
+     * @param sku - product id
+     */
+    public void setSku(String sku) {
+        mSku = sku;
+    }
+
+    /**
+     * Get current product ID.
+     * @return current product ID.
+     */
+    public String getSku() {
+        return mSku;
     }
 
 }

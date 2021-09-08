@@ -5,7 +5,7 @@ import android.content.Context;
 import com.syte.ai.android_sdk.data.ImageSearch;
 import com.syte.ai.android_sdk.data.Personalization;
 import com.syte.ai.android_sdk.data.ShopTheLook;
-import com.syte.ai.android_sdk.data.SimilarProducts;
+import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
@@ -58,7 +58,7 @@ class InputValidator {
         }
     }
 
-    public static void validateInput(SimilarProducts requestData) throws SyteWrongInputException {
+    public static void validateInput(SimilarItems requestData) throws SyteWrongInputException {
         if (requestData == null) {
             throw new SyteWrongInputException("Request data can not be null.");
         }

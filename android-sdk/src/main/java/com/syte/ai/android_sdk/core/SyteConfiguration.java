@@ -2,6 +2,7 @@ package com.syte.ai.android_sdk.core;
 
 import android.content.Context;
 
+import com.syte.ai.android_sdk.SyteCallback;
 import com.syte.ai.android_sdk.core.SyteStorage;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
@@ -23,12 +24,11 @@ public class SyteConfiguration {
     private final String mAccountId;
     private final String mSignature;
 
-    private String mLocale = "en_Us";
-    private String mUserId;
-    private String mSessionId;
+    private String mLocale = "en_US";
 
-    private SyteStorage mStorage;
+    private final SyteStorage mStorage;
     private boolean mAllowAutoCompletionQueue = true;
+    private boolean mLocalStorageEnabled = true;
 
     /**
      *
@@ -40,12 +40,12 @@ public class SyteConfiguration {
         this.mAccountId = accountId;
         this.mSignature = signature;
         this.mStorage = new SyteStorage(context);
-        this.mSessionId = Long.toString(mStorage.getSessionId());
-        this.mUserId = mStorage.getUserId();
     }
 
     /**
      * Method to set locale. Will be used in requests.
+     * A locale with an underscore must be used.
+     * Example: "en_US"
      * @param locale locale to use
      */
     public void setLocale(String locale) {
@@ -81,7 +81,11 @@ public class SyteConfiguration {
      * @return user ID. This value is generated automatically.
      */
     public String getUserId() {
-        return mStorage.getUserId();
+        if (mLocalStorageEnabled) {
+            return mStorage.getUserId();
+        } else {
+            return "OptedOut";
+        }
     }
 
     /**
@@ -89,14 +93,23 @@ public class SyteConfiguration {
      * @return session ID. This value is generated automatically.
      */
     public Long getSessionId() {
-        return mStorage.getSessionId();
+        if (mLocalStorageEnabled) {
+            return mStorage.getSessionId();
+        } else {
+            return 0L;
+        }
     }
 
     void addViewedProduct(String sessionSku) {
-        mStorage.addViewedProduct(sessionSku);
+        if (mLocalStorageEnabled) {
+            mStorage.addViewedProduct(sessionSku);
+        }
     }
 
     Set<String> getViewedProducts() {
+        if (!mLocalStorageEnabled) {
+            return new LinkedHashSet<>();
+        }
         String viewedProductsString = mStorage.getViewedProducts();
         if (viewedProductsString == null || viewedProductsString.isEmpty()) {
             return new LinkedHashSet<>();
@@ -108,12 +121,40 @@ public class SyteConfiguration {
         return mStorage;
     }
 
+    /**
+     * Indicates whether the calls to {@link com.syte.ai.android_sdk.TextSearchClient#getAutoCompleteAsync(String, String, SyteCallback)}
+     * method that are made within 500ms will be saved to queue and invoked.
+     * (Only the last call made within 500ms will be saved).
+     * If false, the calls made within 500ms will be ignored.
+     * @param allowAutoCompletionQueue indicates whether to use the queue
+     */
     public void setAllowAutoCompletionQueue(boolean allowAutoCompletionQueue) {
         mAllowAutoCompletionQueue = allowAutoCompletionQueue;
     }
 
+    /**
+     * Indicates whether the auto-completion queue is allowed
+     * @return is queue allowed.
+     */
     public boolean getAllowAutoCompletionQueue() {
         return mAllowAutoCompletionQueue;
+    }
+
+    /**
+     * Call this method to either enable or disable the usage of the local storage
+     * @param enable whether local storage should be enabled
+     */
+    public void enableLocalStorage(boolean enable) {
+        mLocalStorageEnabled = enable;
+        mStorage.setEnabled(enable);
+    }
+
+    /**
+     * Indicates whether the usage of local storage is enabled.
+     * @return whether local storage is enabled
+     */
+    public boolean isLocalStorageEnabled() {
+        return mLocalStorageEnabled;
     }
 
 }

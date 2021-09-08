@@ -6,7 +6,7 @@ import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a bound selected
  */
 public class EventBBClick extends BaseSyteEvent {
 
@@ -22,15 +22,22 @@ public class EventBBClick extends BaseSyteEvent {
     @SerializedName("catalog")
     private String mCatalog;
 
+    /**
+     * @param imageUrl Url of image used
+     * @param category The bound category as returned in the bounds request
+     * @param gender The bounds gender as returned by Syte
+     * @param catalog The selected bound catalog. See {@link Catalog}
+     * @param pageName unique page name given by the app developer
+     */
     public EventBBClick(
             String imageUrl,
             String category,
             String gender,
-            Catalog catalog,
-            String syteUrlReferer) {
-        super("fe_bb_bb_click", syteUrlReferer, EventsTag.CAMERA);
+            String catalog,
+            String pageName) {
+        super("fe_bb_bb_click", pageName, EventsTag.CAMERA);
         mImageUrl = imageUrl;
-        mCatalog = catalog.getName();
+        mCatalog = catalog;
         mGender = gender;
         mCategory = category;
     }

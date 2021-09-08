@@ -6,19 +6,23 @@ import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.enums.Placement;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time a user clicks on camera button
  */
 public class EventCameraButtonClick extends BaseSyteEvent{
 
     @SerializedName("placement")
     private String mPlacement;
 
+    /**
+     * @param placement see {@link Placement}
+     * @param pageName unique page name given by the app developer
+     */
     public EventCameraButtonClick(
-            Placement placement,
-            String syteUrlReferer
+            String placement,
+            String pageName
     ) {
-        super("fe_camera_button_click", syteUrlReferer, EventsTag.CAMERA);
-        mPlacement = placement.getName();
+        super("fe_camera_button_click", pageName, EventsTag.CAMERA);
+        mPlacement = placement;
     }
 
     @Override

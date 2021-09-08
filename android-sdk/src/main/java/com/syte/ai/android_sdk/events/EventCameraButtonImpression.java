@@ -3,12 +3,15 @@ package com.syte.ai.android_sdk.events;
 import com.syte.ai.android_sdk.enums.EventsTag;
 
 /**
- * Default Syte event
+ * This event should be sent to Syte every time camera button becomes visible to a user / enters user viewport.
  */
 public class EventCameraButtonImpression extends BaseSyteEvent {
 
-    public EventCameraButtonImpression(String syteUrlReferer) {
-        super("fe_camera_button_impression", syteUrlReferer, EventsTag.CAMERA);
+    /**
+     * @param pageName unique page name given by the app developer
+     */
+    public EventCameraButtonImpression(String pageName) {
+        super("fe_camera_button_impression", pageName, EventsTag.CAMERA);
     }
 
     @Override
