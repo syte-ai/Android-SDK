@@ -69,9 +69,7 @@ class TextSearchClientImpl {
         try {
             InputValidator.validateInput(lang);
         } catch (SyteWrongInputException e) {
-            SyteResult<List<String>> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getPopularSearch(lang);
     }
@@ -80,10 +78,8 @@ class TextSearchClientImpl {
         try {
             InputValidator.validateInput(lang);
         } catch (SyteWrongInputException e) {
-            SyteResult<List<String>> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
@@ -99,9 +95,7 @@ class TextSearchClientImpl {
         try {
             InputValidator.validateInput(textSearch);
         } catch (SyteWrongInputException e) {
-            SyteResult<TextSearchResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getTextSearch(textSearch);
     }
@@ -110,10 +104,8 @@ class TextSearchClientImpl {
         try {
             InputValidator.validateInput(textSearch);
         } catch (SyteWrongInputException e) {
-            SyteResult<TextSearchResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
@@ -133,10 +125,8 @@ class TextSearchClientImpl {
             InputValidator.validateInput(query);
             InputValidator.validateInput(lang);
         } catch (SyteWrongInputException e) {
-            SyteResult<AutoCompleteResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }

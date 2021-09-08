@@ -24,4 +24,9 @@ public class SyteResult<T> {
      */
     @Nullable public String errorMessage = null;
 
+    /**
+     * Holds the exception if there is any.
+     */
+    @Nullable public Throwable exception = null;
+
 }

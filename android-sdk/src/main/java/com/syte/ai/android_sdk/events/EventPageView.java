@@ -25,6 +25,14 @@ public class EventPageView extends BaseSyteEvent {
         mSKU = SKU;
     }
 
+    /**
+     * Getter for SKU
+     * @return SKU
+     */
+    public String getSku() {
+        return mSKU;
+    }
+
     @Override
     public String getRequestBodyString() {
         return new Gson().toJson(this, EventPageView.class);

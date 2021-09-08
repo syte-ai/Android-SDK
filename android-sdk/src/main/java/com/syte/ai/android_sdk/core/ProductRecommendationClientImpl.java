@@ -31,9 +31,7 @@ class ProductRecommendationClientImpl {
         try {
             InputValidator.validateInput(similarProducts);
         } catch (SyteWrongInputException e) {
-            SyteResult<SimilarProductsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getSimilarProducts(similarProducts);
     }
@@ -46,9 +44,7 @@ class ProductRecommendationClientImpl {
             InputValidator.validateInput(similarProducts);
         } catch (SyteWrongInputException e) {
             if (callback != null) {
-                SyteResult<SimilarProductsResult> result = new SyteResult<>();
-                result.errorMessage = e.getMessage();
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
@@ -71,9 +67,7 @@ class ProductRecommendationClientImpl {
         try {
             InputValidator.validateInput(shopTheLook);
         } catch (SyteWrongInputException e) {
-            SyteResult<ShopTheLookResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getShopTheLook(shopTheLook, mSytePlatformSettings);
     }
@@ -85,10 +79,8 @@ class ProductRecommendationClientImpl {
         try {
             InputValidator.validateInput(shopTheLook);
         } catch (SyteWrongInputException e) {
-            SyteResult<ShopTheLookResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
@@ -112,9 +104,7 @@ class ProductRecommendationClientImpl {
         try {
             InputValidator.validateInput(personalization);
         } catch (SyteWrongInputException e) {
-            SyteResult<PersonalizationResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getPersonalization(personalization);
     }
@@ -126,10 +116,8 @@ class ProductRecommendationClientImpl {
         try {
             InputValidator.validateInput(personalization);
         } catch (SyteWrongInputException e) {
-            SyteResult<PersonalizationResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }

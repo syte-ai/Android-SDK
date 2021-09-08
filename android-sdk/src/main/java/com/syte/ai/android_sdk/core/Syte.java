@@ -48,6 +48,7 @@ public abstract class Syte {
             SyteResult<Syte> syteResult = new SyteResult<>();
             syteResult.data = null;
             syteResult.errorMessage = e.getMessage();
+            syteResult.exception = e;
             callback.onResult(syteResult);
             return;
         }
@@ -286,4 +287,18 @@ public abstract class Syte {
             SyteCallback<AutoCompleteResult> callback
     );
 
+    /**
+     * Retrieves Auto-complete results. Will use the locale set in {@link SyteConfiguration}.
+     * This method is asynchronous.
+     * There must be at least 500ms interval between calls to this method.
+     * Otherwise there are two options:
+     * 1. If {@link com.syte.ai.android_sdk.core.SyteConfiguration#setAllowAutoCompletionQueue(boolean)}
+     *    is set to true, the last request data will be saved in a queue and the
+     *    request will be fired after 500ms.
+     * 2. If {@link com.syte.ai.android_sdk.core.SyteConfiguration#setAllowAutoCompletionQueue(boolean)}
+     *    is set to false, the calls to this method made within 500ms will be ignored.
+     * @param query text query
+     * @param callback {@link SyteCallback}
+     */
+    public abstract void getAutoComplete(String query, SyteCallback<AutoCompleteResult> callback);
 }

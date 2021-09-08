@@ -70,47 +70,59 @@ public class MainFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mNavigator = new Navigator(getActivity().getSupportFragmentManager());
+        mNavigator = new Navigator(requireActivity().getSupportFragmentManager());
         mUrlSearchButton = view.findViewById(R.id.url_search_btn);
         mUrlSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.urlimageSearchFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.urlimageSearchFragment();
+                }
             }
         });
         mWildSearchButton = view.findViewById(R.id.wild_search_btn);
         mWildSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.wildImageSearchFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.wildImageSearchFragment();
+                }
             }
         });
         mGetSimilarsButton = view.findViewById(R.id.similars);
         mGetSimilarsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.similarsFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.similarsFragment();
+                }
             }
         });
         mGetShopTheLookButton = view.findViewById(R.id.ctl);
         mGetShopTheLookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.shopTheLookFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.shopTheLookFragment();
+                }
             }
         });
         mPersonalizationButton = view.findViewById(R.id.personalization);
         mPersonalizationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.personalizationFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.personalizationFragment();
+                }
             }
         });
         mConfigButton = view.findViewById(R.id.config_btn);
         mConfigButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.configFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.configFragment();
+                }
             }
         });
 
@@ -118,7 +130,9 @@ public class MainFragment extends BaseFragment {
         mAutoCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.autoCompleteFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.autoCompleteFragment();
+                }
             }
         });
 
@@ -126,7 +140,9 @@ public class MainFragment extends BaseFragment {
         mPopularSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.popularSearchFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.popularSearchFragment();
+                }
             }
         });
 
@@ -134,7 +150,9 @@ public class MainFragment extends BaseFragment {
         mTextSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigator.textSearchFragment();
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mNavigator.textSearchFragment();
+                }
             }
         });
 
@@ -142,136 +160,138 @@ public class MainFragment extends BaseFragment {
         mFireEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    SyteConfiguration configuration = new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3");
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    try {
+                        SyteConfiguration configuration = new SyteConfiguration(getActivity(), "9165", "601c206d0a7f780efb9360f3");
 //                    configuration.enableLocalStorage(false);
-                    Syte.initialize(configuration, syteResult -> {
-                        Syte syte = syteResult.data;
-                        syte.fireEvent(
-                                new EventCheckoutStart(
-                                        2,
-                                        "UAH",
-                                        Arrays.asList(new Product("test", 2, 2)),
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventBBClick(
-                                        "url",
-                                        "category",
-                                        "gender",
-                                        Catalog.GENERAL.getName(),
-                                        "sdk-test")
-                        );
-                        syte.fireEvent(
-                                new EventBBShowLayout(
-                                        "url",
-                                        2,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventBBShowResults(
-                                        "url",
-                                        "category",
-                                        3,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventCameraButtonClick(
-                                        Placement.DEFAULT,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventCameraButtonImpression(
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventCheckoutComplete(
-                                        "1",
-                                        2,
-                                        "USD",
-                                        Arrays.asList(new Product("test", 2, 2)),
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventDiscoveryButtonClick(
-                                        "src",
-                                        Placement.DEFAULT,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventDiscoveryButtonImpression(
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventOfferClick(
-                                        "sku",
-                                        123,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventPageView(
-                                        "sku",
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventProductsAddedToCart(
-                                        Arrays.asList(new Product("test", 2, 2)),
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventShopTheLookOfferClick(
-                                        "sku",
-                                        123,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventShopTheLookShowLayout(
-                                        3,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventSimilarItemsOfferClick(
-                                        "sku",
-                                        1,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(
-                                new EventSimilarItemsShowLayout(
-                                        2,
-                                        "sdk-test"
-                                )
-                        );
-                        syte.fireEvent(new BaseSyteEvent("custom_event", "sdk-test", EventsTag.SYTE_ANDROID_SDK) {
-                            @Override
-                            public String getRequestBodyString() {
-                                return null;
-                            }
-                        });
-                        syte.fireEvent(
-                                new EventTextShowResults(
-                                        "text",
-                                        TextSearchEventType.POPULAR_SEARCH,
-                                        10,
-                                        "sdk-test")
-                        );
+                        Syte.initialize(configuration, syteResult -> {
+                            Syte syte = syteResult.data;
+                            syte.fireEvent(
+                                    new EventCheckoutStart(
+                                            2,
+                                            "UAH",
+                                            Arrays.asList(new Product("test", 2, 2)),
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventBBClick(
+                                            "url",
+                                            "category",
+                                            "gender",
+                                            Catalog.GENERAL.getName(),
+                                            "sdk-test")
+                            );
+                            syte.fireEvent(
+                                    new EventBBShowLayout(
+                                            "url",
+                                            2,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventBBShowResults(
+                                            "url",
+                                            "category",
+                                            3,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventCameraButtonClick(
+                                            Placement.DEFAULT,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventCameraButtonImpression(
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventCheckoutComplete(
+                                            "1",
+                                            2,
+                                            "USD",
+                                            Arrays.asList(new Product("test", 2, 2)),
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventDiscoveryButtonClick(
+                                            "src",
+                                            Placement.DEFAULT,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventDiscoveryButtonImpression(
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventOfferClick(
+                                            "sku",
+                                            123,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventPageView(
+                                            "PZZ70556-105",
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventProductsAddedToCart(
+                                            Arrays.asList(new Product("test", 2, 2)),
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventShopTheLookOfferClick(
+                                            "sku",
+                                            123,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventShopTheLookShowLayout(
+                                            3,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventSimilarItemsOfferClick(
+                                            "sku",
+                                            1,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(
+                                    new EventSimilarItemsShowLayout(
+                                            2,
+                                            "sdk-test"
+                                    )
+                            );
+                            syte.fireEvent(new BaseSyteEvent("custom_event", "sdk-test", EventsTag.SYTE_ANDROID_SDK) {
+                                @Override
+                                public String getRequestBodyString() {
+                                    return null;
+                                }
+                            });
+                            syte.fireEvent(
+                                    new EventTextShowResults(
+                                            "text",
+                                            TextSearchEventType.POPULAR_SEARCH,
+                                            10,
+                                            "sdk-test")
+                            );
 
-                    });
-                } catch (SyteInitializationException syteInitializationException) {
-                    syteInitializationException.printStackTrace();
+                        });
+                    } catch (SyteInitializationException syteInitializationException) {
+                        syteInitializationException.printStackTrace();
+                    }
                 }
             }
         });

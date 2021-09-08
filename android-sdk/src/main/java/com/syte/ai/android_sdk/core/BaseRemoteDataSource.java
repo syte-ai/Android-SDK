@@ -44,6 +44,7 @@ abstract class BaseRemoteDataSource {
     protected <T> SyteResult<T> handleOnFailure(Throwable t) {
         SyteResult<T> syteResult = new SyteResult<>();
         syteResult.errorMessage = t.getMessage();
+        syteResult.exception = t;
         return syteResult;
     }
 
@@ -57,6 +58,7 @@ abstract class BaseRemoteDataSource {
             syteResult.resultCode = result.code();
         }
         syteResult.errorMessage = e.getMessage();
+        syteResult.exception = e;
 
         return syteResult;
     }

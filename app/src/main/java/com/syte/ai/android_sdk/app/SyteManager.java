@@ -24,6 +24,7 @@ import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
