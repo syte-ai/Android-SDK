@@ -30,12 +30,19 @@ class EventsRemoteDataSource extends BaseRemoteDataSource {
         RequestBody body = RequestBody.create(
                 mediaType,
                 event.getRequestBodyString() == null? "" : event.getRequestBodyString());
+        Long sessionId = mConfiguration.getSessionId();
+        String stringSessionId = "";
+        if (sessionId == -1L) {
+            stringSessionId = "OptedOut";
+        } else {
+            stringSessionId = Long.toString(sessionId);
+        }
         mService.fireEvent(
                 event.getTagsString(),
                 event.getName(),
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
-                Long.toString(mConfiguration.getSessionId()),
+                stringSessionId,
                 mConfiguration.getUserId(),
                 event.getSyteUrlReferer(),
                 body

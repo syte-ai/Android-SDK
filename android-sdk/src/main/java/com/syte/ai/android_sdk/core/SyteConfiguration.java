@@ -96,7 +96,7 @@ public class SyteConfiguration {
         if (mLocalStorageEnabled) {
             return mStorage.getSessionId();
         } else {
-            return 0L;
+            return -1L;
         }
     }
 

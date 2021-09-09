@@ -234,11 +234,18 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         } catch (Exception e) {
             catalog = null;
         }
+        Long sessionId = mConfiguration.getSessionId();
+        String stringSessionId = "";
+        if (sessionId == -1L) {
+            stringSessionId = "OptedOut";
+        } else {
+            stringSessionId = Long.toString(sessionId);
+        }
         return mSyteService.getBounds(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
                 requestData.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
-                requestData.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
+                requestData.getPersonalizedRanking() ? stringSessionId: null,
                 requestData.getProductType().name,
                 mConfiguration.getLocale(),
                 catalog,
