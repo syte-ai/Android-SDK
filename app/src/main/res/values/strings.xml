@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Android-SDK</string>
+    <string name="initialization">Initialization</string>
+    <string name="url_search">Url Search</string>
+    <string name="wild_search">Wild search</string>
+    <string name="get_similars">GET SIMILARS</string>
+    <string name="shop_the_look">Shop The Look</string>
+    <string name="personalization">Personalization</string>
+    <string name="configuration">Configuration</string>
+    <string name="fire_events">Fire Events</string>
+    <string name="default_account_id">9165</string>
+    <string name="default_sig">601c206d0a7f780efb9360f3</string>
+    <string name="session_skus">Session SKUs</string>
+    <string name="locale">Locale</string>
+    <string name="apply">Apply</string>
+    <string name="get_personalization">Get Personalization</string>
+    <string name="default_image_url"><![CDATA[https://sytestorageeu.blob.core.windows.net/text-static-feeds/boohoo_direct/PZZ70556-105.jpg?se=2023-10-31T19%3A05%3A46Z&sp=r&sv=2018-03-28&sr=b&sig=DQe1/iuTzLpl/hZhMzmb5jJF8qw41GdNlREzZvunw4k%3D]]></string>
+    <string name="default_sku">PZZ70556-105</string>
+    <string name="default_url_referer">mobile_sdk</string>
+    <string name="default_limit">3</string>
+    <string name="get_shop_the_look">Get Shop The Look</string>
+    <string name="url_referer">URL referer:</string>
+    <string name="limit_per_bound">Limit per bound:</string>
+    <string name="limit">Limit:</string>
+    <string name="load_image">Load Image</string>
+    <string name="get_bounds">Get Bounds</string>
+    <string name="fetch_offers_for_the_first_bound">Fetch Offers For The First Bound</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text">Text...</string>
+    <string name="autocomplete">AUTOCOMPLETE</string>
+    <string name="popular_searches">POPULAR SEARCHES</string>
+    <string name="search">SEARCH</string>
+    <string name="comma_separated_filters">Comma separated filters</string>
+    <string name="query">query</string>
+    <string name="text_search">TEXT SEARCH</string>
+    <string name="id_original_data">ID (Original data):</string>
+</resources>

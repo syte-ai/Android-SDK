@@ -1,0 +1,1 @@
+-keep class com.syte.ai.android_sdk.data.** { *; }
