@@ -96,7 +96,7 @@ public class SyteConfiguration {
         if (mLocalStorageEnabled) {
             return mStorage.getSessionId();
         } else {
-            return 0L;
+            return -1L;
         }
     }
 
@@ -122,7 +122,7 @@ public class SyteConfiguration {
     }
 
     /**
-     * Indicates whether the calls to {@link com.syte.ai.android_sdk.TextSearchClient#getAutoCompleteAsync(String, String, SyteCallback)}
+     * Indicates whether the calls to {@link com.syte.ai.android_sdk.core.Syte#getAutoComplete(String, SyteCallback)}}
      * method that are made within 500ms will be saved to queue and invoked.
      * (Only the last call made within 500ms will be saved).
      * If false, the calls made within 500ms will be ignored.

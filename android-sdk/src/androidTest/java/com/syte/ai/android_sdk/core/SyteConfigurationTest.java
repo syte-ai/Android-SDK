@@ -18,6 +18,15 @@ public class SyteConfigurationTest extends BaseTest {
     }
 
     @Test
+    public void getSessionSkusStringSimilarInput() throws SyteWrongInputException {
+        startSessionInternal();
+        mSyte.addViewedItem("test1");
+        mSyte.addViewedItem("test2");
+        mSyte.addViewedItem("test1");
+        assertEquals("test2,test1", Utils.viewedProductsString(mConfiguration.getViewedProducts()));
+    }
+
+    @Test
     public void getSessionSkusJSONArray() throws SyteWrongInputException {
         startSessionInternal();
         mSyte.addViewedItem("test1");

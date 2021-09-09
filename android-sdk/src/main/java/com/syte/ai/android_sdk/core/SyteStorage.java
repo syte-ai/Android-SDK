@@ -60,6 +60,8 @@ class SyteStorage {
             SyteLogger.e(TAG, "Error creating encrypted shared prefs instance: " + e.getMessage());
         }
 
+        getSessionId();
+
     }
 
     public void setEnabled(boolean enabled) {
@@ -155,10 +157,20 @@ class SyteStorage {
         }
         if (mSharedPreferences != null) {
             String viewedProducts = mSharedPreferences.getString(VIEWED_PRODUCTS_KEY, "");
+            StringBuilder newViewedProducts = new StringBuilder();
+            if (!viewedProducts.isEmpty()) {
+                for (String sku : viewedProducts.split(",")) {
+                    if (!sku.equals(sessionSku)) {
+                        newViewedProducts.append(sku);
+                        newViewedProducts.append(",");
+                    }
+                }
+                newViewedProducts.append(sessionSku);
+            }
             mSharedPreferences
                     .edit()
                     .putString(VIEWED_PRODUCTS_KEY, viewedProducts.isEmpty() ?
-                            sessionSku : viewedProducts + "," + sessionSku)
+                            sessionSku : newViewedProducts.toString())
                     .apply();
 
         }

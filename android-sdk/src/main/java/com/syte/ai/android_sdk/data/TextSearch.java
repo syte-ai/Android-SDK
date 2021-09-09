@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.data;
 
+import com.syte.ai.android_sdk.data.result.text_search.Result;
+import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.enums.TextSearchSorting;
 
 import java.util.ArrayList;
@@ -14,9 +16,9 @@ public class TextSearch {
 
     private String mQuery = "";
     private String mLang = "";
-    private final List<String> mFilters = new ArrayList<>();
+    private final Map<String, List<String>> mFilters = new HashMap<>();
     private int mFrom = 0;
-    private int mSize = 20;
+    private int mSize = 30;
     private TextSearchSorting mTextSearchSorting = TextSearchSorting.DEFAULT;
     private Map<String, String> mOptions = new HashMap<>();
 
@@ -79,26 +81,23 @@ public class TextSearch {
     }
 
     /**
-     * Setter for the text filters.
-     * @param filters list of text filters.
+     * Add filters to the text search request.
+     * Available filters can be retrieved after the first Text search call.
+     * To see them use {@link Result#getAggregations()}
+     * Example: textSearch.addFilters("Gender", Arrays.asList("female"));
+     * @param filterKey Filter name (e.g. "Color")
+     * @param filters List of filter values (e.g. ["red", "blue"])
      */
-    public void addFilters(List<String> filters) {
-        mFilters.addAll(filters);
+    public void addFilters(String filterKey, List<String> filters) {
+        List<String> newFilters = new ArrayList<>(filters);
+        mFilters.put(filterKey, newFilters);
     }
 
     /**
-     * Setter for the text filters.
-     * @param filter text filter.
-     */
-    public void addFilter(String filter) {
-        mFilters.add(filter);
-    }
-
-    /**
-     * Getter for the text filters.
+     * Getter for the text search filters.
      * @return text filters.
      */
-    public List<String> getFilters() {
+    public Map<String, List<String>> getFilters() {
         return mFilters;
     }
 

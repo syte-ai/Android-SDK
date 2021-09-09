@@ -272,11 +272,18 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     private Call<ResponseBody> generateSimilarsCall(SimilarItems similarProducts) {
+        Long sessionId = mConfiguration.getSessionId();
+        String stringSessionId = "";
+        if (sessionId == -1L) {
+            stringSessionId = "OptedOut";
+        } else {
+            stringSessionId = Long.toString(sessionId);
+        }
         return mSyteService.getSimilars(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
                 similarProducts.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
-                similarProducts.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
+                similarProducts.getPersonalizedRanking() ? stringSessionId : null,
                 RecommendationProduct.SIMILAR_PRODUCTS.getName(),
                 mConfiguration.getLocale(),
                 similarProducts.getFieldsToReturn().getName(),
@@ -293,11 +300,18 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     private Call<ResponseBody> generateShopTheLookCall(ShopTheLook shopTheLook) {
+        Long sessionId = mConfiguration.getSessionId();
+        String stringSessionId = "";
+        if (sessionId == -1L) {
+            stringSessionId = "OptedOut";
+        } else {
+            stringSessionId = Long.toString(sessionId);
+        }
         return mSyteService.getShopTheLook(
                 mConfiguration.getAccountId(),
                 mConfiguration.getApiSignature(),
                 shopTheLook.getPersonalizedRanking() ? mConfiguration.getUserId() : null,
-                shopTheLook.getPersonalizedRanking() ? Long.toString(mConfiguration.getSessionId()) : null,
+                shopTheLook.getPersonalizedRanking() ? stringSessionId : null,
                 RecommendationProduct.SHOP_THE_LOOK.getName(),
                 mConfiguration.getLocale(),
                 shopTheLook.getFieldsToReturn().getName(),

@@ -1,5 +1,7 @@
 package com.syte.ai.android_sdk.data.result.text_search;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Aggregations{
@@ -130,170 +132,212 @@ public class Aggregations{
 	@SerializedName("Detail")
 	private Detail detail;
 
+	@Nullable
 	public Shape getShape(){
 		return shape;
 	}
 
+	@Nullable
 	public HeelType getHeelType(){
 		return heelType;
 	}
 
+	@Nullable
 	public Neckline getNeckline(){
 		return neckline;
 	}
 
+	@Nullable
 	public Closure getClosure(){
 		return closure;
 	}
 
+	@Nullable
 	public Size getSize(){
 		return size;
 	}
 
+	@Nullable
 	public LapelStyle getLapelStyle(){
 		return lapelStyle;
 	}
 
+	@Nullable
 	public Element getElement(){
 		return element;
 	}
 
+	@Nullable
 	public DialColor getDialColor(){
 		return dialColor;
 	}
 
+	@Nullable
 	public BandType getBandType(){
 		return bandType;
 	}
 
+	@Nullable
 	public TopType getTopType(){
 		return topType;
 	}
 
+	@Nullable
 	public Straps getStraps(){
 		return straps;
 	}
 
+	@Nullable
 	public Sleeve getSleeve(){
 		return sleeve;
 	}
 
+	@Nullable
 	public Gender getGender(){
 		return gender;
 	}
 
+	@Nullable
 	public Texture getTexture(){
 		return texture;
 	}
 
+	@Nullable
 	public Rise getRise(){
 		return rise;
 	}
 
+	@Nullable
 	public BottomStyle getBottomStyle(){
 		return bottomStyle;
 	}
 
+	@Nullable
 	public Opening getOpening(){
 		return opening;
 	}
 
+	@Nullable
 	public FrameType getFrameType(){
 		return frameType;
 	}
 
+	@Nullable
 	public Style getStyle(){
 		return style;
 	}
 
+	@Nullable
 	public Height getHeight(){
 		return height;
 	}
 
+	@Nullable
 	public Look getLook(){
 		return look;
 	}
 
+	@Nullable
 	public ShoesStraps getShoesStraps(){
 		return shoesStraps;
 	}
 
+	@Nullable
 	public TopStyle getTopStyle(){
 		return topStyle;
 	}
 
+	@Nullable
 	public Pattern getPattern(){
 		return pattern;
 	}
 
+	@Nullable
 	public Trim getTrim(){
 		return trim;
 	}
 
+	@Nullable
 	public Color getColor(){
 		return color;
 	}
 
+	@Nullable
 	public Material getMaterial(){
 		return material;
 	}
 
+	@Nullable
 	public BottomType getBottomType(){
 		return bottomType;
 	}
 
+	@Nullable
 	public SleeveStyle getSleeveStyle(){
 		return sleeveStyle;
 	}
 
+	@Nullable
 	public BandMaterial getBandMaterial(){
 		return bandMaterial;
 	}
 
+	@Nullable
 	public Hem getHem(){
 		return hem;
 	}
 
+	@Nullable
 	public Type getType(){
 		return type;
 	}
 
+	@Nullable
 	public CaseShape getCaseShape(){
 		return caseShape;
 	}
 
+	@Nullable
 	public HeelStyle getHeelStyle(){
 		return heelStyle;
 	}
 
+	@Nullable
 	public MaxPrice getMaxPrice(){
 		return maxPrice;
 	}
 
+	@Nullable
 	public MinPrice getMinPrice(){
 		return minPrice;
 	}
 
+	@Nullable
 	public Length getLength(){
 		return length;
 	}
 
+	@Nullable
 	public Embellishments getEmbellishments(){
 		return embellishments;
 	}
 
+	@Nullable
 	public HeelHeight getHeelHeight(){
 		return heelHeight;
 	}
 
+	@Nullable
 	public Cat getCat(){
 		return cat;
 	}
 
+	@Nullable
 	public Model getModel(){
 		return model;
 	}
 
+	@Nullable
 	public Detail getDetail(){
 		return detail;
 	}

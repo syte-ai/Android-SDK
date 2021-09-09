@@ -59,6 +59,8 @@ Then you'll need to initialize Syte class passing the configuration instance and
     Syte.initialize(syteConfiguration, syteResult -> {
         if (syteResult.isSuccessful) {
             syte = syteResult.data;
+        } else {
+            Log.e(<tag>, syteResult.errorMessage);
         }
     });
 

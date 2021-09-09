@@ -33,6 +33,9 @@ public class BaseTest {
                 mSyte = syteResult.data;
                 latch.countDown();
             });
+            mConfiguration.getStorage().clearViewedProducts();
+            mConfiguration.getStorage().clearPopularSearch();
+            mConfiguration.getStorage().clearSessionId();
             latch.await();
         } catch (SyteInitializationException | InterruptedException syteInitializationException) {
             fail("Unable to create configuration: " + syteInitializationException.getMessage());

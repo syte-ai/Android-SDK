@@ -22,6 +22,7 @@ import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.events.EventInitialization;
+import com.syte.ai.android_sdk.events.EventPageView;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
@@ -113,6 +114,11 @@ class SyteImpl extends Syte {
     public void fireEvent(BaseSyteEvent event) {
         verifyInitialized();
         mEventsRemoteDataSource.fireEvent(event);
+        if (event instanceof EventPageView) {
+            try {
+                addViewedItem(((EventPageView) event).getSku());
+            } catch (SyteWrongInputException e) {}
+        }
     }
 
     @Override
@@ -150,87 +156,110 @@ class SyteImpl extends Syte {
 
     @Override
     public SyteResult<BoundsResult> getBounds(Context context, ImageSearch imageSearch) {
+        verifyInitialized();
         return mImageSearchClient.getBounds(context, imageSearch);
     }
 
     @Override
     public SyteResult<BoundsResult> getBounds(UrlImageSearch urlImageSearch) {
+        verifyInitialized();
         return mImageSearchClient.getBounds(urlImageSearch);
     }
 
     @Override
     public SyteResult<ItemsResult> getItemsForBound(Bound bound, CropCoordinates cropCoordinates) {
+        verifyInitialized();
         return mImageSearchClient.getItemsForBound(bound, cropCoordinates);
     }
 
     @Override
     public void getItemsForBoundAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<ItemsResult> callback) {
+        verifyInitialized();
         mImageSearchClient.getItemsForBoundAsync(bound, cropCoordinates, callback);
     }
 
     @Override
     public void getBoundsAsync(Context context, ImageSearch imageSearch, SyteCallback<BoundsResult> callback) {
+        verifyInitialized();
         mImageSearchClient.getBoundsAsync(context, imageSearch, callback);
     }
 
     @Override
     public void getBoundsAsync(UrlImageSearch urlImageSearch, SyteCallback<BoundsResult> callback) {
+        verifyInitialized();
         mImageSearchClient.getBoundsAsync(urlImageSearch, callback);
     }
 
     @Override
     public SyteResult<SimilarProductsResult> getSimilarProducts(SimilarItems similarProducts) {
+        verifyInitialized();
         return mProductRecommendationClient.getSimilarProducts(similarProducts);
     }
 
     @Override
     public void getSimilarProductsAsync(SimilarItems similarProducts, SyteCallback<SimilarProductsResult> callback) {
+        verifyInitialized();
         mProductRecommendationClient.getSimilarProductsAsync(similarProducts, callback);
     }
 
     @Override
     public SyteResult<ShopTheLookResult> getShopTheLook(ShopTheLook shopTheLook) {
+        verifyInitialized();
         return mProductRecommendationClient.getShopTheLook(shopTheLook);
     }
 
     @Override
     public void getShopTheLookAsync(ShopTheLook shopTheLook, SyteCallback<ShopTheLookResult> callback) {
+        verifyInitialized();
         mProductRecommendationClient.getShopTheLookAsync(shopTheLook, callback);
     }
 
     @Override
     public SyteResult<PersonalizationResult> getPersonalizedProducts(Personalization personalization) {
+        verifyInitialized();
         return mProductRecommendationClient.getPersonalizedProducts(personalization);
     }
 
     @Override
     public void getPersonalizedProductsAsync(Personalization personalization, SyteCallback<PersonalizationResult> callback) {
+        verifyInitialized();
         mProductRecommendationClient.getPersonalizedProductsAsync(personalization, callback);
     }
 
     @Override
     public SyteResult<List<String>> getPopularSearch(String lang) {
+        verifyInitialized();
         return mTextSearchClient.getPopularSearch(lang);
     }
 
     @Override
     public void getPopularSearchAsync(String lang, SyteCallback<List<String>> callback) {
+        verifyInitialized();
         mTextSearchClient.getPopularSearchAsync(lang, callback);
     }
 
     @Override
     public SyteResult<TextSearchResult> getTextSearch(TextSearch textSearch) {
+        verifyInitialized();
         return mTextSearchClient.getTextSearch(textSearch);
     }
 
     @Override
     public void getTextSearchAsync(TextSearch textSearch, SyteCallback<TextSearchResult> callback) {
+        verifyInitialized();
         mTextSearchClient.getTextSearchAsync(textSearch, callback);
     }
 
     @Override
     public void getAutoComplete(String query, String lang, SyteCallback<AutoCompleteResult> callback) {
+        verifyInitialized();
         mTextSearchClient.getAutoCompleteAsync(query, lang, callback);
+    }
+
+    @Override
+    public void getAutoComplete(String query, SyteCallback<AutoCompleteResult> callback) {
+        verifyInitialized();
+        mTextSearchClient.getAutoCompleteAsync(query, mConfiguration.getLocale(), callback);
     }
 
     private void verifyInitialized() throws SyteInitializationException {

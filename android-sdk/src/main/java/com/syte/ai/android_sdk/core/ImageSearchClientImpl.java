@@ -28,9 +28,7 @@ class ImageSearchClientImpl {
             InputValidator.validateInput(imageSearch);
             InputValidator.validateInput(context);
         } catch (SyteWrongInputException e) {
-            SyteResult<BoundsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
 
         return mSyteRemoteDataSource.getBoundsWild(
@@ -44,9 +42,7 @@ class ImageSearchClientImpl {
         try {
             InputValidator.validateInput(urlImageSearch);
         } catch (SyteWrongInputException e) {
-            SyteResult<BoundsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getBounds(urlImageSearch, mSytePlatformSettings);
     }
@@ -55,9 +51,7 @@ class ImageSearchClientImpl {
         try {
             InputValidator.validateInput(bound);
         } catch (SyteWrongInputException e) {
-            SyteResult<ItemsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
-            return result;
+            return mSyteRemoteDataSource.handleOnFailure(e);
         }
         return mSyteRemoteDataSource.getOffers(bound, cropCoordinates, mSytePlatformSettings);
     }
@@ -66,10 +60,8 @@ class ImageSearchClientImpl {
         try {
             InputValidator.validateInput(bound);
         } catch (SyteWrongInputException e) {
-            SyteResult<ItemsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
@@ -85,10 +77,8 @@ class ImageSearchClientImpl {
             InputValidator.validateInput(context);
             InputValidator.validateInput(imageSearch);
         } catch (SyteWrongInputException e) {
-            SyteResult<BoundsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
@@ -99,10 +89,8 @@ class ImageSearchClientImpl {
         try {
             InputValidator.validateInput(urlImageSearch);
         } catch (SyteWrongInputException e) {
-            SyteResult<BoundsResult> result = new SyteResult<>();
-            result.errorMessage = e.getMessage();
             if (callback != null) {
-                callback.onResult(result);
+                callback.onResult(mSyteRemoteDataSource.handleOnFailure(e));
             }
             return;
         }
