@@ -127,22 +127,19 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     SyteResult<ShopTheLookResult> getShopTheLook(
-            ShopTheLook shopTheLook,
-            SytePlatformSettings sytePlatformSettings
+            ShopTheLook shopTheLook
     ) {
         renewTimestamp();
-        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLook, sytePlatformSettings);
+        return mRecommendationRemoteDataSource.getShopTheLook(shopTheLook);
     }
 
     void getShopTheLookAsync(
             ShopTheLook shopTheLook,
-            SytePlatformSettings sytePlatformSettings,
             SyteCallback<ShopTheLookResult> callback
     ) {
         renewTimestamp();
         mRecommendationRemoteDataSource.getShopTheLookAsync(
                 shopTheLook,
-                sytePlatformSettings,
                 callback
         );
     }
@@ -218,22 +215,15 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     private Call<ResponseBody> generateBoundsCall(
-            UrlImageSearch requestData,
-            SytePlatformSettings sytePlatformSettings
+            UrlImageSearch requestData
     ) {
-        String catalog;
-        try {
-            catalog = sytePlatformSettings
-                    .getData()
-                    .getProducts()
-                    .getSyteapp()
-                    .getFeatures()
-                    .getBoundingBox()
-                    .getCropper()
-                    .getCatalog();
-        } catch (Exception e) {
-            catalog = null;
+        Catalog catalog = requestData.getCatalog();
+        String stringCatalog = null;
+
+        if (catalog != null) {
+            stringCatalog = catalog.getName().toLowerCase();
         }
+
         Long sessionId = mConfiguration.getSessionId();
         String stringSessionId = "";
         if (sessionId == -1L) {
@@ -248,7 +238,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 requestData.getPersonalizedRanking() ? stringSessionId: null,
                 requestData.getProductType().name,
                 mConfiguration.getLocale(),
-                catalog,
+                stringCatalog,
                 requestData.getSku(),
                 requestData.getImageUrl(),
                 requestData.getPersonalizedRanking() && mConfiguration.isLocalStorageEnabled() ?
@@ -257,15 +247,14 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         );
     }
 
-    SyteResult<BoundsResult> getBounds(UrlImageSearch requestData, SytePlatformSettings sytePlatformSettings) {
+    SyteResult<BoundsResult> getBounds(UrlImageSearch requestData) {
         renewTimestamp();
         Response<ResponseBody> response = null;
         try {
-            response = generateBoundsCall(requestData, sytePlatformSettings).execute();
+            response = generateBoundsCall(requestData).execute();
             return onBoundsResult(requestData,
                     response,
                     requestData.getFirstBoundItemsCoordinates(),
-                    sytePlatformSettings,
                     true,
                     null
             );
@@ -275,10 +264,9 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     }
 
     void getBoundsAsync(UrlImageSearch requestData,
-                        SytePlatformSettings sytePlatformSettings,
                         SyteCallback<BoundsResult> callback) {
         renewTimestamp();
-        generateBoundsCall(requestData, sytePlatformSettings).enqueue(new Callback<ResponseBody>() {
+        generateBoundsCall(requestData).enqueue(new Callback<ResponseBody>() {
 
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call,
@@ -288,7 +276,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                             requestData,
                             response,
                             requestData.getFirstBoundItemsCoordinates(),
-                            sytePlatformSettings,
                             false,
                             new BoundsResultCallback() {
                                 @Override
@@ -311,8 +298,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     SyteResult<ItemsResult> getOffers(
             Bound bound,
-            @Nullable CropCoordinates cropCoordinates,
-            SytePlatformSettings sytePlatformSettings
+            @Nullable CropCoordinates cropCoordinates
     ) {
         renewTimestamp();
         SyteResult<ItemsResult> syteResult = new SyteResult<>();
@@ -320,8 +306,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
         try {
             response = generateOffersCall(
                     bound.getItemUrl(),
-                    cropCoordinates,
-                    sytePlatformSettings
+                    cropCoordinates
             ).execute();
             syteResult.isSuccessful = response.isSuccessful();
             syteResult.resultCode = response.code();
@@ -338,13 +323,11 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     void getOffersAsync(
             Bound bound,
             CropCoordinates cropCoordinates,
-            SytePlatformSettings sytePlatformSettings,
             SyteCallback<ItemsResult> callback) {
         renewTimestamp();
         generateOffersCall(
                 bound.getItemUrl(),
-                cropCoordinates,
-                sytePlatformSettings
+                cropCoordinates
         ).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -373,7 +356,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             UrlImageSearch requestData,
             Response<ResponseBody> response,
             @Nullable CropCoordinates cropCoordinates,
-            SytePlatformSettings sytePlatformSettings,
             boolean sync,
             @Nullable BoundsResultCallback resultCallback
     ) throws IOException {
@@ -429,8 +411,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 try {
                     offersResponse = generateOffersCall(
                             syteResult.data.getBounds().get(0).getItemUrl(),
-                            cropCoordinates,
-                            sytePlatformSettings
+                            cropCoordinates
                     ).execute();
                 } catch (IOException e) {
                     return handleException(response, e);
@@ -440,8 +421,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             } else {
                 generateOffersCall(
                         syteResult.data.getBounds().get(0).getItemUrl(),
-                        cropCoordinates,
-                        sytePlatformSettings
+                        cropCoordinates
                 ).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
@@ -473,12 +453,12 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private Call<ResponseBody> generateOffersCall(
             String offersUrl,
-            CropCoordinates cropCoordinates,
-            SytePlatformSettings sytePlatformSettings
+            CropCoordinates cropCoordinates
     ) {
         boolean cropEnabled = cropCoordinates != null;
         String actualUrl = null;
         String coordinatesBase64 = null;
+        String catalog = null;
 
         if (cropEnabled) {
             byte[] coordinateStringBytes = cropCoordinates.toString().getBytes();
@@ -493,7 +473,6 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
             for (String param : params) {
                 if (param.equals("cats")
                         || param.equals("crop")
-                        || param.equals("catalog")
                         || param.equals("feed")
                 ) continue;
                 newUri.appendQueryParameter(param, uri.getQueryParameter(param));
@@ -508,15 +487,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 actualUrl,
                 coordinatesBase64,
                 cropEnabled ? Catalog.GENERAL.getName() : null,
-                cropEnabled ? sytePlatformSettings
-                        .getData()
-                        .getProducts()
-                        .getSyteapp()
-                        .getFeatures()
-                        .getBoundingBox()
-                        .getCropper()
-                        .getCatalog() : null
-
+                cropEnabled ? catalog : null
         );
     }
 
@@ -547,20 +518,17 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     public SyteResult<BoundsResult> getBoundsWild(
             Context context,
-            ImageSearch requestData,
-            SytePlatformSettings sytePlatformSettings
+            ImageSearch requestData
     ) {
 
         ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
-                this,
-                sytePlatformSettings
+                this
         );
         UrlImageSearch urlImageSearch;
         try {
             urlImageSearch = prepareImageSearchRequestData(
                     context,
-                    requestData,
-                    sytePlatformSettings
+                    requestData
             );
         } catch (Exception e) {
             return handleException(null, e);
@@ -571,17 +539,14 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     void getBoundsWildAsync(
             Context context,
             ImageSearch requestData,
-            SytePlatformSettings sytePlatformSettings,
             SyteCallback<BoundsResult> callback
     ) {
         ImageSearchClientImpl imageSearchClient = new ImageSearchClientImpl(
-                this,
-                sytePlatformSettings
+                this
         );
         prepareImageSearchRequestDataAsync(
                 context,
                 requestData,
-                sytePlatformSettings,
                 new ExifRemovalResultCallback() {
                     @Override
                     public void onResult(UrlImageSearch requestData, Throwable e) {
@@ -597,11 +562,10 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private UrlImageSearch prepareImageSearchRequestData(
             Context context,
-            ImageSearch requestData,
-            SytePlatformSettings sytePlatformSettings
+            ImageSearch requestData
     ) throws IOException, JSONException, SyteGeneralException {
 
-        byte[] bytes = prepareImage(context, requestData, sytePlatformSettings);
+        byte[] bytes = prepareImage(context, requestData);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), bytes);
 
@@ -636,12 +600,11 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
     private void prepareImageSearchRequestDataAsync(
             Context context,
             ImageSearch requestData,
-            SytePlatformSettings sytePlatformSettings,
             ExifRemovalResultCallback callback
     ) {
         byte[] bytes = new byte[0];
         try {
-            bytes = prepareImage(context, requestData, sytePlatformSettings);
+            bytes = prepareImage(context, requestData);
         } catch (Exception e) {
             callback.onResult(null, e);
         }
@@ -702,8 +665,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
 
     private byte[] prepareImage(
             Context context,
-            ImageSearch requestData,
-            SytePlatformSettings sytePlatformSettings) throws IOException, SyteGeneralException {
+            ImageSearch requestData) throws IOException, SyteGeneralException {
 
         ImageProcessor imageProcessor = new ImageProcessor();
         Bitmap bitmap = imageProcessor.rotateImageIfNeeded(
@@ -721,7 +683,7 @@ class SyteRemoteDataSource extends BaseRemoteDataSource {
                 context,
                 size,
                 bitmap,
-                Utils.getImageScale(sytePlatformSettings)
+                requestData.getImageScale()
         );
 
         SyteLogger.i(TAG, "Compressed image size: " + file.length() + " bytes");

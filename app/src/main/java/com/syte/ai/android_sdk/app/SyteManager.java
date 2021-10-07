@@ -1,6 +1,7 @@
 package com.syte.ai.android_sdk.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.syte.ai.android_sdk.SyteCallback;
@@ -12,6 +13,8 @@ import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
+import com.syte.ai.android_sdk.data.result.SyteResult;
+import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.auto_complete.AutoCompleteResult;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
@@ -37,6 +40,7 @@ public class SyteManager {
 
     public SyteManager(Context context) {
         mContext = context;
+        initialize();
     }
 
     private void showToastError(String error) {
@@ -57,7 +61,7 @@ public class SyteManager {
         return mSyte.getConfiguration().getLocale();
     }
 
-    public void initialize(SyteCallback<Syte> callback) {
+    public void initialize() {
         SyteConfiguration syteConfiguration = new SyteConfiguration(
                 mContext,
                 mContext.getResources().getString(R.string.default_account_id),
@@ -65,13 +69,7 @@ public class SyteManager {
         );
         syteConfiguration.setLocale("en_US");
 //        syteConfiguration.enableLocalStorage(false);
-        Syte.initialize(syteConfiguration, syteResult -> {
-            if (!syteResult.isSuccessful) {
-                showToastError(syteResult.errorMessage);
-            }
-            mSyte = syteResult.data;
-            callback.onResult(syteResult);
-        });
+        mSyte = Syte.newInstance(syteConfiguration);
     }
 
     public Set<String> getViewedProducts() {

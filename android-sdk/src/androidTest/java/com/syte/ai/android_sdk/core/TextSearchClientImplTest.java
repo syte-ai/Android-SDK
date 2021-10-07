@@ -15,18 +15,10 @@ import static org.junit.Assert.*;
 public class TextSearchClientImplTest extends BaseTest {
 
     @Test
-    public void testGetPopularSearchLoadedOnInit() throws InterruptedException {
-        startSessionInternal();
-        Thread.sleep(1000); // Wait till the popular search data is loaded as part of initialization
-        assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
-    }
-
-    @Test
     public void getPopularSearchAsync() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         startSessionInternal();
         Thread.sleep(1000);
-        assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
         mSyte.getPopularSearchAsync("en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertNull(syteResult.errorMessage);
@@ -40,7 +32,6 @@ public class TextSearchClientImplTest extends BaseTest {
     public void getPopularSearch() throws InterruptedException {
         startSessionInternal();
         Thread.sleep(1000);
-        assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
         SyteResult<List<String>> syteResult = mSyte.getPopularSearch("en_US");
         assertTrue(syteResult.isSuccessful);
         assertNull(syteResult.errorMessage);
@@ -51,9 +42,7 @@ public class TextSearchClientImplTest extends BaseTest {
     public void getPopularSearchWrongLang() throws InterruptedException {
         startSessionInternal();
         Thread.sleep(1000);
-        assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
         SyteResult<List<String>> syteResult = mSyte.getPopularSearch("some_lang");
-        assertNotEquals(mConfiguration.getStorage().getPopularSearch("en_US"), "");
         assertEquals(mConfiguration.getStorage().getPopularSearch("some_lang"), "");
         assertTrue(syteResult.isSuccessful);
         assertNull(syteResult.errorMessage);

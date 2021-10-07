@@ -37,56 +37,27 @@ class SyteImpl extends Syte {
 
     private static final String TAG = "Syte";
 
-    private enum SyteState {
-        IDLE, INITIALIZED
-    }
-
     private SyteConfiguration mConfiguration;
-    private SyteRemoteDataSource mRemoteDataSource;
-    private SytePlatformSettings mSytePlatformSettings;
-    private EventsRemoteDataSource mEventsRemoteDataSource;
-    private SyteState mState = SyteState.IDLE;
-    private TextSearchClientImpl mTextSearchClient = null;
-    private ImageSearchClientImpl mImageSearchClient = null;
+    private final SyteRemoteDataSource mRemoteDataSource;
+    private final EventsRemoteDataSource mEventsRemoteDataSource;
+    private final TextSearchClientImpl mTextSearchClient;
+    private final ImageSearchClientImpl mImageSearchClient;
     private ProductRecommendationClientImpl mProductRecommendationClient = null;
 
     SyteImpl(SyteConfiguration configuration) {
         mConfiguration = configuration;
         mRemoteDataSource = new SyteRemoteDataSource(mConfiguration);
         mEventsRemoteDataSource = new EventsRemoteDataSource(mConfiguration);
-    }
-
-    void startSessionAsync(SyteCallback<Boolean> callback) {
-        mRemoteDataSource.initializeAsync(syteResult -> {
-            if (syteResult.isSuccessful) {
-                mSytePlatformSettings = syteResult.data;
-                mTextSearchClient = new TextSearchClientImpl(
-                        mRemoteDataSource,
-                        mConfiguration.getAllowAutoCompletionQueue()
-                );
-                mProductRecommendationClient = new ProductRecommendationClientImpl(
-                        mRemoteDataSource, mSytePlatformSettings
-                );
-                mImageSearchClient = new ImageSearchClientImpl(
-                        mRemoteDataSource,
-                        mSytePlatformSettings
-                );
-                mState = SyteState.INITIALIZED;
-            } else {
-                mState = SyteState.IDLE;
-            }
-            if (mState == SyteState.INITIALIZED) {
-                fireEvent(new EventInitialization());
-            }
-            if (callback != null) {
-                SyteResult<Boolean> result = new SyteResult<>();
-                result.data = syteResult.isSuccessful;
-                result.resultCode = syteResult.resultCode;
-                result.isSuccessful = syteResult.isSuccessful;
-                result.errorMessage = syteResult.errorMessage;
-                callback.onResult(result);
-            }
-        });
+        mTextSearchClient = new TextSearchClientImpl(
+                mRemoteDataSource,
+                mConfiguration.getAllowAutoCompletionQueue()
+        );
+        mProductRecommendationClient = new ProductRecommendationClientImpl(
+                mRemoteDataSource
+        );
+        mImageSearchClient = new ImageSearchClientImpl(
+                mRemoteDataSource
+        );
     }
 
     @Override
@@ -105,9 +76,19 @@ class SyteImpl extends Syte {
     }
 
     @Override
-    public SytePlatformSettings getSytePlatformSettings() {
+    public SyteResult<SytePlatformSettings> getSytePlatformSettings() {
         verifyInitialized();
-        return mSytePlatformSettings;
+        return mRemoteDataSource.initialize();
+    }
+
+    @Override
+    public void getSytePlatformSettingsAsync(SyteCallback<SytePlatformSettings> syteCallback) {
+        verifyInitialized();
+        mRemoteDataSource.initializeAsync(syteResult -> {
+            if (syteCallback != null) {
+                syteCallback.onResult(syteResult);
+            }
+        });
     }
 
     @Override
@@ -263,9 +244,9 @@ class SyteImpl extends Syte {
     }
 
     private void verifyInitialized() throws SyteInitializationException {
-        if (mState != SyteState.INITIALIZED) {
-            throw new SyteInitializationException("Syte is not initialized.");
-        }
+//        if (mState != SyteState.INITIALIZED) {
+//            throw new SyteInitializationException("Syte is not initialized.");
+//        }
     }
 
 }

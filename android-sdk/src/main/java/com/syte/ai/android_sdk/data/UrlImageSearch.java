@@ -3,6 +3,7 @@ package com.syte.ai.android_sdk.data;
 import androidx.annotation.Nullable;
 
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
+import com.syte.ai.android_sdk.enums.Catalog;
 import com.syte.ai.android_sdk.enums.SyteProductType;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class UrlImageSearch {
     private CropCoordinates mCoordinates;
     private boolean mPersonalizedRanking = false;
     private Map<String, String> mOptions = new HashMap<>();
+    private Catalog mCatalog;
 
     /**
      * @param imageUrl - image URL
@@ -121,6 +123,23 @@ public class UrlImageSearch {
      */
     public boolean getPersonalizedRanking() {
         return mPersonalizedRanking;
+    }
+
+    /**
+     * Set catalog that will be used in requests.
+     * No catalog will be added to the requests by default
+     * @param catalog {@link Catalog}
+     */
+    public void setCatalog(Catalog catalog) {
+        mCatalog = catalog;
+    }
+
+    /**
+     * Get catalog
+     * @return {@link Catalog}
+     */
+    public Catalog getCatalog() {
+        return mCatalog;
     }
 
 }

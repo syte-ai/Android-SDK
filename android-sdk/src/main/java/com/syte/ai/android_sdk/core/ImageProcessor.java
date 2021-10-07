@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
+import com.syte.ai.android_sdk.enums.ImageScale;
 import com.syte.ai.android_sdk.exceptions.SyteGeneralException;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
@@ -29,10 +30,6 @@ class ImageProcessor {
 
     private static final String TAG = ImageProcessor.class.getSimpleName();
 
-    enum Scale {
-        SMALL, MEDIUM, LARGE
-    }
-
     static final String COMPRESSED_IMAGE_DIR = "/compress";
     static final int SCALE_QUALITY = 20;
     static final int SMALL_IMAGE_MAX_SIZE = 300_000;
@@ -43,7 +40,7 @@ class ImageProcessor {
     static final float LARGE_IMAGE_MAX_WIDTH = 2000f;
     static final float LARGE_IMAGE_MAX_HEIGHT = 2000f;
 
-    File compress(Context context, long size, Bitmap bitmap, Scale scale) throws SyteGeneralException {
+    File compress(Context context, long size, Bitmap bitmap, ImageScale scale) throws SyteGeneralException {
         Compress compress = Compress.Companion.with(context, bitmap);
         compress.setFormat(Bitmap.CompressFormat.JPEG);
         compress.setQuality(SCALE_QUALITY);
@@ -66,12 +63,12 @@ class ImageProcessor {
 
         float height = 0;
         float width = 0;
-        Scale resultScale;
+        ImageScale resultScale;
 
         if (size > SMALL_IMAGE_MAX_SIZE) {
             resultScale = scale;
         } else {
-            resultScale = Scale.SMALL;
+            resultScale = ImageScale.SMALL;
         }
 
         switch (resultScale) {

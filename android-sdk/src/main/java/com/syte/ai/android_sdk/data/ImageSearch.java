@@ -3,6 +3,7 @@ package com.syte.ai.android_sdk.data;
 import android.net.Uri;
 
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
+import com.syte.ai.android_sdk.enums.ImageScale;
 
 import java.io.File;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class ImageSearch {
     private boolean mRetrieveOffersForTheFirstBound = true;
     private boolean mPersonalizedRanking = false;
     private Map<String, String> mOptions = new HashMap<>();
+    private ImageScale mImageScale = ImageScale.MEDIUM;
 
     /**
      * @param imageUri - a path to the image on device.
@@ -99,6 +101,23 @@ public class ImageSearch {
      */
     public boolean getPersonalizedRanking() {
         return mPersonalizedRanking;
+    }
+
+    /**
+     * Get {@link ImageScale}.
+     * @return {@link ImageScale}
+     */
+    public ImageScale getImageScale() {
+        return mImageScale;
+    }
+
+    /**
+     * Set {@link ImageScale} to process the image.
+     * {@link ImageScale#MEDIUM} will be used by default.
+     * @param scale {@link ImageScale}
+     */
+    public void setImageScale(ImageScale scale) {
+        mImageScale = scale;
     }
 
 }

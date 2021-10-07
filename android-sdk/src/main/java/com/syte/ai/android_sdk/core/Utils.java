@@ -26,35 +26,6 @@ class Utils {
         return bytes;
     }
 
-    static ImageProcessor.Scale getImageScale(SytePlatformSettings sytePlatformSettings) {
-        String imageScale = sytePlatformSettings
-                .getData()
-                .getProducts()
-                .getSyteapp()
-                .getFeatures()
-                .getCameraHandler()
-                .getPhotoReductionSize();
-
-        ImageProcessor.Scale scale;
-
-        switch (imageScale.toLowerCase()) {
-            case "small":
-                scale = ImageProcessor.Scale.SMALL;
-                break;
-            case "medium":
-                scale = ImageProcessor.Scale.MEDIUM;
-                break;
-            case "large":
-                scale = ImageProcessor.Scale.LARGE;
-                break;
-            default:
-                scale = ImageProcessor.Scale.MEDIUM;
-                break;
-        }
-
-        return scale;
-    }
-
     public static String viewedProductsString(Set<String> viewedProducts) {
         if (viewedProducts.isEmpty()) {
             return null;

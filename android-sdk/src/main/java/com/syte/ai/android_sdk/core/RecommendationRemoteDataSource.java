@@ -86,14 +86,13 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     public SyteResult<ShopTheLookResult> getShopTheLook(
-            ShopTheLook shopTheLook,
-            SytePlatformSettings sytePlatformSettings
+            ShopTheLook shopTheLook
     ) {
         Response<ResponseBody> result = null;
         try {
             result =
                     generateShopTheLookCall(shopTheLook).execute();
-            return onShopTheLookResult(result, sytePlatformSettings);
+            return onShopTheLookResult(result);
         } catch (IOException | JSONException e) {
             return handleException(result, e);
         }
@@ -101,13 +100,12 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
 
     public void getShopTheLookAsync(
             ShopTheLook shopTheLook,
-            SytePlatformSettings sytePlatformSettings,
             SyteCallback<ShopTheLookResult> callback) {
         generateShopTheLookCall(shopTheLook).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NotNull Call<ResponseBody> call, @NotNull Response<ResponseBody> response) {
                 try {
-                    callback.onResult(onShopTheLookResult(response, sytePlatformSettings));
+                    callback.onResult(onShopTheLookResult(response));
                 } catch (IOException | JSONException e) {
                     callback.onResult(handleException(response, e));
                 }
@@ -191,8 +189,7 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
     }
 
     private SyteResult<ShopTheLookResult> onShopTheLookResult(
-            Response<ResponseBody> result,
-            SytePlatformSettings sytePlatformSettings
+            Response<ResponseBody> result
     ) throws IOException, JSONException {
         if (result.body() == null) {
             return handleEmptyBody(result);
@@ -203,7 +200,6 @@ class RecommendationRemoteDataSource extends BaseRemoteDataSource {
                 responseString,
                 ShopTheLookResult.class
         );
-        ctlResult.setSytePlatformSettings(sytePlatformSettings);
 
         // TODO put in a separate method
         JSONObject jsonObject = new JSONObject(responseString);

@@ -2,10 +2,8 @@ package com.syte.ai.android_sdk.core;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
-import org.junit.After;
 import org.junit.Before;
 
 import java.util.concurrent.CountDownLatch;
@@ -28,16 +26,11 @@ public class BaseTest {
                     "9165",
                     "601c206d0a7f780efb9360f3"
             );
-            CountDownLatch latch = new CountDownLatch(1);
-            Syte.initialize(mConfiguration, syteResult -> {
-                mSyte = syteResult.data;
-                latch.countDown();
-            });
+            mSyte = Syte.newInstance(mConfiguration);
             mConfiguration.getStorage().clearViewedProducts();
             mConfiguration.getStorage().clearPopularSearch();
             mConfiguration.getStorage().clearSessionId();
-            latch.await();
-        } catch (SyteInitializationException | InterruptedException syteInitializationException) {
+        } catch (SyteInitializationException syteInitializationException) {
             fail("Unable to create configuration: " + syteInitializationException.getMessage());
         }
     }

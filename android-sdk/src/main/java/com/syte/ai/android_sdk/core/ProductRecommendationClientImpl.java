@@ -15,14 +15,11 @@ import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 class ProductRecommendationClientImpl {
 
     private final SyteRemoteDataSource mSyteRemoteDataSource;
-    private final SytePlatformSettings mSytePlatformSettings;
 
     ProductRecommendationClientImpl(
-            SyteRemoteDataSource syteRemoteDataSource,
-            SytePlatformSettings sytePlatformSettings
+            SyteRemoteDataSource syteRemoteDataSource
     ) {
         mSyteRemoteDataSource = syteRemoteDataSource;
-        mSytePlatformSettings = sytePlatformSettings;
     }
 
     public SyteResult<SimilarProductsResult> getSimilarProducts(
@@ -69,7 +66,7 @@ class ProductRecommendationClientImpl {
         } catch (SyteWrongInputException e) {
             return mSyteRemoteDataSource.handleOnFailure(e);
         }
-        return mSyteRemoteDataSource.getShopTheLook(shopTheLook, mSytePlatformSettings);
+        return mSyteRemoteDataSource.getShopTheLook(shopTheLook);
     }
 
     public void getShopTheLookAsync(
@@ -86,7 +83,6 @@ class ProductRecommendationClientImpl {
         }
         mSyteRemoteDataSource.getShopTheLookAsync(
                 shopTheLook,
-                mSytePlatformSettings,
                 new SyteCallback<ShopTheLookResult>() {
                     @Override
                     public void onResult(SyteResult<ShopTheLookResult> syteResult) {

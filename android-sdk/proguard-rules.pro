@@ -10,6 +10,7 @@
 -keep class androidx.security.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
+-keepattributes Exceptions
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 -keep class * implements com.google.gson.TypeAdapter

@@ -16,11 +16,9 @@ import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 class ImageSearchClientImpl {
 
     private final SyteRemoteDataSource mSyteRemoteDataSource;
-    private final SytePlatformSettings mSytePlatformSettings;
 
-    ImageSearchClientImpl(SyteRemoteDataSource syteRemoteDataSource, SytePlatformSettings sytePlatformSettings) {
+    ImageSearchClientImpl(SyteRemoteDataSource syteRemoteDataSource) {
         mSyteRemoteDataSource = syteRemoteDataSource;
-        mSytePlatformSettings = sytePlatformSettings;
     }
 
     public SyteResult<BoundsResult> getBounds(Context context, ImageSearch imageSearch) {
@@ -33,8 +31,7 @@ class ImageSearchClientImpl {
 
         return mSyteRemoteDataSource.getBoundsWild(
                 context,
-                imageSearch,
-                mSytePlatformSettings
+                imageSearch
         );
     }
 
@@ -44,7 +41,7 @@ class ImageSearchClientImpl {
         } catch (SyteWrongInputException e) {
             return mSyteRemoteDataSource.handleOnFailure(e);
         }
-        return mSyteRemoteDataSource.getBounds(urlImageSearch, mSytePlatformSettings);
+        return mSyteRemoteDataSource.getBounds(urlImageSearch);
     }
 
     public SyteResult<ItemsResult> getItemsForBound(Bound bound, CropCoordinates cropCoordinates) {
@@ -53,7 +50,7 @@ class ImageSearchClientImpl {
         } catch (SyteWrongInputException e) {
             return mSyteRemoteDataSource.handleOnFailure(e);
         }
-        return mSyteRemoteDataSource.getOffers(bound, cropCoordinates, mSytePlatformSettings);
+        return mSyteRemoteDataSource.getOffers(bound, cropCoordinates);
     }
 
     public void getItemsForBoundAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<ItemsResult> callback) {
@@ -65,7 +62,7 @@ class ImageSearchClientImpl {
             }
             return;
         }
-        mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, mSytePlatformSettings, callback);
+        mSyteRemoteDataSource.getOffersAsync(bound, cropCoordinates, callback);
     }
 
     public void getBoundsAsync(
@@ -82,7 +79,7 @@ class ImageSearchClientImpl {
             }
             return;
         }
-        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearch, mSytePlatformSettings, callback);
+        mSyteRemoteDataSource.getBoundsWildAsync(context, imageSearch, callback);
     }
 
     public void getBoundsAsync(UrlImageSearch urlImageSearch, SyteCallback<BoundsResult> callback) {
@@ -94,7 +91,7 @@ class ImageSearchClientImpl {
             }
             return;
         }
-        mSyteRemoteDataSource.getBoundsAsync(urlImageSearch, mSytePlatformSettings, callback);
+        mSyteRemoteDataSource.getBoundsAsync(urlImageSearch, callback);
     }
 
 }

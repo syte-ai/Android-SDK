@@ -12,8 +12,6 @@ import com.syte.ai.android_sdk.data.result.offers.Item;
  */
 public class ShopTheLookResult {
 
-    private SytePlatformSettings sytePlatformSettings;
-
     @SerializedName("response")
     private List<ShopTheLookResponseItem> items;
 
@@ -37,33 +35,8 @@ public class ShopTheLookResult {
     }
 
     /**
-     * Setter for {@link SytePlatformSettings}. Is used internally
-     * @param sytePlatformSettings {@link SytePlatformSettings}
-     */
-    public void setSytePlatformSettings(SytePlatformSettings sytePlatformSettings) {
-        this.sytePlatformSettings = sytePlatformSettings;
-    }
-
-    /**
-     * Get list of all retrieved items. If zip in {@link SytePlatformSettings} is true, the items will be shuffled.
-     * @return list of all retrieved items
-     */
-    public List<Item> getItemsForAllLabels() {
-        if (sytePlatformSettings == null) {
-            return getItemsForAllLabels(false);
-        }
-        return getItemsForAllLabels(sytePlatformSettings
-                .getData()
-                .getProducts()
-                .getSyteapp()
-                .getFeatures()
-                .getShopTheLook()
-                .isZip());
-    }
-
-    /**
      * Get list of all retrieved items.
-     * @param forceZip - true to shuffle items (disregarding the zip value in {@link SytePlatformSettings})
+     * @param forceZip - true to shuffle items)
      * @return list of all retrieved items
      */
     public List<Item> getItemsForAllLabels(boolean forceZip) {

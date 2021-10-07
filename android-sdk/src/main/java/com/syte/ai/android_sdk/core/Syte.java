@@ -21,6 +21,7 @@ import com.syte.ai.android_sdk.data.result.recommendation.ShopTheLookResult;
 import com.syte.ai.android_sdk.data.result.recommendation.SimilarProductsResult;
 import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
+import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
@@ -35,36 +36,18 @@ public abstract class Syte {
     private static final String TAG = "Syte";
 
     /**
-     * Creates a new instance of the InitSyte class and triggers the start session call.
+     * Creates a new instance of the Syte class.
+     *
+     * @param configuration {@link SyteConfiguration}
      * @return new instance
      */
-    public static void initialize(
-            SyteConfiguration configuration,
-            SyteCallback<Syte> callback) {
+    public static Syte newInstance(SyteConfiguration configuration) {
         try {
             InputValidator.validateInput(configuration);
         } catch (SyteWrongInputException e) {
-            SyteLogger.e(TAG, e.getMessage());
-            SyteResult<Syte> syteResult = new SyteResult<>();
-            syteResult.data = null;
-            syteResult.errorMessage = e.getMessage();
-            syteResult.exception = e;
-            callback.onResult(syteResult);
-            return;
+            throw new SyteInitializationException(e.getMessage());
         }
-        SyteImpl syte = new SyteImpl(configuration);
-        syte.startSessionAsync(syteResult -> {
-            SyteResult<Syte> result = new SyteResult<>();
-            result.errorMessage = syteResult.errorMessage;
-            result.resultCode = syteResult.resultCode;
-            result.isSuccessful = syteResult.isSuccessful;
-            if (syteResult.isSuccessful) {
-                result.data = syte;
-            } else {
-                result.data = null;
-            }
-            callback.onResult(result);
-        });
+        return new SyteImpl(configuration);
     }
 
     /**
@@ -81,11 +64,18 @@ public abstract class Syte {
     public abstract void setConfiguration(SyteConfiguration configuration) throws SyteWrongInputException;
 
     /**
-     * Getter for {@link SytePlatformSettings}. Method will return null if the session was not started!
+     * Retrieve {@link SytePlatformSettings}.
+     * This method must not be called on the UI thread!
      * @return {@link SytePlatformSettings}
      */
-    @Nullable
-    public abstract SytePlatformSettings getSytePlatformSettings();
+    public abstract SyteResult<SytePlatformSettings> getSytePlatformSettings();
+
+    /**
+     * Retrieve {@link SytePlatformSettings}.
+     * Asynchronous equivalent of {@link Syte#getSytePlatformSettings()}
+     * @param syteCallback {@link SyteCallback} result callback
+     */
+    public abstract void getSytePlatformSettingsAsync(SyteCallback<SytePlatformSettings> syteCallback);
 
     /**
      * Send event to Syte. Can be used to send either predefined events {@link com.syte.ai.android_sdk.events} or a custom event.

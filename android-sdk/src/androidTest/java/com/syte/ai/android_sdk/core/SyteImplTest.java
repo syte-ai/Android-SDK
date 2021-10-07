@@ -2,8 +2,6 @@ package com.syte.ai.android_sdk.core;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.data.result.SyteResult;
 import com.syte.ai.android_sdk.enums.EventsTag;
 import com.syte.ai.android_sdk.events.BaseSyteEvent;
 import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
@@ -29,55 +27,49 @@ public class SyteImplTest extends BaseTest {
     }
 
     @Test
-    public void startSessionConfigurationNull() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        Syte.initialize(null, result -> {
-            assertNotNull(result);
-            assertNotNull(result.errorMessage);
-            assertNull(result.data);
-            assertFalse(result.isSuccessful);
-            assertEquals(result.resultCode, -1);
-            latch.countDown();
-        });
-        latch.await();
+    public void createInstanceConfigurationNull() throws InterruptedException {
+        try {
+            Syte.newInstance(null);
+        } catch (SyteInitializationException e) {
+            // We should get here
+            return;
+        }
+        fail("Unexpected success");
     }
 
     @Test
-    public void startSessionAccountIdNull() throws InterruptedException {
+    public void createInstanceAccountIdNull() throws InterruptedException {
         SyteConfiguration syteConfiguration = new SyteConfiguration(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 null,
                 ""
         );
-        CountDownLatch latch = new CountDownLatch(1);
-        Syte.initialize(null, result -> {
-            assertNotNull(result);
-            assertNotNull(result.errorMessage);
-            assertNull(result.data);
-            assertFalse(result.isSuccessful);
-            assertEquals(result.resultCode, -1);
-            latch.countDown();
-        });
-        latch.await();
+        try {
+            Syte.newInstance(syteConfiguration);
+        } catch (SyteInitializationException e) {
+            // We should get here
+            return;
+        }
+
+        fail("Unexpected success");
     }
 
     @Test
-    public void startSessionSignatureNull() throws InterruptedException {
+    public void createInstanceSignatureNull() throws InterruptedException {
         SyteConfiguration syteConfiguration = new SyteConfiguration(
                 InstrumentationRegistry.getInstrumentation().getTargetContext(),
                 "test",
                 null
         );
-        CountDownLatch latch = new CountDownLatch(1);
-        Syte.initialize(null, result -> {
-            assertNotNull(result);
-            assertNotNull(result.errorMessage);
-            assertNull(result.data);
-            assertFalse(result.isSuccessful);
-            assertEquals(result.resultCode, -1);
-            latch.countDown();
-        });
-        latch.await();
+        try {
+            Syte.newInstance(syteConfiguration);
+        } catch (SyteInitializationException e) {
+            // We should get here
+            return;
+        }
+
+        fail("Unexpected success");
+
     }
 
     @Test
@@ -102,35 +94,6 @@ public class SyteImplTest extends BaseTest {
         }
 
         assertEquals("test_locale", mSyte.getConfiguration().getLocale());
-    }
-
-    @Test
-    public void setConfigurationNotInitialized() {
-        try {
-            try {
-                mSyte.setConfiguration(mConfiguration);
-            } catch (SyteWrongInputException e) {
-                e.printStackTrace();
-            }
-            fail("Configuration was set successfully while in IDLE state"); // We should not get here
-        } catch (SyteInitializationException exception) {
-            // We are good
-        }
-    }
-
-    @Test
-    public void fireEventNotInitialized() {
-        try {
-            mSyte.fireEvent(new BaseSyteEvent("", "", EventsTag.SYTE_ANDROID_SDK) {
-                @Override
-                public String getRequestBodyString() {
-                    return null;
-                }
-            });
-            fail("Configuration was set successfully while in IDLE state"); // We should not get here
-        } catch (SyteInitializationException exception) {
-            // We are good
-        }
     }
 
     @Test
