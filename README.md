@@ -52,23 +52,13 @@ Then use the created instance to set the locale.
     );
     syteConfiguration.setLocale("en_US");
 
-Then you'll need to initialize Syte class passing the configuration instance and the callback:
+Then you'll need to initialize Syte class passing the configuration instance:
 
+    Syte syte = Syte.newInstance(syteConfiguration);
 
-    Syte syte;
-    Syte.initialize(syteConfiguration, syteResult -> {
-        if (syteResult.isSuccessful) {
-            syte = syteResult.data;
-        } else {
-            Log.e(<tag>, syteResult.errorMessage);
-        }
-    });
-
-Event fires automatically: https://syteapi.com/et?name=syte_init&account_id=[account_id]&session_id=[session_id]&sig=[api_signature]&syte_uuid=[user_id]&build_num=&lang=&tags=android_sdk&syte_url_referer=[app_name]
- 
 API used: https://cdn.syteapi.com/accounts/[account_id]
 
-To retrieve the instance of SytePlatformSettings use the syte.getSytePlatformSettings() method.
+To retrieve the instance of SytePlatformSettings use the syte.getPlatformSettings() method.
 
 ## Image Search
 
@@ -96,11 +86,11 @@ For image search:
 
 For Url image search:
 
-    `SyteResult<BoundsResult> result = syte.getBounds(urlImageSearch);`
+    `SyteResult<BoundsResult> result = syte.getBoundsForImageUrl(urlImageSearch);`
     
 For image search:
 
-    `SyteResult<BoundsResult> result = syte.getBounds(context, imageSearch);`
+    `SyteResult<BoundsResult> result = syte.getBoundsForImage(context, imageSearch);`
 
 3. Retrieve Items for a bound:
 
@@ -131,12 +121,12 @@ To use the "Recommendations" functionality, do the following:
         Personalization personalization
     );`
     
-**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **Syte.addViewedItem(String)** method.
+**NOTE:** You must add at least one product ID to use the "Personalization" functionality. To do this use the **Syte.addViewedProduct(String)** method.
 
 # Personalized ranking
 
 Enabling the personalized ranking will attach the list of viewed products to the requests. 
-To add a product to the list of viewed ones use the **Syte.addViewedItem(String)** method.
+To add a product to the list of viewed ones use the **Syte.addViewedProduct(String)** method.
 To enable this functionality use the **setPersonalizedRanking(true)** method. 
 It is supported in the following classes: **UrlImageSearch, ImageSearch, ShopTheLook, SimilarProducts**.
 Personalized ranking is disabled by default.
@@ -155,7 +145,7 @@ There are 3 main features:
 
 1. Popular Searches. Will retrieve the list of the most popular searches.
 
-    `syte.getPopularSearch("en_US");`
+    `syte.getPopularSearches("en_US");`
 
 2. Text search. Will retrieve the results for the specified query.
 
@@ -165,6 +155,6 @@ There are 3 main features:
 
 3. Auto-complete. Text auto-completion functionality.
 
-    `syte.getAutoComplete("query", "en_US", syteResult -> {`
+    `syte.getAutoCompleteForTextSearch("query", "en_US", syteResult -> {`
         `// Process the results here.`
     `});`

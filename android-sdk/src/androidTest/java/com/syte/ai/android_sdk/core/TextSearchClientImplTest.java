@@ -19,7 +19,7 @@ public class TextSearchClientImplTest extends BaseTest {
         CountDownLatch latch = new CountDownLatch(1);
         startSessionInternal();
         Thread.sleep(1000);
-        mSyte.getPopularSearchAsync("en_US", syteResult -> {
+        mSyte.getPopularSearchesAsync("en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertNull(syteResult.errorMessage);
             assertNotNull(syteResult.data);
@@ -32,7 +32,7 @@ public class TextSearchClientImplTest extends BaseTest {
     public void getPopularSearch() throws InterruptedException {
         startSessionInternal();
         Thread.sleep(1000);
-        SyteResult<List<String>> syteResult = mSyte.getPopularSearch("en_US");
+        SyteResult<List<String>> syteResult = mSyte.getPopularSearches("en_US");
         assertTrue(syteResult.isSuccessful);
         assertNull(syteResult.errorMessage);
         assertNotNull(syteResult.data);
@@ -42,7 +42,7 @@ public class TextSearchClientImplTest extends BaseTest {
     public void getPopularSearchWrongLang() throws InterruptedException {
         startSessionInternal();
         Thread.sleep(1000);
-        SyteResult<List<String>> syteResult = mSyte.getPopularSearch("some_lang");
+        SyteResult<List<String>> syteResult = mSyte.getPopularSearches("some_lang");
         assertEquals(mConfiguration.getStorage().getPopularSearch("some_lang"), "");
         assertTrue(syteResult.isSuccessful);
         assertNull(syteResult.errorMessage);
@@ -90,14 +90,14 @@ public class TextSearchClientImplTest extends BaseTest {
     public void getAutoCompleteAsync() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         startSessionInternal();
-        mSyte.getAutoComplete("a", "en_US", syteResult -> {
+        mSyte.getAutoCompleteForTextSearch("a", "en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
             assertNotNull(syteResult.data);
             countDownLatch.countDown();
         });
-        mSyte.getAutoComplete("a", "en_US", syteResult -> {
+        mSyte.getAutoCompleteForTextSearch("a", "en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
@@ -113,14 +113,14 @@ public class TextSearchClientImplTest extends BaseTest {
         startSessionInternal();
         mConfiguration.setAllowAutoCompletionQueue(false);
         mSyte.setConfiguration(mConfiguration);
-        mSyte.getAutoComplete("a", "en_US", syteResult -> {
+        mSyte.getAutoCompleteForTextSearch("a", "en_US", syteResult -> {
             assertTrue(syteResult.isSuccessful);
             assertEquals(syteResult.resultCode, 200);
             assertNull(syteResult.errorMessage);
             assertNotNull(syteResult.data);
             countDownLatch.countDown();
         });
-        mSyte.getAutoComplete("a", "en_US", syteResult -> {
+        mSyte.getAutoCompleteForTextSearch("a", "en_US", syteResult -> {
             fail("Should not be called");
         });
         countDownLatch.await();

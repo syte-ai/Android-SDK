@@ -25,8 +25,6 @@ import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 import com.syte.ai.android_sdk.util.SyteLogger;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Set;
 
@@ -68,14 +66,14 @@ public abstract class Syte {
      * This method must not be called on the UI thread!
      * @return {@link SytePlatformSettings}
      */
-    public abstract SyteResult<SytePlatformSettings> getSytePlatformSettings();
+    public abstract SyteResult<SytePlatformSettings> getPlatformSettings();
 
     /**
      * Retrieve {@link SytePlatformSettings}.
-     * Asynchronous equivalent of {@link Syte#getSytePlatformSettings()}
+     * Asynchronous equivalent of {@link Syte#getPlatformSettings()}
      * @param syteCallback {@link SyteCallback} result callback
      */
-    public abstract void getSytePlatformSettingsAsync(SyteCallback<SytePlatformSettings> syteCallback);
+    public abstract void getPlatformSettingsAsync(SyteCallback<SytePlatformSettings> syteCallback);
 
     /**
      * Send event to Syte. Can be used to send either predefined events {@link com.syte.ai.android_sdk.events} or a custom event.
@@ -88,7 +86,7 @@ public abstract class Syte {
      * Save product ID into the local storage. All saved viewed products will be used for personalization.
      * @param sku product ID
      */
-    public abstract void addViewedItem(String sku) throws SyteWrongInputException;
+    public abstract void addViewedProduct(String sku) throws SyteWrongInputException;
 
     /**
      * Get all product IDs that were viewed during this session.
@@ -111,24 +109,26 @@ public abstract class Syte {
 
 
     /**
-     * Retrieves bounds
+     * Retrieves bounds: Returns a list of all objects (bounds) detected in the image.
+     * Each bound includes the category name it belongs to and the coordinates (x,y) of the object.
      * Synchronous method. Must NOT be called on the UI thread!
      * @param context context
      * @param imageSearch {@link ImageSearch}
      * @return {@link SyteResult}
      */
-    public abstract SyteResult<BoundsResult> getBounds(Context context, ImageSearch imageSearch);
+    public abstract SyteResult<BoundsResult> getBoundsForImage(Context context, ImageSearch imageSearch);
 
     /**
-     * Retrieves bounds
+     * Retrieves bounds: Returns a list of all objects (bounds) detected in the image.
+     * Each bound includes the category name it belongs to and the coordinates (x,y) of the object.
      * Synchronous method. Must NOT be called on the UI thread!
      * @param urlImageSearch {@link UrlImageSearch}
      * @return {@link SyteResult}
      */
-    public abstract SyteResult<BoundsResult> getBounds(UrlImageSearch urlImageSearch);
+    public abstract SyteResult<BoundsResult> getBoundsForImageUrl(UrlImageSearch urlImageSearch);
 
     /**
-     * Retrieves items.
+     * Retrieves items: Get similar items per bounding box detected in the image.
      * Synchronous method. Must NOT be called on the UI thread!
      * @param bound {@link Bound}. The list of Bounds can be retrieved from the result of getBounds call.
      * @param cropCoordinates pass {@link CropCoordinates} to enable crop. Pass null to disregard crop.
@@ -137,7 +137,7 @@ public abstract class Syte {
     public abstract SyteResult<ItemsResult> getItemsForBound(Bound bound, CropCoordinates cropCoordinates);
 
     /**
-     * Retrieves items.
+     * Retrieves items: Get similar items per bounding box detected in the image.
      * Asynchronous equivalent for the {@link #getItemsForBound(Bound, CropCoordinates)} method.
      * @param bound {@link Bound}. The list of Bounds can be retrieved from the result of getBounds call.
      * @param cropCoordinates pass {@link CropCoordinates} to enable crop. Pass null to disregard crop.
@@ -146,24 +146,26 @@ public abstract class Syte {
     public abstract void getItemsForBoundAsync(Bound bound, CropCoordinates cropCoordinates, SyteCallback<ItemsResult> callback);
 
     /**
-     * Retrieves bounds
-     * Asynchronous equivalent for the {@link #getBounds(Context, ImageSearch)} method.
+     * Retrieves bounds: Returns a list of all objects (bounds) detected in the image.
+     * Each bound includes the category name it belongs to and the coordinates (x,y) of the object.
+     * Asynchronous equivalent for the {@link #getBoundsForImage(Context, ImageSearch)} method.
      * @param context context
      * @param imageSearch {@link ImageSearch}
      * @param callback {@link SyteCallback}
      */
-    public abstract void getBoundsAsync(Context context, ImageSearch imageSearch, SyteCallback<BoundsResult> callback);
+    public abstract void getBoundsForImageAsync(Context context, ImageSearch imageSearch, SyteCallback<BoundsResult> callback);
 
     /**
-     * Retrieves bounds
-     * Asynchronous equivalent for the {@link #getBounds(UrlImageSearch)} method.
+     * Retrieves bounds: Returns a list of all objects (bounds) detected in the image.
+     * Each bound includes the category name it belongs to and the coordinates (x,y) of the object.
+     * Asynchronous equivalent for the {@link #getBoundsForImageUrl(UrlImageSearch)} method.
      * @param urlImageSearch {@link UrlImageSearch}
      * @param callback {@link SyteCallback}
      */
-    public abstract void getBoundsAsync(UrlImageSearch urlImageSearch, SyteCallback<BoundsResult> callback);
+    public abstract void getBoundsForImageUrlAsync(UrlImageSearch urlImageSearch, SyteCallback<BoundsResult> callback);
 
     /**
-     * Make 'Similars' call
+     * Make 'Similars' call: Receives a product SKU and returns a list of similar products.
      * Synchronous method. Must NOT be called on the UI thread!
      * @param similarProducts {@link SimilarItems}
      * @return {@link SyteResult}
@@ -173,7 +175,7 @@ public abstract class Syte {
     );
 
     /**
-     * Make 'Similars' call
+     * Make 'Similars' call: Receives a product SKU and returns a list of similar products.
      * Asynchronous equivalent for the {@link #getSimilarProducts(SimilarItems)} method.
      * @param similarProducts {@link SimilarItems}
      * @param callback {@link SyteCallback}
@@ -184,7 +186,8 @@ public abstract class Syte {
     );
 
     /**
-     * Make 'Shop the look' call
+     * Make 'Shop the look' call: Receives a product SKU and returns a list of similar products
+     * for all the items in the image (besides the PDP item).
      * Synchronous method. Must NOT be called on the UI thread!
      * @param shopTheLook {@link ShopTheLook}
      * @return {@link SyteResult}
@@ -194,7 +197,8 @@ public abstract class Syte {
     );
 
     /**
-     * Make 'Shop the look' call
+     * Make 'Shop the look' call: Receives a product SKU and returns a list of similar products for
+     * all the items in the image (besides the PDP item).
      * Asynchronous equivalent for the {@link #getShopTheLook(ShopTheLook)} method.
      * @param shopTheLook {@link ShopTheLook}
      * @param callback {@link SyteCallback}
@@ -205,7 +209,8 @@ public abstract class Syte {
     );
 
     /**
-     * Make 'Personalization' call
+     * Make 'Personalization' call: Receives a list of visited SKUs and the current SKU,
+     * the engine will return a list of recommended products for this user, according to the defined model for the account.
      * Synchronous method. Must NOT be called on the UI thread!
      * @param personalization {@link Personalization}
      * @return {@link SyteResult}
@@ -215,7 +220,8 @@ public abstract class Syte {
     );
 
     /**
-     * Make 'Personalization' call
+     * Make 'Personalization' call: Receives a list of visited SKUs and the current SKU,
+     * the engine will return a list of recommended products for this user, according to the defined model for the account.
      * Asynchronous equivalent for the {@link #getPersonalizedProducts(Personalization)} method.
      * @param personalization {@link Personalization}
      * @param callback {@link SyteCallback}
@@ -231,15 +237,15 @@ public abstract class Syte {
      * @param lang locale to retrieve the searches for.
      * @return The list of the most popular searches.
      */
-    public abstract SyteResult<List<String>> getPopularSearch(String lang);
+    public abstract SyteResult<List<String>> getPopularSearches(String lang);
 
     /**
      * Retrieves the most popular searches for the specified language.
-     * Asynchronous equivalent of the {@link #getPopularSearch(String)} method.
+     * Asynchronous equivalent of the {@link #getPopularSearches(String)} method.
      * @param lang locale to retrieve the searches for.
      * @param callback instance of {@link SyteCallback}.
      */
-    public abstract void getPopularSearchAsync(String lang, SyteCallback<List<String>> callback);
+    public abstract void getPopularSearchesAsync(String lang, SyteCallback<List<String>> callback);
 
     /**
      * Retrieves the text search results.
@@ -271,7 +277,7 @@ public abstract class Syte {
      * @param lang locale to retrieve the searches for.
      * @param callback {@link SyteCallback}
      */
-    public abstract void getAutoComplete(
+    public abstract void getAutoCompleteForTextSearch(
             String query,
             String lang,
             SyteCallback<AutoCompleteResult> callback
@@ -290,5 +296,5 @@ public abstract class Syte {
      * @param query text query
      * @param callback {@link SyteCallback}
      */
-    public abstract void getAutoComplete(String query, SyteCallback<AutoCompleteResult> callback);
+    public abstract void getAutoCompleteForTextSearch(String query, SyteCallback<AutoCompleteResult> callback);
 }

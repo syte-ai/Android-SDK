@@ -3,17 +3,9 @@ package com.syte.ai.android_sdk.core;
 import android.content.Context;
 
 import com.syte.ai.android_sdk.SyteCallback;
-import com.syte.ai.android_sdk.core.SyteStorage;
-import com.syte.ai.android_sdk.exceptions.SyteInitializationException;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -122,7 +114,7 @@ public class SyteConfiguration {
     }
 
     /**
-     * Indicates whether the calls to {@link com.syte.ai.android_sdk.core.Syte#getAutoComplete(String, SyteCallback)}}
+     * Indicates whether the calls to {@link com.syte.ai.android_sdk.core.Syte#getAutoCompleteForTextSearch(String, SyteCallback)}}
      * method that are made within 500ms will be saved to queue and invoked.
      * (Only the last call made within 500ms will be saved).
      * If false, the calls made within 500ms will be ignored.

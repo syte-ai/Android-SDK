@@ -1,7 +1,6 @@
 package com.syte.ai.android_sdk.app;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.syte.ai.android_sdk.SyteCallback;
@@ -13,8 +12,6 @@ import com.syte.ai.android_sdk.data.ShopTheLook;
 import com.syte.ai.android_sdk.data.SimilarItems;
 import com.syte.ai.android_sdk.data.TextSearch;
 import com.syte.ai.android_sdk.data.UrlImageSearch;
-import com.syte.ai.android_sdk.data.result.SyteResult;
-import com.syte.ai.android_sdk.data.result.account.SytePlatformSettings;
 import com.syte.ai.android_sdk.data.result.auto_complete.AutoCompleteResult;
 import com.syte.ai.android_sdk.data.result.offers.Bound;
 import com.syte.ai.android_sdk.data.result.offers.BoundsResult;
@@ -27,7 +24,6 @@ import com.syte.ai.android_sdk.data.result.text_search.TextSearchResult;
 import com.syte.ai.android_sdk.exceptions.SyteWrongInputException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -79,7 +75,7 @@ public class SyteManager {
     public void addViewedProducts(Set<String> viewedProducts) {
         for (String viewedProduct : viewedProducts) {
             try {
-                mSyte.addViewedItem(viewedProduct);
+                mSyte.addViewedProduct(viewedProduct);
             } catch (SyteWrongInputException e) {}
         }
     }
@@ -116,7 +112,7 @@ public class SyteManager {
     }
 
     public void getAutoComplete(String query, SyteCallback<AutoCompleteResult> callback) {
-        mSyte.getAutoComplete(
+        mSyte.getAutoCompleteForTextSearch(
                 query,
                 mSyte.getConfiguration().getLocale(),
                 syteResult -> {
@@ -129,7 +125,7 @@ public class SyteManager {
     }
 
     public void getPopularSearch(SyteCallback<List<String>> callback) {
-        mSyte.getPopularSearchAsync(
+        mSyte.getPopularSearchesAsync(
                 mSyte.getConfiguration().getLocale(),
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
@@ -184,7 +180,7 @@ public class SyteManager {
             UrlImageSearch requestData,
             SyteCallback<BoundsResult> callback
     ) {
-        mSyte.getBoundsAsync(
+        mSyte.getBoundsForImageUrlAsync(
                 requestData,
                 syteResult -> {
                     if (!syteResult.isSuccessful) {
@@ -215,7 +211,7 @@ public class SyteManager {
             ImageSearch requestData,
             SyteCallback<BoundsResult> callback
     ) {
-        mSyte.getBoundsAsync(
+        mSyte.getBoundsForImageAsync(
                 mContext,
                 requestData,
                 syteResult -> {

@@ -99,7 +99,7 @@ public class SyteImplTest extends BaseTest {
     @Test
     public void addViewedProduct() throws SyteWrongInputException {
         startSessionInternal();
-        mSyte.addViewedItem("test");
+        mSyte.addViewedProduct("test");
         assertTrue(mSyte.getConfiguration().getViewedProducts().contains("test"));
     }
 
