@@ -28,6 +28,8 @@ public class ConfigurationFragment extends BaseFragment {
 
     private EditText mLocaleET;
     private EditText mSessionSKUsET;
+    private EditText mAccountId;
+    private EditText mSignature;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -40,15 +42,25 @@ public class ConfigurationFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         mLocaleET = view.findViewById(R.id.locale);
         mSessionSKUsET = view.findViewById(R.id.session_skus);
+        mAccountId = view.findViewById(R.id.account_id);
+        mSignature = view.findViewById(R.id.signature);
         Button configureButton = view.findViewById(R.id.config_btn);
 
         mLocaleET.setText(mSyteManager.getLocale());
         mSessionSKUsET.setText(Utils.viewedProductsString(mSyteManager.getViewedProducts()));
+        mAccountId.setText(requireActivity().getString(R.string.default_account_id));
+        mSignature.setText(requireActivity().getString(R.string.default_sig));
+
         configureButton.setOnClickListener(v -> {
-            if (mLocaleET.getText().toString().isEmpty()) {
-                showToast("WrongInput");
+            if (
+                    mLocaleET.getText().toString().isEmpty()
+                    || mAccountId.getText().toString().isEmpty()
+                    || mSignature.getText().toString().isEmpty()
+            ) {
+                showToast("Wrong Input");
                 return;
             }
+            mSyteManager.initialize(mAccountId.getText().toString(), mSignature.getText().toString());
             mSyteManager.setLocale(mLocaleET.getText().toString());
             if (!mSessionSKUsET.getText().toString().isEmpty()) {
                 Set<String> set = new HashSet<>(Arrays.asList(mSessionSKUsET.getText().toString().split(",")));

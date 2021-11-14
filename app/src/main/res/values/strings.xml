@@ -35,4 +35,6 @@
     <string name="query">query</string>
     <string name="text_search">TEXT SEARCH</string>
     <string name="id_original_data">ID (Original data):</string>
+    <string name="account_id">Account ID:</string>
+    <string name="signature">Signature:</string>
 </resources>

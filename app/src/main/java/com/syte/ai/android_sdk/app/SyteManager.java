@@ -36,7 +36,10 @@ public class SyteManager {
 
     public SyteManager(Context context) {
         mContext = context;
-        initialize();
+        initialize(
+                mContext.getResources().getString(R.string.default_account_id),
+                mContext.getResources().getString(R.string.default_sig)
+        );
     }
 
     private void showToastError(String error) {
@@ -57,11 +60,9 @@ public class SyteManager {
         return mSyte.getConfiguration().getLocale();
     }
 
-    public void initialize() {
+    public void initialize(String accountId, String signature) {
         SyteConfiguration syteConfiguration = new SyteConfiguration(
-                mContext,
-                mContext.getResources().getString(R.string.default_account_id),
-                mContext.getResources().getString(R.string.default_sig)
+                mContext, accountId, signature
         );
         syteConfiguration.setLocale("en_US");
 //        syteConfiguration.enableLocalStorage(false);

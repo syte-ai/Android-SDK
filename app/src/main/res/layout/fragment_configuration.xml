@@ -17,6 +17,50 @@
         android:maxLines="5"
         android:textColor="@color/black" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/account_id"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/account_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:maxLines="5"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signature"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/signature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:maxLines="5"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
     <EditText
         android:id="@+id/session_skus"
         android:layout_width="wrap_content"
