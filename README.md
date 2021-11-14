@@ -98,7 +98,9 @@ For image search:
 
 You can pass CropCoordinates instance instead of *null* here to enable the crop functionality. Example:
 
-    CropCoordinates coordinates = new CropCoordinates(0.2, 0.2, 0.8, 0.8); // The coordinates should be relative ranging from 0.0 to 1.0
+    CropCoordinates coordinates = new CropCoordinates(0.2, 0.2, 0.8, 0.8);
+    // The coordinates should be relative ranging from 0.0 to 1.0
+        // CropCoordinates class reflects two points of the image: top left and bottom right.
     SyteResult<ItemsResult> syte.getItems(result.data.getBounds().get(index), coordinates);
 
 **NOTE**
